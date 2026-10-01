@@ -141,7 +141,7 @@ void main() {
       final offenders = <String>[];
       _arb('app_ar.arb').forEach((String key, Object? value) {
         if (key.startsWith('@') || value is! String) return;
-        if ((value! as String).trim().isEmpty) return;
+        if (value.trim().isEmpty) return;
         // These are deliberately non-Arabic values.
         const allowlisted = <String>{'authPhoneHint', 'requestsPhotosHintSize'};
         if (allowlisted.contains(key)) return;
