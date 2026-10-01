@@ -78,6 +78,25 @@ class ApiClient implements AuthTokenDelegate {
     return response;
   }
 
+  /// For the endpoints that answer with a bare JSON array.
+  ///
+  /// Dio cannot decode an array into `Map<String, dynamic>`, so the catalogue
+  /// endpoints (`GET /services`, `GET /catalogue`, `GET /services/{id}/problems`)
+  /// must be read as a list. They are declared `response_model=list[...]` on the
+  /// backend and are not wrapped in a pagination envelope.
+  Future<Response<List<Map<String, dynamic>>>> getList(
+    String path, {
+    Map<String, dynamic>? query,
+  }) async {
+    return _send<List<Map<String, dynamic>>>(
+      () => _dio.get<List<Map<String, dynamic>>>(
+        path,
+        queryParameters: query,
+        options: _rejectNonSuccess(null),
+      ),
+    );
+  }
+
   Future<Response<Map<String, dynamic>>> post(
     String path, {
     Object? data,

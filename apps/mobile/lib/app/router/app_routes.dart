@@ -1,7 +1,7 @@
 import 'package:equatable/equatable.dart';
 
 /// Every route name, declared once so `context.goNamed` can never be handed a
-/// string literal that does not exist (§20: go_router owns all navigation).
+/// string literal that does not exist (go_router owns all navigation).
 enum AppRoute {
   splash('splash'),
   onboarding('onboarding'),
@@ -10,6 +10,10 @@ enum AppRoute {
   home('home'),
   requests('requests'),
   requestNew('request-new'),
+  requestDetails('request-details'),
+  requestPhotos('request-photos'),
+  requestLocation('request-location'),
+  requestReview('request-review'),
   requestDetail('request-detail'),
   orders('orders'),
   orderDetail('order-detail'),
@@ -31,6 +35,10 @@ enum AppRoute {
     AppRoute.home,
     AppRoute.requests,
     AppRoute.requestNew,
+    AppRoute.requestDetails,
+    AppRoute.requestPhotos,
+    AppRoute.requestLocation,
+    AppRoute.requestReview,
     AppRoute.requestDetail,
     AppRoute.orders,
     AppRoute.orderDetail,

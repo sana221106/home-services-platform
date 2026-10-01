@@ -1675,6 +1675,18 @@ abstract class AppLocalizations {
   /// In ar, this message translates to:
   /// **'أدخل رقم جهة الاتصال عند تحديد اسم جهة الاتصال'**
   String get requestsAddressContactPairError;
+
+  /// No description provided for @requestsNewActivity.
+  ///
+  /// In ar, this message translates to:
+  /// **'تحديث جديد'**
+  String get requestsNewActivity;
+
+  /// Requests tab list count. {count} is a number.
+  ///
+  /// In ar, this message translates to:
+  /// **'1575160415731580160515751604 15731604160515801605: {count}'**
+  String requestsListCount(Object count);
 }
 
 class _AppLocalizationsDelegate

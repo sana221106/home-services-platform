@@ -21,7 +21,7 @@ class RequestWizardScaffold extends ConsumerWidget {
     this.nextLabel,
     this.nextEnabled,
     this.onNext,
-    this.hideNext = false,
+    this.bottomBar,
     super.key,
   });
 
@@ -32,8 +32,9 @@ class RequestWizardScaffold extends ConsumerWidget {
   final bool? nextEnabled;
   final VoidCallback? onNext;
 
-  /// The photos step drives its own buttons, so it hides the shared next.
-  final bool hideNext;
+  /// Replaces the shared back/next footer. The review step needs this because
+  /// its primary action is submit, not "next step".
+  final Widget? bottomBar;
 
   static const List<RequestWizardStep> _ordered = RequestWizardStep.values;
 
@@ -66,27 +67,27 @@ class RequestWizardScaffold extends ConsumerWidget {
           ),
         ],
       ),
-      bottomBar: hideNext
-          ? null
-          : StickyFooter(
-              children: <Widget>[
-                if (onBack != null)
-                  Expanded(
-                    child: OutlinedButton(
-                      onPressed: onBack,
-                      child: Text(l10n.commonBack),
-                    ),
-                  ),
-                if (onBack != null) const SizedBox(width: AppSpacing.sm),
+      bottomBar:
+          bottomBar ??
+          StickyFooter(
+            children: <Widget>[
+              if (onBack != null)
                 Expanded(
-                  flex: 2,
-                  child: FilledButton(
-                    onPressed: enabled ? onNext : null,
-                    child: Text(nextLabel ?? l10n.commonNext),
+                  child: OutlinedButton(
+                    onPressed: onBack,
+                    child: Text(l10n.commonBack),
                   ),
                 ),
-              ],
-            ),
+              if (onBack != null) const SizedBox(width: AppSpacing.sm),
+              Expanded(
+                flex: 2,
+                child: FilledButton(
+                  onPressed: enabled ? onNext : null,
+                  child: Text(nextLabel ?? l10n.commonNext),
+                ),
+              ),
+            ],
+          ),
     );
   }
 }
@@ -147,7 +148,10 @@ class WizardSelectTile extends StatelessWidget {
   final String title;
   final String? subtitle;
   final bool selected;
-  final VoidCallback onTap;
+
+  /// Null renders the tile disabled, used where an option is unavailable in the
+  /// current combination (for example urgent while inspection-only is on).
+  final VoidCallback? onTap;
   final Widget? leading;
   final Widget? trailing;
 
@@ -156,55 +160,139 @@ class WizardSelectTile extends StatelessWidget {
     final AppColors colors = AppColors.of(context);
     return Padding(
       padding: const EdgeInsets.only(bottom: AppSpacing.sm),
-      child: Material(
-        color: selected ? colors.primarySoft : colors.surface,
-        borderRadius: BorderRadius.circular(16),
-        child: InkWell(
-          onTap: onTap,
+      child: Opacity(
+        opacity: onTap == null ? 0.45 : 1,
+        child: Material(
+          color: selected ? colors.primarySoft : colors.surface,
           borderRadius: BorderRadius.circular(16),
-          child: Container(
-            padding: const EdgeInsets.all(AppSpacing.md),
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(16),
-              border: Border.all(
-                color: selected ? colors.primary : colors.border,
-                width: selected ? 1.6 : 1,
+          child: InkWell(
+            onTap: onTap,
+            borderRadius: BorderRadius.circular(16),
+            child: Container(
+              padding: const EdgeInsets.all(AppSpacing.md),
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(16),
+                border: Border.all(
+                  color: selected ? colors.primary : colors.border,
+                  width: selected ? 1.6 : 1,
+                ),
               ),
-            ),
-            child: Row(
-              children: <Widget>[
-                if (leading != null) ...<Widget>[
-                  leading!,
-                  const SizedBox(width: AppSpacing.sm),
-                ],
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: <Widget>[
-                      Text(
-                        title,
-                        style: context.text.body.copyWith(
-                          fontWeight: FontWeight.w600,
-                          color: selected ? colors.primary : colors.textPrimary,
-                        ),
-                      ),
-                      if (subtitle != null && subtitle!.isNotEmpty) ...<Widget>[
-                        const SizedBox(height: 2),
+              child: Row(
+                children: <Widget>[
+                  if (leading != null) ...<Widget>[
+                    leading!,
+                    const SizedBox(width: AppSpacing.sm),
+                  ],
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: <Widget>[
                         Text(
-                          subtitle!,
-                          style: context.text.caption.copyWith(
-                            color: colors.textSecondary,
+                          title,
+                          style: context.text.body.copyWith(
+                            fontWeight: FontWeight.w600,
+                            color: selected
+                                ? colors.primary
+                                : colors.textPrimary,
                           ),
                         ),
+                        if (subtitle != null &&
+                            subtitle!.isNotEmpty) ...<Widget>[
+                          const SizedBox(height: 2),
+                          Text(
+                            subtitle!,
+                            style: context.text.caption.copyWith(
+                              color: colors.textSecondary,
+                            ),
+                          ),
+                        ],
                       ],
-                    ],
+                    ),
                   ),
-                ),
-                ?trailing,
-              ],
+                  ?trailing,
+                ],
+              ),
             ),
           ),
         ),
+      ),
+    );
+  }
+}
+
+/// A text field whose value is owned by a Riverpod controller.
+///
+/// The controller must not be rebuilt inside `build`, or every keystroke
+/// recreates it and the caret jumps to the start. This keeps one instance and
+/// only pushes an external change back into the field when it actually differs,
+/// so the wizard can restore a previously typed answer without fighting the
+/// customer while they type.
+class WizardTextField extends StatefulWidget {
+  const WizardTextField({
+    required this.value,
+    required this.onChanged,
+    this.hintText,
+    this.errorText,
+    this.minLines = 1,
+    this.maxLines = 1,
+    this.maxLength,
+    this.keyboardType,
+    this.fieldKey,
+    super.key,
+  });
+
+  final String value;
+  final ValueChanged<String> onChanged;
+  final String? hintText;
+  final String? errorText;
+  final int minLines;
+  final int maxLines;
+  final int? maxLength;
+  final TextInputType? keyboardType;
+  final Key? fieldKey;
+
+  @override
+  State<WizardTextField> createState() => _WizardTextFieldState();
+}
+
+class _WizardTextFieldState extends State<WizardTextField> {
+  late final TextEditingController _controller = TextEditingController(
+    text: widget.value,
+  );
+
+  @override
+  void didUpdateWidget(WizardTextField oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    // Only adopt an external change when it is not what the user is currently
+    // typing, otherwise restoring state would fight the caret.
+    if (widget.value != _controller.text) {
+      _controller.value = TextEditingValue(
+        text: widget.value,
+        selection: TextSelection.collapsed(offset: widget.value.length),
+      );
+    }
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return TextField(
+      key: widget.fieldKey,
+      controller: _controller,
+      minLines: widget.minLines,
+      maxLines: widget.maxLines,
+      maxLength: widget.maxLength,
+      keyboardType: widget.keyboardType,
+      onChanged: widget.onChanged,
+      decoration: InputDecoration(
+        hintText: widget.hintText,
+        errorText: widget.errorText,
+        border: const OutlineInputBorder(),
       ),
     );
   }

@@ -508,5 +508,18 @@
                                                               }
                                                   },
                                  "description":  "Photo counter. Both numbers."
+                             },
+  "requestsNewActivity": "New activity",
+"@requestsListCount":  {
+  "description":  "Requests tab list count. {count} is a number."
+},
+  "requestsListCount":  "{count} total",
+  "@requestsListCount":  {
+  "placeholders":  {
+                   "count":  {
+                                 "type":  "int"
                              }
+                 },
+  "description":  "Requests tab list count. {count} is a number."
+}
 }

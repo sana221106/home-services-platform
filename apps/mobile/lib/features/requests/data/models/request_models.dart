@@ -191,9 +191,18 @@ class AddressSnapshot extends Equatable {
 
   /// The four fields the backend requires. Used to gate the wizard's next step
   /// before spending a round trip on a guaranteed 422.
+  /// Range checks are not enough on their own.
+  ///
+  /// `latitude`/`longitude` default to 0 when the JSON omits them, and 0,0 is a
+  /// valid point for the backend's `ge=-90/le=90` bound, so a property whose
+  /// coordinates were never filled in would otherwise be submitted as an
+  /// address in the Gulf of Guinea. Treat the zero pair as "not picked".
+  bool get hasCoordinates => latitude != 0 || longitude != 0;
+
   bool get isSubmittable =>
       governorate.trim().isNotEmpty &&
       city.trim().isNotEmpty &&
+      hasCoordinates &&
       latitude.abs() <= 90 &&
       longitude.abs() <= 180;
 

@@ -841,4 +841,12 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get requestsAddressContactPairError =>
       'Enter a contact phone when you set a contact name';
+
+  @override
+  String get requestsNewActivity => 'New activity';
+
+  @override
+  String requestsListCount(Object count) {
+    return '$count total';
+  }
 }

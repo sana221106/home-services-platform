@@ -1,4 +1,8 @@
+import 'dart:typed_data';
+
 import 'package:equatable/equatable.dart';
+
+import '../../../../app/router/app_routes.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../../core/errors/failure.dart';
@@ -25,7 +29,7 @@ class PendingPhoto extends Equatable {
   /// Stable identity for list keys, since bytes have no id yet.
   final String localId;
   final String filename;
-  final List<int> bytes;
+  final Uint8List bytes;
   final String contentType;
 
   /// Set once the upload succeeds, so a retry can skip this file.
@@ -265,9 +269,24 @@ class RequestWizardController extends Notifier<RequestWizardState> {
     );
   }
 
+  /// Records the step the customer is on.
+  ///
+  /// Navigation itself is the router's job, so this deliberately does not push
+  /// a route. The wizard pages call this alongside their own navigation, and
+  /// keeping the two apart means the controller stays testable without a
+  /// GoRouter and a mid-flow page rebuild cannot skip a step.
   void goToStep(RequestWizardStep step) {
     state = state.copyWith(step: step, clearError: true);
   }
+
+  /// The route for each step, so navigation is not spelled out per page.
+  static String routeFor(RequestWizardStep step) => switch (step) {
+    RequestWizardStep.service => AppRoute.requestNew.name,
+    RequestWizardStep.details => AppRoute.requestDetails.name,
+    RequestWizardStep.photos => AppRoute.requestPhotos.name,
+    RequestWizardStep.location => AppRoute.requestLocation.name,
+    RequestWizardStep.review => AppRoute.requestReview.name,
+  };
 
   /// Whether the customer may leave the current step forward.
   ///

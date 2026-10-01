@@ -10,6 +10,7 @@ import '../../data/models/request_models.dart';
 import '../../data/repositories/requests_repository.dart';
 import '../controllers/request_wizard_controller.dart';
 import '../widgets/request_wizard_scaffold.dart';
+import '../widgets/wizard_navigation.dart';
 
 /// Wizard step 1 of 5 (spec screen 6): pick a service category.
 ///
@@ -33,9 +34,11 @@ class SelectServicePage extends ConsumerWidget {
     return RequestWizardScaffold(
       step: RequestWizardStep.service,
       nextEnabled: wizard.category != null,
-      onNext: () => ref
-          .read(requestWizardProvider.notifier)
-          .goToStep(RequestWizardStep.details),
+      onNext: () => wizardGoNext(
+        context,
+        ref.read(requestWizardProvider.notifier),
+        RequestWizardStep.details,
+      ),
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[

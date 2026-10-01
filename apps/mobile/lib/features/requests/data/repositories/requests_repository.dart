@@ -1,3 +1,5 @@
+import 'dart:typed_data';
+
 import 'package:dio/dio.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -85,7 +87,7 @@ class RequestsRepository {
   Future<RequestMedia> uploadMedia({
     required String requestId,
     required String filename,
-    required List<int> bytes,
+    required Uint8List bytes,
     String contentType = 'image/jpeg',
   }) => _guard(
     () => _requests.uploadMedia(

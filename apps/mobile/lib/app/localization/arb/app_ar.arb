@@ -508,5 +508,16 @@
                                                               }
                                                   },
                                  "description":  "Photo counter. Both numbers."
+                             },
+  "requestsNewActivity": "تحديث جديد",
+"@requestsListCount":  {
+  "placeholders":  {
+                   "count":  {
+                                 "type":  "int"
                              }
+                 },
+  "description":  "Requests tab list count. {count} is a number."
+},
+"requestsListCount":  "{count} طلب"
+
 }

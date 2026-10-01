@@ -1,3 +1,5 @@
+import 'dart:typed_data';
+
 import 'package:dio/dio.dart';
 
 import '../../../../core/network/api_client.dart';
@@ -17,33 +19,35 @@ class CatalogueRemoteDataSource {
 
   final ApiClient _client;
 
+  /// These three endpoints all declare `response_model=list[...]` on the
+  /// backend, so they return a bare JSON array rather than the `{items: [...]}`
+  /// envelope used by the paginated routes. Reading them through `get` and
+  /// `mapList('items')` would fail on every call.
+  ///
   /// The whole catalogue in one call, problems included.
   Future<List<ServiceCategory>> catalogue() async {
-    final Response<Map<String, dynamic>> response = await _client.get(
+    final Response<List<Map<String, dynamic>>> response = await _client.getList(
       ApiEndpoints.catalogue,
     );
-    return (response.data ?? const <String, dynamic>{})
-        .mapList('items')
+    return (response.data ?? const <Map<String, dynamic>>[])
         .map(ServiceCategory.fromJson)
         .toList(growable: false);
   }
 
   Future<List<ServiceCategory>> categories() async {
-    final Response<Map<String, dynamic>> response = await _client.get(
+    final Response<List<Map<String, dynamic>>> response = await _client.getList(
       ApiEndpoints.services,
     );
-    return (response.data ?? const <String, dynamic>{})
-        .mapList('items')
+    return (response.data ?? const <Map<String, dynamic>>[])
         .map(ServiceCategory.fromJson)
         .toList(growable: false);
   }
 
   Future<List<ProblemType>> problems(String categoryId) async {
-    final Response<Map<String, dynamic>> response = await _client.get(
+    final Response<List<Map<String, dynamic>>> response = await _client.getList(
       ApiEndpoints.serviceProblems(categoryId),
     );
-    return (response.data ?? const <String, dynamic>{})
-        .mapList('items')
+    return (response.data ?? const <Map<String, dynamic>>[])
         .map(ProblemType.fromJson)
         .toList(growable: false);
   }
@@ -134,7 +138,7 @@ class RequestsRemoteDataSource {
   Future<RequestMedia> uploadMedia({
     required String requestId,
     required String filename,
-    required List<int> bytes,
+    required Uint8List bytes,
     String contentType = 'image/jpeg',
   }) async {
     final Response<Map<String, dynamic>> response = await _client.upload(

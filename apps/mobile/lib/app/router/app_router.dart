@@ -11,6 +11,12 @@ import '../../features/auth/presentation/pages/phone_entry_screen.dart';
 import '../../features/home/presentation/pages/home_page.dart';
 import '../../features/properties/presentation/pages/properties_page.dart';
 import '../../features/properties/presentation/pages/property_history_page.dart';
+import '../../features/requests/presentation/pages/location_page.dart';
+import '../../features/requests/presentation/pages/problem_details_page.dart';
+import '../../features/requests/presentation/pages/photo_annotation_page.dart';
+import '../../features/requests/presentation/pages/requests_page.dart';
+import '../../features/requests/presentation/pages/review_request_page.dart';
+import '../../features/requests/presentation/pages/select_service_page.dart';
 import '../shell/app_shell.dart';
 import 'app_routes.dart';
 import 'route_guards.dart';
@@ -79,7 +85,7 @@ final Provider<GoRouter> routerProvider = Provider<GoRouter>((Ref ref) {
                 path: '/requests',
                 name: AppRoute.requests.name,
                 builder: (BuildContext context, GoRouterState state) =>
-                    ComingSoonScreen(title: context.l10n.requestsTitle),
+                    const RequestsPage(),
               ),
             ],
           ),
@@ -115,12 +121,46 @@ final Provider<GoRouter> routerProvider = Provider<GoRouter>((Ref ref) {
           ),
         ],
       ),
+      // The wizard is five separate routes so the back button, deep links and
+      // process death all behave like a normal stack. The step itself is owned
+      // by `RequestWizardController`, and every page reads the same state, so
+      // entering the wizard at step 3 still shows steps 1 and 2 answered.
       GoRoute(
         path: '/requests/new',
         name: AppRoute.requestNew.name,
         parentNavigatorKey: rootKey,
         builder: (BuildContext context, GoRouterState state) =>
-            const ComingSoonScreen(title: ''),
+            const SelectServicePage(),
+        routes: <RouteBase>[
+          GoRoute(
+            path: 'details',
+            name: AppRoute.requestDetails.name,
+            parentNavigatorKey: rootKey,
+            builder: (BuildContext context, GoRouterState state) =>
+                const ProblemDetailsPage(),
+          ),
+          GoRoute(
+            path: 'photos',
+            name: AppRoute.requestPhotos.name,
+            parentNavigatorKey: rootKey,
+            builder: (BuildContext context, GoRouterState state) =>
+                const PhotoAnnotationPage(),
+          ),
+          GoRoute(
+            path: 'location',
+            name: AppRoute.requestLocation.name,
+            parentNavigatorKey: rootKey,
+            builder: (BuildContext context, GoRouterState state) =>
+                const LocationPage(),
+          ),
+          GoRoute(
+            path: 'review',
+            name: AppRoute.requestReview.name,
+            parentNavigatorKey: rootKey,
+            builder: (BuildContext context, GoRouterState state) =>
+                const ReviewRequestPage(),
+          ),
+        ],
       ),
       GoRoute(
         path: '/requests/:requestId',

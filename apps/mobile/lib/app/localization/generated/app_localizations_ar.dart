@@ -833,4 +833,12 @@ class AppLocalizationsAr extends AppLocalizations {
   @override
   String get requestsAddressContactPairError =>
       'أدخل رقم جهة الاتصال عند تحديد اسم جهة الاتصال';
+
+  @override
+  String get requestsNewActivity => 'تحديث جديد';
+
+  @override
+  String requestsListCount(Object count) {
+    return '1575160415731580160515751604 15731604160515801605: $count';
+  }
 }
