@@ -5,10 +5,10 @@ import 'package:go_router/go_router.dart';
 import '../localization/app_localizations.dart';
 
 import '../../features/auth/presentation/controllers/auth_controller.dart';
-import '../../features/auth/presentation/screens/onboarding_screen.dart';
-import '../../features/auth/presentation/screens/otp_verify_screen.dart';
-import '../../features/auth/presentation/screens/phone_entry_screen.dart';
-import '../../features/home/presentation/home_screen.dart';
+import '../../features/auth/presentation/pages/onboarding_screen.dart';
+import '../../features/auth/presentation/pages/otp_verify_screen.dart';
+import '../../features/auth/presentation/pages/phone_entry_screen.dart';
+import '../../features/home/presentation/pages/home_page.dart';
 import '../../features/properties/presentation/pages/properties_page.dart';
 import '../../features/properties/presentation/pages/property_history_page.dart';
 import '../shell/app_shell.dart';
@@ -69,7 +69,7 @@ final Provider<GoRouter> routerProvider = Provider<GoRouter>((Ref ref) {
                 path: '/home',
                 name: AppRoute.home.name,
                 builder: (BuildContext context, GoRouterState state) =>
-                    const HomeScreen(),
+                    const HomePage(),
               ),
             ],
           ),

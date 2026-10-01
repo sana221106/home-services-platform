@@ -1,25 +1,10 @@
 import 'package:equatable/equatable.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../../../app/bootstrap/app_bootstrap.dart';
-import '../../../../core/errors/failure.dart';
-import '../data/home_repository.dart';
-import '../data/models/home_models.dart';
+import '../../../../../core/errors/failure.dart';
+import '../../data/repositories/home_repository.dart';
+import '../../data/models/home_models.dart';
 
-final Provider<HomeRemoteDataSource> homeRemoteDataSourceProvider =
-    Provider<HomeRemoteDataSource>(
-      (Ref ref) => HomeRemoteDataSource(ref.watch(apiClientProvider).raw),
-      name: 'homeRemoteDataSource',
-    );
-
-final Provider<HomeRepository> homeRepositoryProvider =
-    Provider<HomeRepository>(
-      (Ref ref) => HomeRepository(
-        remote: ref.watch(homeRemoteDataSourceProvider),
-        client: ref.watch(apiClientProvider),
-      ),
-      name: 'homeRepository',
-    );
 
 enum HomeStatus { initial, loading, ready, failed }
 
@@ -65,7 +50,7 @@ class HomeController extends Notifier<HomeState> {
   Future<void> load({bool silent = false}) async {
     if (!silent) state = state.copyWith(status: HomeStatus.loading);
     try {
-      final dashboard = await ref.read(homeRepositoryProvider).load();
+      final dashboard = await ref.read(homeRepositoryProvider).dashboard();
       state = HomeState(status: HomeStatus.ready, dashboard: dashboard);
     } on ApiFailure catch (failure) {
       state = state.copyWith(

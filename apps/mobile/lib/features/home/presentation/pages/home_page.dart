@@ -2,28 +2,28 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
-import '../../../app/router/app_routes.dart';
-import '../../../app/theme/app_colors.dart';
-import '../../../app/theme/app_radius.dart';
-import '../../../app/theme/app_text_style.dart';
-import '../../../app/theme/app_spacing.dart';
-import '../../../app/localization/app_localizations.dart';
-import '../../../core/widgets/app_icon.dart';
-import '../../auth/presentation/controllers/auth_controller.dart';
-import '../data/models/home_models.dart';
-import 'home_controller.dart';
+import '../../../../app/router/app_routes.dart';
+import '../../../../app/theme/app_colors.dart';
+import '../../../../app/theme/app_radius.dart';
+import '../../../../app/theme/app_text_style.dart';
+import '../../../../app/theme/app_spacing.dart';
+import '../../../../app/localization/app_localizations.dart';
+import '../../../../core/widgets/app_icon.dart';
+import '../../../auth/presentation/controllers/auth_controller.dart';
+import '../../data/models/home_models.dart';
+import '../controllers/home_controller.dart';
 
 /// Customer home: greeting counts, quick services, in-flight requests and
 /// unread badges. Every value comes from the server so lifecycle wording can
 /// never drift from the backend state machine.
-class HomeScreen extends ConsumerStatefulWidget {
-  const HomeScreen({super.key});
+class HomePage extends ConsumerStatefulWidget {
+  const HomePage({super.key});
 
   @override
-  ConsumerState<HomeScreen> createState() => _HomeScreenState();
+  ConsumerState<HomePage> createState() => _HomePageState();
 }
 
-class _HomeScreenState extends ConsumerState<HomeScreen> {
+class _HomePageState extends ConsumerState<HomePage> {
   @override
   void initState() {
     super.initState();
