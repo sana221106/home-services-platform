@@ -1398,7 +1398,7 @@ abstract class AppLocalizations {
   ///
   /// In ar, this message translates to:
   /// **'الخطوة {current} من {total}'**
-  String requestsStepCounter(Object current, Object total);
+  String requestsStepCounter(int total, int current);
 
   /// Service picker prompt
   ///
@@ -1458,7 +1458,7 @@ abstract class AppLocalizations {
   ///
   /// In ar, this message translates to:
   /// **'وصلت للحد الأقصى {max} صور'**
-  String requestsPhotosLimit(Object max);
+  String requestsPhotosLimit(int max);
 
   /// Accepted formats and size
   ///
@@ -1476,7 +1476,7 @@ abstract class AppLocalizations {
   ///
   /// In ar, this message translates to:
   /// **'{count} من {max} صور'**
-  String requestsPhotosCount(Object count, Object max);
+  String requestsPhotosCount(int count, int max);
 
   /// Property picker prompt
   ///
@@ -1668,7 +1668,7 @@ abstract class AppLocalizations {
   ///
   /// In ar, this message translates to:
   /// **'{count} طلب'**
-  String requestsCountLabel(Object count);
+  String requestsCountLabel(int count);
 
   /// Cross-field validation message
   ///

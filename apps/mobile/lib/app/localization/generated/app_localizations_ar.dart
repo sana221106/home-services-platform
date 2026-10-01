@@ -683,7 +683,7 @@ class AppLocalizationsAr extends AppLocalizations {
   String get requestsStepReview => 'المراجعة';
 
   @override
-  String requestsStepCounter(Object current, Object total) {
+  String requestsStepCounter(int total, int current) {
     return 'الخطوة $current من $total';
   }
 
@@ -716,7 +716,7 @@ class AppLocalizationsAr extends AppLocalizations {
   String get requestsPhotosRequired => 'يلزم صورة واحدة على الأقل للمتابعة';
 
   @override
-  String requestsPhotosLimit(Object max) {
+  String requestsPhotosLimit(int max) {
     return 'وصلت للحد الأقصى $max صور';
   }
 
@@ -728,7 +728,7 @@ class AppLocalizationsAr extends AppLocalizations {
   String get requestsPhotosUploading => 'جارٍ رفع الصور...';
 
   @override
-  String requestsPhotosCount(Object count, Object max) {
+  String requestsPhotosCount(int count, int max) {
     return '$count من $max صور';
   }
 
@@ -826,7 +826,7 @@ class AppLocalizationsAr extends AppLocalizations {
   String get requestsReferenceCode => 'رقم الطلب';
 
   @override
-  String requestsCountLabel(Object count) {
+  String requestsCountLabel(int count) {
     return '$count طلب';
   }
 

@@ -295,9 +295,6 @@
                                 "description":  "Wizard step 5 of 5"
                             },
     "requestsStepReview":  "المراجعة",
-    "@requestsStepCounter":  {
-                                 "description":  "Wizard progress. {current} and {total} are numbers."
-                             },
     "requestsStepCounter":  "الخطوة {current} من {total}",
     "@requestsServiceChoose":  {
                                    "description":  "Service picker prompt"
@@ -335,9 +332,6 @@
                                     "description":  "Submit needs media_count \u003e 0"
                                 },
     "requestsPhotosRequired":  "يلزم صورة واحدة على الأقل للمتابعة",
-    "@requestsPhotosLimit":  {
-                                 "description":  "Photo cap. {max} is a number."
-                             },
     "requestsPhotosLimit":  "وصلت للحد الأقصى {max} صور",
     "@requestsPhotosHintSize":  {
                                     "description":  "Accepted formats and size"
@@ -347,9 +341,6 @@
                                      "description":  "While photos upload"
                                  },
     "requestsPhotosUploading":  "جارٍ رفع الصور...",
-    "@requestsPhotosCount":  {
-                                 "description":  "Photo counter. Both numbers."
-                             },
     "requestsPhotosCount":  "{count} من {max} صور",
     "@requestsLocationPick":  {
                                   "description":  "Property picker prompt"
@@ -478,9 +469,44 @@
                                    "description":  "request reference_code label"
                                },
     "requestsReferenceCode":  "رقم الطلب",
+    "requestsCountLabel":  "{count} طلب",
+    "requestsAddressContactPairError":  "أدخل رقم جهة الاتصال عند تحديد اسم جهة الاتصال",
     "@requestsCountLabel":  {
+                                "placeholders":  {
+                                                     "count":  {
+                                                                   "type":  "int"
+                                                               }
+                                                 },
                                 "description":  "List count. {count} is a number."
                             },
-    "requestsCountLabel":  "{count} طلب",
-    "requestsAddressContactPairError":  "أدخل رقم جهة الاتصال عند تحديد اسم جهة الاتصال"
+    "@requestsStepCounter":  {
+                                 "placeholders":  {
+                                                      "total":  {
+                                                                    "type":  "int"
+                                                                },
+                                                      "current":  {
+                                                                      "type":  "int"
+                                                                  }
+                                                  },
+                                 "description":  "Wizard progress. {current} and {total} are numbers."
+                             },
+    "@requestsPhotosLimit":  {
+                                 "placeholders":  {
+                                                      "max":  {
+                                                                  "type":  "int"
+                                                              }
+                                                  },
+                                 "description":  "Photo cap. {max} is a number."
+                             },
+    "@requestsPhotosCount":  {
+                                 "placeholders":  {
+                                                      "count":  {
+                                                                    "type":  "int"
+                                                                },
+                                                      "max":  {
+                                                                  "type":  "int"
+                                                              }
+                                                  },
+                                 "description":  "Photo counter. Both numbers."
+                             }
 }
