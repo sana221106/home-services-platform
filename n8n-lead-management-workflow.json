@@ -1,0 +1,1105 @@
+{
+  "name": "Lead Management & Campaign Processing",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "lead-management",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "id": "aaaa",
+      "name": "Webhook Trigger",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        220,
+        300
+      ],
+      "webhookId": "lead-management-2026"
+    },
+    {
+      "parameters": {
+        "jsCode": "const body = $input.first().json.body;\n\nif (!body || typeof body !== 'object') {\n  return [{\n    json: {\n      isValid: false,\n      error: 'Invalid request payload',\n      message: 'Request body is missing or not valid JSON'\n    }\n  }];\n}\n\nif (body.event_type !== 'lead_submission') {\n  return [{\n    json: {\n      isValid: false,\n      error: 'Invalid event type',\n      message: 'event_type must be \"lead_submission\"'\n    }\n  }];\n}\n\nconst ci = body.campaign_info;\nif (!ci || !ci.campaign_id || !ci.campaign_name) {\n  return [{\n    json: {\n      isValid: false,\n      error: 'Invalid campaign info',\n      message: 'campaign_info with campaign_id and campaign_name is required'\n    }\n  }];\n}\n\nconst leads = body.leads;\nif (!Array.isArray(leads) || leads.length === 0) {\n  return [{\n    json: {\n      isValid: false,\n      error: 'Invalid request payload',\n      message: 'campaign_info and a non-empty leads array are required'\n    }\n  }];\n}\n\nreturn [{\n  json: {\n    isValid: true,\n    eventType: body.event_type,\n    campaignInfo: ci,\n    leads: leads\n  }\n}];"
+      },
+      "id": "bbbb",
+      "name": "Validate Root Data",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        440,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "boolean": [
+            {
+              "value1": "={{ $json.isValid === true }}",
+              "value2": true
+            }
+          ]
+        }
+      },
+      "id": "cccc",
+      "name": "IF Root Valid?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [
+        660,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ { success: false, error: $json.error, message: $json.message } }}",
+        "options": {
+          "responseCode": 400,
+          "responseHeaders": [
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        }
+      },
+      "id": "dddd",
+      "name": "Respond 400",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [
+        880,
+        560
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "const ci = $input.first().json.campaignInfo;\nconst leads = $input.first().json.leads;\n\nconst emailRegex = /^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$/;\nconst phoneRegex = /^\\+[1-9]\\d{6,14}$/;\n\nconst cleanedLeads = leads.map((lead) => {\n  const fullName = (lead.full_name || '').trim();\n  const email = (lead.email || '').trim().toLowerCase();\n  let phone = (lead.phone || '').trim();\n  const status = (lead.status || '').trim().toLowerCase();\n  const score = Number(lead.score) || 0;\n\n  if (phone.startsWith('01') && phone.length === 11) {\n    phone = '+20' + phone;\n  }\n\n  const reasons = [];\n  if (status !== 'active') reasons.push('inactive_status');\n  if (!(score >= 50)) reasons.push('low_score');\n  if (!fullName) reasons.push('missing_name');\n  if (!emailRegex.test(email)) reasons.push('invalid_email');\n  if (!phoneRegex.test(phone)) reasons.push('missing_phone');\n\n  return {\n    lead_id: lead.lead_id || '',\n    full_name: fullName,\n    email: email,\n    phone: phone,\n    status: status,\n    score: score,\n    isValid: reasons.length === 0,\n    rejectionReasons: reasons\n  };\n});\n\nreturn [{\n  json: {\n    campaign_info: {\n      campaign_id: ci.campaign_id,\n      campaign_name: ci.campaign_name,\n      utm_source: ci.utm_source || '',\n      utm_medium: ci.utm_medium || ''\n    },\n    leads: cleanedLeads\n  }\n}];"
+      },
+      "id": "eeee",
+      "name": "Clean & Normalize Leads",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        880,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "fieldToSplitOut": "leads",
+        "options": {}
+      },
+      "id": "ffff",
+      "name": "Split Out Leads",
+      "type": "n8n-nodes-base.splitOut",
+      "typeVersion": 4,
+      "position": [
+        1100,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "boolean": [
+            {
+              "value1": "={{ $json.isValid === true }}",
+              "value2": true
+            }
+          ]
+        }
+      },
+      "id": "1111",
+      "name": "IF Eligible Lead?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [
+        1320,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "const out = [];\nfor (const item of $input.all()) {\n  out.push({\n    json: {\n      ...item.json,\n      isValid: false,\n      operation: 'INVALID',\n      processedAt: new Date().toISOString(),\n      rejected: item.json.rejectionReasons.join(',')\n    }\n  });\n}\nreturn out;"
+      },
+      "id": "2222",
+      "name": "Collect Invalid Leads",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1540,
+        520
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "read",
+        "documentId": {
+          "__rl": true,
+          "mode": "list",
+          "value": "YOUR_GOOGLE_SPREADSHEET_ID"
+        },
+        "sheetName": {
+          "__rl": true,
+          "mode": "list",
+          "value": "Leads"
+        },
+        "filtersUI": {
+          "values": [
+            {
+              "lookupColumn": "email",
+              "lookupValue": "={{ $json.email }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "3333",
+      "name": "Search Lead by Email",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.5,
+      "position": [
+        1540,
+        100
+      ],
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "YOUR_GOOGLE_SHEETS_CREDENTIAL_ID",
+          "name": "Google Sheets"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "const item = $input.first().json;\nconst hasRow = item && item.row_number !== undefined && item.row_number !== null;\nreturn [{\n  json: {\n    ...item,\n    matchFound: !!hasRow,\n    matchingRowNumber: hasRow ? item.row_number : null\n  }\n}];"
+      },
+      "id": "4444",
+      "name": "Check Email Match",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1760,
+        100
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "boolean": [
+            {
+              "value1": "={{ $json.matchFound === true }}",
+              "value2": true
+            }
+          ]
+        }
+      },
+      "id": "5555",
+      "name": "IF Email Match?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [
+        1980,
+        100
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "read",
+        "documentId": {
+          "__rl": true,
+          "mode": "list",
+          "value": "YOUR_GOOGLE_SPREADSHEET_ID"
+        },
+        "sheetName": {
+          "__rl": true,
+          "mode": "list",
+          "value": "Leads"
+        },
+        "filtersUI": {
+          "values": [
+            {
+              "lookupColumn": "phone",
+              "lookupValue": "={{ $json.phone }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "6666",
+      "name": "Search Lead by Phone",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.5,
+      "position": [
+        2200,
+        260
+      ],
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "YOUR_GOOGLE_SHEETS_CREDENTIAL_ID",
+          "name": "Google Sheets"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "const item = $input.first().json;\nconst hasRow = item && item.row_number !== undefined && item.row_number !== null;\nreturn [{\n  json: {\n    ...item,\n    matchFound: !!hasRow,\n    matchingRowNumber: hasRow ? item.row_number : null\n  }\n}];"
+      },
+      "id": "7777",
+      "name": "Check Phone Match",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        2420,
+        260
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "boolean": [
+            {
+              "value1": "={{ $json.matchFound === true }}",
+              "value2": true
+            }
+          ]
+        }
+      },
+      "id": "8888",
+      "name": "IF Phone Match?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [
+        2640,
+        260
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "documentId": {
+          "__rl": true,
+          "mode": "list",
+          "value": "YOUR_GOOGLE_SPREADSHEET_ID"
+        },
+        "sheetName": {
+          "__rl": true,
+          "mode": "list",
+          "value": "Leads"
+        },
+        "filtersUI": {
+          "values": [
+            {
+              "lookupColumn": "email",
+              "lookupValue": "={{ $json.email }}"
+            }
+          ]
+        },
+        "columns": {
+          "mappings": {
+            "value": [
+              {
+                "column": "lead_id",
+                "value": "={{ $json.lead_id }}"
+              },
+              {
+                "column": "full_name",
+                "value": "={{ $json.full_name }}"
+              },
+              {
+                "column": "email",
+                "value": "={{ $json.email }}"
+              },
+              {
+                "column": "phone",
+                "value": "={{ $json.phone }}"
+              },
+              {
+                "column": "status",
+                "value": "={{ $json.status }}"
+              },
+              {
+                "column": "score",
+                "value": "={{ $json.score }}"
+              },
+              {
+                "column": "campaign_id",
+                "value": "={{ $json.campaign_info.campaign_id }}"
+              },
+              {
+                "column": "campaign_name",
+                "value": "={{ $json.campaign_info.campaign_name }}"
+              },
+              {
+                "column": "utm_source",
+                "value": "={{ $json.campaign_info.utm_source }}"
+              },
+              {
+                "column": "utm_medium",
+                "value": "={{ $json.campaign_info.utm_medium }}"
+              },
+              {
+                "column": "updated_at",
+                "value": "={{ $now.toISO() }}"
+              }
+            ]
+          }
+        },
+        "options": {
+          "cellFormat": "USER_ENTERED",
+          "valueInputMode": "USER_ENTERED"
+        }
+      },
+      "id": "9999",
+      "name": "Update Existing by Email",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.5,
+      "position": [
+        2860,
+        0
+      ],
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "YOUR_GOOGLE_SHEETS_CREDENTIAL_ID",
+          "name": "Google Sheets"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "documentId": {
+          "__rl": true,
+          "mode": "list",
+          "value": "YOUR_GOOGLE_SPREADSHEET_ID"
+        },
+        "sheetName": {
+          "__rl": true,
+          "mode": "list",
+          "value": "Leads"
+        },
+        "filtersUI": {
+          "values": [
+            {
+              "lookupColumn": "phone",
+              "lookupValue": "={{ $json.phone }}"
+            }
+          ]
+        },
+        "columns": {
+          "mappings": {
+            "value": [
+              {
+                "column": "lead_id",
+                "value": "={{ $json.lead_id }}"
+              },
+              {
+                "column": "full_name",
+                "value": "={{ $json.full_name }}"
+              },
+              {
+                "column": "email",
+                "value": "={{ $json.email }}"
+              },
+              {
+                "column": "phone",
+                "value": "={{ $json.phone }}"
+              },
+              {
+                "column": "status",
+                "value": "={{ $json.status }}"
+              },
+              {
+                "column": "score",
+                "value": "={{ $json.score }}"
+              },
+              {
+                "column": "campaign_id",
+                "value": "={{ $json.campaign_info.campaign_id }}"
+              },
+              {
+                "column": "campaign_name",
+                "value": "={{ $json.campaign_info.campaign_name }}"
+              },
+              {
+                "column": "utm_source",
+                "value": "={{ $json.campaign_info.utm_source }}"
+              },
+              {
+                "column": "utm_medium",
+                "value": "={{ $json.campaign_info.utm_medium }}"
+              },
+              {
+                "column": "updated_at",
+                "value": "={{ $now.toISO() }}"
+              }
+            ]
+          }
+        },
+        "options": {
+          "cellFormat": "USER_ENTERED",
+          "valueInputMode": "USER_ENTERED"
+        }
+      },
+      "id": "aaaa1",
+      "name": "Update Existing by Phone",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.5,
+      "position": [
+        3080,
+        260
+      ],
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "YOUR_GOOGLE_SHEETS_CREDENTIAL_ID",
+          "name": "Google Sheets"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "mode": "list",
+          "value": "YOUR_GOOGLE_SPREADSHEET_ID"
+        },
+        "sheetName": {
+          "__rl": true,
+          "mode": "list",
+          "value": "Leads"
+        },
+        "columns": {
+          "mappings": {
+            "value": [
+              {
+                "column": "lead_id",
+                "value": "={{ $json.lead_id }}"
+              },
+              {
+                "column": "full_name",
+                "value": "={{ $json.full_name }}"
+              },
+              {
+                "column": "email",
+                "value": "={{ $json.email }}"
+              },
+              {
+                "column": "phone",
+                "value": "={{ $json.phone }}"
+              },
+              {
+                "column": "status",
+                "value": "={{ $json.status }}"
+              },
+              {
+                "column": "score",
+                "value": "={{ $json.score }}"
+              },
+              {
+                "column": "campaign_id",
+                "value": "={{ $json.campaign_info.campaign_id }}"
+              },
+              {
+                "column": "campaign_name",
+                "value": "={{ $json.campaign_info.campaign_name }}"
+              },
+              {
+                "column": "utm_source",
+                "value": "={{ $json.campaign_info.utm_source }}"
+              },
+              {
+                "column": "utm_medium",
+                "value": "={{ $json.campaign_info.utm_medium }}"
+              },
+              {
+                "column": "created_at",
+                "value": "={{ $now.toISO() }}"
+              },
+              {
+                "column": "updated_at",
+                "value": "={{ $now.toISO() }}"
+              }
+            ]
+          }
+        },
+        "options": {
+          "cellFormat": "USER_ENTERED",
+          "valueInputMode": "USER_ENTERED"
+        }
+      },
+      "id": "bbbb1",
+      "name": "Insert New Lead",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.5,
+      "position": [
+        3080,
+        440
+      ],
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "YOUR_GOOGLE_SHEETS_CREDENTIAL_ID",
+          "name": "Google Sheets"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "const item = $input.first().json;\nreturn [{\n  json: {\n    ...item,\n    operation: 'UPDATED',\n    processedAt: new Date().toISOString()\n  }\n}];"
+      },
+      "id": "cccc1",
+      "name": "Tag as Updated",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        3300,
+        260
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "const item = $input.first().json;\nreturn [{\n  json: {\n    ...item,\n    operation: 'CREATED',\n    processedAt: new Date().toISOString()\n  }\n}];"
+      },
+      "id": "dddd1",
+      "name": "Tag as Created",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        3300,
+        440
+      ]
+    },
+    {
+      "parameters": {
+        "mode": "append",
+        "options": {}
+      },
+      "id": "eeee1",
+      "name": "Merge DB Results",
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3,
+      "position": [
+        3520,
+        260
+      ]
+    },
+    {
+      "parameters": {
+        "chatId": "YOUR_TELEGRAM_CHAT_ID",
+        "text": "=New Lead Processed\n\nName: {{ $json.full_name }}\nEmail: {{ $json.email }}\nPhone: {{ $json.phone }}\nScore: {{ $json.score }}\nCampaign: {{ $json.campaign_info.campaign_name }}\nSource: {{ $json.campaign_info.utm_source }}\nOperation: {{ $json.operation }}",
+        "additionalFields": {}
+      },
+      "id": "ffff1",
+      "name": "Telegram Notification",
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        3740,
+        260
+      ],
+      "credentials": {
+        "telegramApi": {
+          "id": "YOUR_TELEGRAM_CREDENTIAL_ID",
+          "name": "Telegram Bot"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "fromEmail": "your-email@example.com",
+        "toEmail": "={{ $json.email }}",
+        "subject": "Lead Submission Confirmation",
+        "emailType": "html",
+        "message": "=<html>\n<body style=\"font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;\">\n  <h2 style=\"color: #2c3e50;\">Lead Submission Confirmation</h2>\n  <p>Dear <strong>{{ $json.full_name }}</strong>,</p>\n  <p>Thank you for your submission to <strong>{{ $json.campaign_info.campaign_name }}</strong>.</p>\n  <p>Your lead details have been successfully processed and stored in our system.</p>\n  <div style=\"background-color: #f8f9fa; padding: 15px; border-radius: 5px; margin: 20px 0;\">\n    <p><strong>Lead ID:</strong> {{ $json.lead_id }}</p>\n    <p><strong>Campaign:</strong> {{ $json.campaign_info.campaign_name }}</p>\n    <p><strong>Score:</strong> {{ $json.score }}</p>\n  </div>\n  <p>If you have any questions, please contact us.</p>\n  <p>Best regards,<br>The Team</p>\n</body>\n</html>",
+        "options": {}
+      },
+      "id": "11111",
+      "name": "Email Notification",
+      "type": "n8n-nodes-base.emailSend",
+      "typeVersion": 2.1,
+      "position": [
+        3960,
+        260
+      ],
+      "credentials": {
+        "smtp": {
+          "id": "YOUR_SMTP_CREDENTIAL_ID",
+          "name": "SMTP"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "mode": "append",
+        "options": {}
+      },
+      "id": "22221",
+      "name": "Merge For Aggregation",
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3,
+      "position": [
+        4180,
+        480
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "const items = $input.all();\n\nlet campaignId = '';\nlet campaignName = '';\nlet total = items.length;\nlet valid = 0, invalid = 0, created = 0, updated = 0, failed = 0;\n\nfor (const it of items) {\n  const j = it.json;\n  if (!j) continue;\n\n  if (j.campaign_info) {\n    campaignId = j.campaign_info.campaign_id || campaignId;\n    campaignName = j.campaign_info.campaign_name || campaignName;\n  }\n\n  if (j.isValid === false) {\n    invalid++;\n  } else {\n    valid++;\n    if (j.operation === 'CREATED') created++;\n    else if (j.operation === 'UPDATED') updated++;\n    else failed++;\n  }\n}\n\nif (!campaignId) {\n  const f = items.find((i) => i.json && i.json.campaign_id);\n  if (f) {\n    campaignId = f.json.campaign_id;\n    campaignName = f.json.campaign_name;\n  }\n}\n\nreturn [{\n  json: {\n    campaign_id: campaignId,\n    campaign_name: campaignName,\n    total_leads: total,\n    valid_leads: valid,\n    invalid_leads: invalid,\n    created_leads: created,\n    updated_leads: updated,\n    failed_leads: failed,\n    execution_time: new Date().toISOString()\n  }\n}];"
+      },
+      "id": "33331",
+      "name": "Aggregate Statistics",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        4400,
+        480
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "mode": "list",
+          "value": "YOUR_GOOGLE_SPREADSHEET_ID"
+        },
+        "sheetName": {
+          "__rl": true,
+          "mode": "list",
+          "value": "Campaign_Summary"
+        },
+        "columns": {
+          "mappings": {
+            "value": [
+              {
+                "column": "execution_time",
+                "value": "={{ $json.execution_time }}"
+              },
+              {
+                "column": "campaign_id",
+                "value": "={{ $json.campaign_id }}"
+              },
+              {
+                "column": "campaign_name",
+                "value": "={{ $json.campaign_name }}"
+              },
+              {
+                "column": "total_leads",
+                "value": "={{ $json.total_leads }}"
+              },
+              {
+                "column": "valid_leads",
+                "value": "={{ $json.valid_leads }}"
+              },
+              {
+                "column": "invalid_leads",
+                "value": "={{ $json.invalid_leads }}"
+              },
+              {
+                "column": "created_leads",
+                "value": "={{ $json.created_leads }}"
+              },
+              {
+                "column": "updated_leads",
+                "value": "={{ $json.updated_leads }}"
+              },
+              {
+                "column": "failed_leads",
+                "value": "={{ $json.failed_leads }}"
+              }
+            ]
+          }
+        },
+        "options": {
+          "cellFormat": "USER_ENTERED",
+          "valueInputMode": "USER_ENTERED"
+        }
+      },
+      "id": "44441",
+      "name": "Save Summary",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.5,
+      "position": [
+        4620,
+        480
+      ],
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "YOUR_GOOGLE_SHEETS_CREDENTIAL_ID",
+          "name": "Google Sheets"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ { success: true, message: 'Lead processing completed successfully', summary: { total_leads: $json.total_leads, valid_leads: $json.valid_leads, invalid_leads: $json.invalid_leads, created_leads: $json.created_leads, updated_leads: $json.updated_leads, failed_leads: $json.failed_leads } } }}",
+        "options": {
+          "responseCode": 200,
+          "responseHeaders": [
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        }
+      },
+      "id": "55551",
+      "name": "Respond 200",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [
+        4840,
+        480
+      ]
+    },
+    {
+      "parameters": {},
+      "id": "66661",
+      "name": "Error Trigger",
+      "type": "n8n-nodes-base.errorTrigger",
+      "typeVersion": 1.1,
+      "position": [
+        1200,
+        700
+      ]
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ { success: false, error: 'Internal processing error', message: 'The lead could not be processed' } }}",
+        "options": {
+          "responseCode": 500,
+          "responseHeaders": [
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        }
+      },
+      "id": "77771",
+      "name": "Respond 500",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [
+        1420,
+        700
+      ]
+    }
+  ],
+  "connections": {
+    "Webhook Trigger": {
+      "main": [
+        [
+          {
+            "node": "Validate Root Data",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Validate Root Data": {
+      "main": [
+        [
+          {
+            "node": "IF Root Valid?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "IF Root Valid?": {
+      "main": [
+        [
+          {
+            "node": "Clean & Normalize Leads",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Respond 400",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Clean & Normalize Leads": {
+      "main": [
+        [
+          {
+            "node": "Split Out Leads",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Split Out Leads": {
+      "main": [
+        [
+          {
+            "node": "IF Eligible Lead?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "IF Eligible Lead?": {
+      "main": [
+        [
+          {
+            "node": "Search Lead by Email",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Collect Invalid Leads",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Search Lead by Email": {
+      "main": [
+        [
+          {
+            "node": "Check Email Match",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Check Email Match": {
+      "main": [
+        [
+          {
+            "node": "IF Email Match?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "IF Email Match?": {
+      "main": [
+        [
+          {
+            "node": "Update Existing by Email",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Search Lead by Phone",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Search Lead by Phone": {
+      "main": [
+        [
+          {
+            "node": "Check Phone Match",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Check Phone Match": {
+      "main": [
+        [
+          {
+            "node": "IF Phone Match?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "IF Phone Match?": {
+      "main": [
+        [
+          {
+            "node": "Update Existing by Phone",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Insert New Lead",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Update Existing by Email": {
+      "main": [
+        [
+          {
+            "node": "Tag as Updated",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Update Existing by Phone": {
+      "main": [
+        [
+          {
+            "node": "Tag as Updated",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Insert New Lead": {
+      "main": [
+        [
+          {
+            "node": "Tag as Created",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Tag as Updated": {
+      "main": [
+        [
+          {
+            "node": "Merge DB Results",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Tag as Created": {
+      "main": [
+        [
+          {
+            "node": "Merge DB Results",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "Merge DB Results": {
+      "main": [
+        [
+          {
+            "node": "Telegram Notification",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Telegram Notification": {
+      "main": [
+        [
+          {
+            "node": "Email Notification",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Email Notification": {
+      "main": [
+        [
+          {
+            "node": "Merge For Aggregation",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Collect Invalid Leads": {
+      "main": [
+        [
+          {
+            "node": "Merge For Aggregation",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "Merge For Aggregation": {
+      "main": [
+        [
+          {
+            "node": "Aggregate Statistics",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Aggregate Statistics": {
+      "main": [
+        [
+          {
+            "node": "Save Summary",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Save Summary": {
+      "main": [
+        [
+          {
+            "node": "Respond 200",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Error Trigger": {
+      "main": [
+        [
+          {
+            "node": "Respond 500",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "tags": [],
+  "triggerCount": 1,
+  "updatedAt": "2026-09-14T00:00:00.000Z"
+}

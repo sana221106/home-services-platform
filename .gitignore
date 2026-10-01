@@ -1,0 +1,57 @@
+# ---------------------------------------------------------------------------
+# Secrets and local configuration. Never commit these.
+# ---------------------------------------------------------------------------
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+*.p12
+*.jks
+google-services.json
+GoogleService-Info.plist
+
+# ---------------------------------------------------------------------------
+# Python / FastAPI backend
+# ---------------------------------------------------------------------------
+backend/.venv/
+__pycache__/
+*.py[cod]
+*.egg-info/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+
+# ---------------------------------------------------------------------------
+# Flutter / Dart mobile app
+# ---------------------------------------------------------------------------
+apps/mobile/build/
+apps/mobile/.dart_tool/
+apps/mobile/.flutter-plugins
+apps/mobile/.flutter-plugins-dependencies
+apps/mobile/.packages
+apps/mobile/coverage/
+
+# ---------------------------------------------------------------------------
+# Databases and local runtime data
+# ---------------------------------------------------------------------------
+*.sqlite
+*.sqlite3
+*.db
+backend/.routes.db
+backend/.seed_check.db
+postgres-data/
+# Uploaded media from local runs and tests is runtime data, not source.
+backend/var/
+
+# ---------------------------------------------------------------------------
+# Editors and OS noise
+# ---------------------------------------------------------------------------
+.idea/
+.vscode/
+*.iml
+Thumbs.db
+.DS_Store
+desktop.ini

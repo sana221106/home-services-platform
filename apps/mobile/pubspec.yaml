@@ -1,0 +1,68 @@
+name: home_services_app
+description: "Home Services Platform - customer mobile app (Arabic RTL)."
+publish_to: 'none'
+
+# Versions are pinned to the latest stable release that supports Dart 3.11 /
+# Flutter 3.41. See §21 (package version policy).
+version: 1.0.0+1
+
+environment:
+  sdk: ^3.11.1
+
+dependencies:
+  flutter:
+    sdk: flutter
+  flutter_localizations:
+    sdk: flutter
+
+  # State management (§20) - Riverpod only, never mixed with another framework.
+  # 3.4.x requires Dart 3.12; 3.3.2 is the newest release for this SDK.
+  flutter_riverpod: ^3.3.2
+
+  # Navigation (§20) - go_router, never MaterialPageRoute at the call site.
+  go_router: ^17.5.0
+
+  # Networking (§ core/network).
+  dio: ^5.11.1
+
+  # Storage.
+  shared_preferences: ^2.5.5
+  flutter_secure_storage: ^11.2.0
+
+  # Formatting (§60 - Africa/Cairo presentation).
+  # Pinned to whatever flutter_localizations resolves for this SDK.
+  intl: 0.20.2
+
+  # Icons (§49 - vector SVG, never emoji).
+  flutter_svg: ^2.3.0
+
+  # Media (§28 - request photos and review photos).
+  # cached_network_image 4.x requires Dart 3.12; 3.4.1 is the newest release
+  # that supports this SDK (§21 requires checking SDK compatibility).
+  cached_network_image: ^3.4.1
+  image_picker: ^1.2.3
+
+  # Value equality for state objects.
+  equatable: ^3.0.0
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^6.0.0
+
+flutter:
+  generate: true
+  uses-material-design: true
+
+  assets:
+    - assets/icons/
+    - assets/images/
+    - assets/fonts/
+
+  # Cairo (§43) is an OFL variable font. Flutter selects the weight through the
+  # `wght` axis, which app_typography applies via FontVariation; `fontWeight` is
+  # still set alongside it so semantics stay correct for accessibility tooling.
+  fonts:
+    - family: Cairo
+      fonts:
+        - asset: assets/fonts/Cairo-Variable.ttf

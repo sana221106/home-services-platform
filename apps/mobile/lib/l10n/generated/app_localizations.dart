@@ -1,0 +1,1034 @@
+import 'dart:async';
+
+import 'package:flutter/foundation.dart';
+import 'package:flutter/widgets.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:intl/intl.dart' as intl;
+
+import 'app_localizations_ar.dart';
+import 'app_localizations_en.dart';
+
+// ignore_for_file: type=lint
+
+/// Callers can lookup localized strings with an instance of AppLocalizations
+/// returned by `AppLocalizations.of(context)`.
+///
+/// Applications need to include `AppLocalizations.delegate()` in their app's
+/// `localizationDelegates` list, and the locales they support in the app's
+/// `supportedLocales` list. For example:
+///
+/// ```dart
+/// import 'generated/app_localizations.dart';
+///
+/// return MaterialApp(
+///   localizationsDelegates: AppLocalizations.localizationsDelegates,
+///   supportedLocales: AppLocalizations.supportedLocales,
+///   home: MyApplicationHome(),
+/// );
+/// ```
+///
+/// ## Update pubspec.yaml
+///
+/// Please make sure to update your pubspec.yaml to include the following
+/// packages:
+///
+/// ```yaml
+/// dependencies:
+///   # Internationalization support.
+///   flutter_localizations:
+///     sdk: flutter
+///   intl: any # Use the pinned version from flutter_localizations
+///
+///   # Rest of dependencies
+/// ```
+///
+/// ## iOS Applications
+///
+/// iOS applications define key application metadata, including supported
+/// locales, in an Info.plist file that is built into the application bundle.
+/// To configure the locales supported by your app, you’ll need to edit this
+/// file.
+///
+/// First, open your project’s ios/Runner.xcworkspace Xcode workspace file.
+/// Then, in the Project Navigator, open the Info.plist file under the Runner
+/// project’s Runner folder.
+///
+/// Next, select the Information Property List item, select Add Item from the
+/// Editor menu, then select Localizations from the pop-up menu.
+///
+/// Select and expand the newly-created Localizations item then, for each
+/// locale your application supports, add a new item and select the locale
+/// you wish to add from the pop-up menu in the Value field. This list should
+/// be consistent with the languages listed in the AppLocalizations.supportedLocales
+/// property.
+abstract class AppLocalizations {
+  AppLocalizations(String locale)
+    : localeName = intl.Intl.canonicalizedLocale(locale.toString());
+
+  final String localeName;
+
+  static AppLocalizations of(BuildContext context) {
+    return Localizations.of<AppLocalizations>(context, AppLocalizations)!;
+  }
+
+  static const LocalizationsDelegate<AppLocalizations> delegate =
+      _AppLocalizationsDelegate();
+
+  /// A list of this localizations delegate along with the default localizations
+  /// delegates.
+  ///
+  /// Returns a list of localizations delegates containing this delegate along with
+  /// GlobalMaterialLocalizations.delegate, GlobalCupertinoLocalizations.delegate,
+  /// and GlobalWidgetsLocalizations.delegate.
+  ///
+  /// Additional delegates can be added by appending to this list in
+  /// MaterialApp. This list does not have to be used at all if a custom list
+  /// of delegates is preferred or required.
+  static const List<LocalizationsDelegate<dynamic>> localizationsDelegates =
+      <LocalizationsDelegate<dynamic>>[
+        delegate,
+        GlobalMaterialLocalizations.delegate,
+        GlobalCupertinoLocalizations.delegate,
+        GlobalWidgetsLocalizations.delegate,
+      ];
+
+  /// A list of this localizations delegate's supported locales.
+  static const List<Locale> supportedLocales = <Locale>[
+    Locale('ar'),
+    Locale('en'),
+  ];
+
+  /// No description provided for @appTitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'خدمات المنزل'**
+  String get appTitle;
+
+  /// No description provided for @appTagline.
+  ///
+  /// In ar, this message translates to:
+  /// **'كل ما يحتاجه منزلك، في مكان واحد'**
+  String get appTagline;
+
+  /// No description provided for @commonRetry.
+  ///
+  /// In ar, this message translates to:
+  /// **'إعادة المحاولة'**
+  String get commonRetry;
+
+  /// No description provided for @commonCancel.
+  ///
+  /// In ar, this message translates to:
+  /// **'إلغاء'**
+  String get commonCancel;
+
+  /// No description provided for @commonConfirm.
+  ///
+  /// In ar, this message translates to:
+  /// **'تأكيد'**
+  String get commonConfirm;
+
+  /// No description provided for @commonContinue.
+  ///
+  /// In ar, this message translates to:
+  /// **'متابعة'**
+  String get commonContinue;
+
+  /// No description provided for @commonBack.
+  ///
+  /// In ar, this message translates to:
+  /// **'رجوع'**
+  String get commonBack;
+
+  /// No description provided for @commonNext.
+  ///
+  /// In ar, this message translates to:
+  /// **'التالي'**
+  String get commonNext;
+
+  /// No description provided for @commonSkip.
+  ///
+  /// In ar, this message translates to:
+  /// **'تخطي'**
+  String get commonSkip;
+
+  /// No description provided for @commonSave.
+  ///
+  /// In ar, this message translates to:
+  /// **'حفظ'**
+  String get commonSave;
+
+  /// No description provided for @commonSubmit.
+  ///
+  /// In ar, this message translates to:
+  /// **'إرسال'**
+  String get commonSubmit;
+
+  /// No description provided for @commonSearch.
+  ///
+  /// In ar, this message translates to:
+  /// **'بحث'**
+  String get commonSearch;
+
+  /// No description provided for @commonClose.
+  ///
+  /// In ar, this message translates to:
+  /// **'إغلاق'**
+  String get commonClose;
+
+  /// No description provided for @commonDelete.
+  ///
+  /// In ar, this message translates to:
+  /// **'حذف'**
+  String get commonDelete;
+
+  /// No description provided for @commonEdit.
+  ///
+  /// In ar, this message translates to:
+  /// **'تعديل'**
+  String get commonEdit;
+
+  /// No description provided for @commonSeeAll.
+  ///
+  /// In ar, this message translates to:
+  /// **'عرض الكل'**
+  String get commonSeeAll;
+
+  /// No description provided for @commonSeeDetails.
+  ///
+  /// In ar, this message translates to:
+  /// **'عرض التفاصيل'**
+  String get commonSeeDetails;
+
+  /// No description provided for @commonLoading.
+  ///
+  /// In ar, this message translates to:
+  /// **'جارٍ التحميل…'**
+  String get commonLoading;
+
+  /// No description provided for @commonSomethingWentWrong.
+  ///
+  /// In ar, this message translates to:
+  /// **'حدث خطأ غير متوقع. حاول مرة أخرى.'**
+  String get commonSomethingWentWrong;
+
+  /// No description provided for @commonNoResults.
+  ///
+  /// In ar, this message translates to:
+  /// **'لا توجد نتائج'**
+  String get commonNoResults;
+
+  /// No description provided for @commonRequiredField.
+  ///
+  /// In ar, this message translates to:
+  /// **'هذا الحقل مطلوب'**
+  String get commonRequiredField;
+
+  /// No description provided for @commonOptional.
+  ///
+  /// In ar, this message translates to:
+  /// **'اختياري'**
+  String get commonOptional;
+
+  /// No description provided for @comingSoon.
+  ///
+  /// In ar, this message translates to:
+  /// **'هذه الشاشة قيد الإنشاء.'**
+  String get comingSoon;
+
+  /// No description provided for @homeTabLabel.
+  ///
+  /// In ar, this message translates to:
+  /// **'الرئيسية'**
+  String get homeTabLabel;
+
+  /// No description provided for @requestsTabLabel.
+  ///
+  /// In ar, this message translates to:
+  /// **'الطلبات'**
+  String get requestsTabLabel;
+
+  /// No description provided for @propertiesTabLabel.
+  ///
+  /// In ar, this message translates to:
+  /// **'عقاراتي'**
+  String get propertiesTabLabel;
+
+  /// No description provided for @supportTabLabel.
+  ///
+  /// In ar, this message translates to:
+  /// **'الدعم'**
+  String get supportTabLabel;
+
+  /// No description provided for @profileTabLabel.
+  ///
+  /// In ar, this message translates to:
+  /// **'حسابي'**
+  String get profileTabLabel;
+
+  /// No description provided for @onboardingWelcomeTitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'أهلاً بك'**
+  String get onboardingWelcomeTitle;
+
+  /// No description provided for @onboardingWelcomeBody.
+  ///
+  /// In ar, this message translates to:
+  /// **'اطلب سباكاً، كهربائياً، تكييف أو تنظيف — وتابع التنفيذ لحظة بلحظة.'**
+  String get onboardingWelcomeBody;
+
+  /// No description provided for @onboardingHowItWorksTitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'كيف تعمل الخدمة؟'**
+  String get onboardingHowItWorksTitle;
+
+  /// No description provided for @onboardingStepChoose.
+  ///
+  /// In ar, this message translates to:
+  /// **'اختر الخدمة'**
+  String get onboardingStepChoose;
+
+  /// No description provided for @onboardingStepDescribe.
+  ///
+  /// In ar, this message translates to:
+  /// **'اشرح المشكلة وصفّرها'**
+  String get onboardingStepDescribe;
+
+  /// No description provided for @onboardingStepQuote.
+  ///
+  /// In ar, this message translates to:
+  /// **'استلم عرض السعر'**
+  String get onboardingStepQuote;
+
+  /// No description provided for @onboardingStepTrack.
+  ///
+  /// In ar, this message translates to:
+  /// **'تابع التنفيذ والتقييم'**
+  String get onboardingStepTrack;
+
+  /// No description provided for @onboardingGetStarted.
+  ///
+  /// In ar, this message translates to:
+  /// **'ابدأ الآن'**
+  String get onboardingGetStarted;
+
+  /// No description provided for @authPhoneTitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'رقم الهاتف'**
+  String get authPhoneTitle;
+
+  /// No description provided for @authPhoneBody.
+  ///
+  /// In ar, this message translates to:
+  /// **'أدخل رقم هاتفك للمتابعة'**
+  String get authPhoneBody;
+
+  /// No description provided for @authPhoneLabel.
+  ///
+  /// In ar, this message translates to:
+  /// **'رقم الهاتف'**
+  String get authPhoneLabel;
+
+  /// No description provided for @authPhoneHint.
+  ///
+  /// In ar, this message translates to:
+  /// **'01xxxxxxxxx'**
+  String get authPhoneHint;
+
+  /// No description provided for @authPhoneInvalid.
+  ///
+  /// In ar, this message translates to:
+  /// **'رقم الهاتف غير صحيح'**
+  String get authPhoneInvalid;
+
+  /// No description provided for @authPhoneNewAccountHint.
+  ///
+  /// In ar, this message translates to:
+  /// **'رقم جديد؟ سننشئ لك حساباً تلقائياً عند التحقق.'**
+  String get authPhoneNewAccountHint;
+
+  /// No description provided for @authPhoneRequired.
+  ///
+  /// In ar, this message translates to:
+  /// **'رقم الهاتف غير معروف. أعد إدخاله.'**
+  String get authPhoneRequired;
+
+  /// No description provided for @authNameLabel.
+  ///
+  /// In ar, this message translates to:
+  /// **'الاسم بالكامل'**
+  String get authNameLabel;
+
+  /// No description provided for @authNameHint.
+  ///
+  /// In ar, this message translates to:
+  /// **'اكتب اسمك'**
+  String get authNameHint;
+
+  /// No description provided for @authOtpTitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'رمز التحقق'**
+  String get authOtpTitle;
+
+  /// No description provided for @authOtpBody.
+  ///
+  /// In ar, this message translates to:
+  /// **'أرسلنا رمزاً مكوّناً من {count} أرقام إلى رقمك'**
+  String authOtpBody(Object count);
+
+  /// No description provided for @authOtpResendIn.
+  ///
+  /// In ar, this message translates to:
+  /// **'إعادة الإرسال خلال {seconds} ثانية'**
+  String authOtpResendIn(Object seconds);
+
+  /// No description provided for @authOtpResendNow.
+  ///
+  /// In ar, this message translates to:
+  /// **'إعادة إرسال الرمز'**
+  String get authOtpResendNow;
+
+  /// No description provided for @authOtpVerify.
+  ///
+  /// In ar, this message translates to:
+  /// **'تحقق'**
+  String get authOtpVerify;
+
+  /// No description provided for @authOtpChangeNumber.
+  ///
+  /// In ar, this message translates to:
+  /// **'تغيير رقم الهاتف'**
+  String get authOtpChangeNumber;
+
+  /// No description provided for @authOtpField.
+  ///
+  /// In ar, this message translates to:
+  /// **'رمز التحقق'**
+  String get authOtpField;
+
+  /// No description provided for @authOtpSent.
+  ///
+  /// In ar, this message translates to:
+  /// **'تم إرسال رمز التحقق'**
+  String get authOtpSent;
+
+  /// No description provided for @homeGreeting.
+  ///
+  /// In ar, this message translates to:
+  /// **'أهلاً، {name}'**
+  String homeGreeting(Object name);
+
+  /// No description provided for @homeActiveRequestTitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'طلب نشط'**
+  String get homeActiveRequestTitle;
+
+  /// No description provided for @homeQuickActions.
+  ///
+  /// In ar, this message translates to:
+  /// **'خدمات سريعة'**
+  String get homeQuickActions;
+
+  /// No description provided for @homeRecentRequests.
+  ///
+  /// In ar, this message translates to:
+  /// **'طلباتك الأخيرة'**
+  String get homeRecentRequests;
+
+  /// No description provided for @homeSeeAllRequests.
+  ///
+  /// In ar, this message translates to:
+  /// **'عرض كل الطلبات'**
+  String get homeSeeAllRequests;
+
+  /// No description provided for @homeNoActiveRequest.
+  ///
+  /// In ar, this message translates to:
+  /// **'لا يوجد طلب نشط حالياً'**
+  String get homeNoActiveRequest;
+
+  /// No description provided for @homeStartRequest.
+  ///
+  /// In ar, this message translates to:
+  /// **'ابدأ طلباً جديداً'**
+  String get homeStartRequest;
+
+  /// No description provided for @homeUpcomingVisit.
+  ///
+  /// In ar, this message translates to:
+  /// **'موعدك القادم'**
+  String get homeUpcomingVisit;
+
+  /// No description provided for @requestsTitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'الطلبات'**
+  String get requestsTitle;
+
+  /// No description provided for @requestsNew.
+  ///
+  /// In ar, this message translates to:
+  /// **'طلب جديد'**
+  String get requestsNew;
+
+  /// No description provided for @requestsActive.
+  ///
+  /// In ar, this message translates to:
+  /// **'نشط'**
+  String get requestsActive;
+
+  /// No description provided for @requestsHistory.
+  ///
+  /// In ar, this message translates to:
+  /// **'السجل'**
+  String get requestsHistory;
+
+  /// No description provided for @requestsEmptyTitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'لا توجد طلبات بعد'**
+  String get requestsEmptyTitle;
+
+  /// No description provided for @requestsEmptyBody.
+  ///
+  /// In ar, this message translates to:
+  /// **'ابدأ بطلب أول خدمة لك'**
+  String get requestsEmptyBody;
+
+  /// No description provided for @requestsCategoryTitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'اختر الخدمة'**
+  String get requestsCategoryTitle;
+
+  /// No description provided for @requestsProblemTitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'ما المشكلة؟'**
+  String get requestsProblemTitle;
+
+  /// No description provided for @requestsDescribeTitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'اشرح المشكلة'**
+  String get requestsDescribeTitle;
+
+  /// No description provided for @requestsDescribeHint.
+  ///
+  /// In ar, this message translates to:
+  /// **'اكتب وصفاً واضحاً للمشكلة…'**
+  String get requestsDescribeHint;
+
+  /// No description provided for @requestsPhotosTitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'أضف صوراً'**
+  String get requestsPhotosTitle;
+
+  /// No description provided for @requestsPhotosHint.
+  ///
+  /// In ar, this message translates to:
+  /// **'صور واضحة تساعد الفني على تقدير العمل بدقة'**
+  String get requestsPhotosHint;
+
+  /// No description provided for @requestsPhotosMax.
+  ///
+  /// In ar, this message translates to:
+  /// **'حتى {count} صور'**
+  String requestsPhotosMax(Object count);
+
+  /// No description provided for @requestsAddressTitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'العنوان'**
+  String get requestsAddressTitle;
+
+  /// No description provided for @requestsPropertyTitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'اختر العقار'**
+  String get requestsPropertyTitle;
+
+  /// No description provided for @requestsScheduleTitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'موعد الزيارة'**
+  String get requestsScheduleTitle;
+
+  /// No description provided for @requestsScheduleUrgent.
+  ///
+  /// In ar, this message translates to:
+  /// **'طارئ'**
+  String get requestsScheduleUrgent;
+
+  /// No description provided for @requestsScheduleUrgentHint.
+  ///
+  /// In ar, this message translates to:
+  /// **'سنحاول خدمتك في أقرب وقت متاح'**
+  String get requestsScheduleUrgentHint;
+
+  /// No description provided for @requestsReviewTitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'راجع الطلب'**
+  String get requestsReviewTitle;
+
+  /// No description provided for @requestsSubmit.
+  ///
+  /// In ar, this message translates to:
+  /// **'إرسال الطلب'**
+  String get requestsSubmit;
+
+  /// No description provided for @requestsSubmitSuccess.
+  ///
+  /// In ar, this message translates to:
+  /// **'تم إرسال طلبك بنجاح'**
+  String get requestsSubmitSuccess;
+
+  /// No description provided for @requestDetailTitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'تفاصيل الطلب'**
+  String get requestDetailTitle;
+
+  /// No description provided for @requestTimelineTitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'مراحل الطلب'**
+  String get requestTimelineTitle;
+
+  /// No description provided for @requestQuoteTitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'عرض السعر'**
+  String get requestQuoteTitle;
+
+  /// No description provided for @requestQuoteAccept.
+  ///
+  /// In ar, this message translates to:
+  /// **'قبول عرض السعر'**
+  String get requestQuoteAccept;
+
+  /// No description provided for @requestQuoteReject.
+  ///
+  /// In ar, this message translates to:
+  /// **'رفض'**
+  String get requestQuoteReject;
+
+  /// No description provided for @requestQuoteExpired.
+  ///
+  /// In ar, this message translates to:
+  /// **'انتهت صلاحية عرض السعر'**
+  String get requestQuoteExpired;
+
+  /// No description provided for @requestQuoteNeedsInfo.
+  ///
+  /// In ar, this message translates to:
+  /// **'مطلوب معلومات إضافية'**
+  String get requestQuoteNeedsInfo;
+
+  /// No description provided for @requestDepositTitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'العربون'**
+  String get requestDepositTitle;
+
+  /// No description provided for @requestDepositAmount.
+  ///
+  /// In ar, this message translates to:
+  /// **'قيمة العربون'**
+  String get requestDepositAmount;
+
+  /// No description provided for @requestCancelTitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'إلغاء الطلب'**
+  String get requestCancelTitle;
+
+  /// No description provided for @requestCancelWarning.
+  ///
+  /// In ar, this message translates to:
+  /// **'قد يستغرق استرداع العربون وقتًا أطول حسب سياسة الإلغاء.'**
+  String get requestCancelWarning;
+
+  /// No description provided for @requestCancelConfirm.
+  ///
+  /// In ar, this message translates to:
+  /// **'تأكيد الإلغاء'**
+  String get requestCancelConfirm;
+
+  /// No description provided for @requestAddInfo.
+  ///
+  /// In ar, this message translates to:
+  /// **'إرسال معلومات إضافية'**
+  String get requestAddInfo;
+
+  /// No description provided for @ordersTitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'طلباتي'**
+  String get ordersTitle;
+
+  /// No description provided for @orderTrackTitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'تتبع الطلب'**
+  String get orderTrackTitle;
+
+  /// No description provided for @orderTechnicianOnWay.
+  ///
+  /// In ar, this message translates to:
+  /// **'الفني في الطريق إليك'**
+  String get orderTechnicianOnWay;
+
+  /// No description provided for @orderTechnicianArrived.
+  ///
+  /// In ar, this message translates to:
+  /// **'الفني وصل'**
+  String get orderTechnicianArrived;
+
+  /// No description provided for @orderTimelineTitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'خطوات التنفيذ'**
+  String get orderTimelineTitle;
+
+  /// No description provided for @orderEta.
+  ///
+  /// In ar, this message translates to:
+  /// **'الوصول المتوقع'**
+  String get orderEta;
+
+  /// No description provided for @orderCancel.
+  ///
+  /// In ar, this message translates to:
+  /// **'إلغاء'**
+  String get orderCancel;
+
+  /// No description provided for @paymentsTitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'الدفع'**
+  String get paymentsTitle;
+
+  /// No description provided for @paymentsMethods.
+  ///
+  /// In ar, this message translates to:
+  /// **'طرق الدفع المتاحة'**
+  String get paymentsMethods;
+
+  /// No description provided for @paymentsUploadProof.
+  ///
+  /// In ar, this message translates to:
+  /// **'رفع إثبات الدفع'**
+  String get paymentsUploadProof;
+
+  /// No description provided for @paymentsProofHint.
+  ///
+  /// In ar, this message translates to:
+  /// **'صورة واضحة للإيصال أو التحويل'**
+  String get paymentsProofHint;
+
+  /// No description provided for @paymentsPendingVerification.
+  ///
+  /// In ar, this message translates to:
+  /// **'بانتظار التحقق'**
+  String get paymentsPendingVerification;
+
+  /// No description provided for @paymentsVerified.
+  ///
+  /// In ar, this message translates to:
+  /// **'تم التحقق'**
+  String get paymentsVerified;
+
+  /// No description provided for @paymentsRejected.
+  ///
+  /// In ar, this message translates to:
+  /// **'مرفوض'**
+  String get paymentsRejected;
+
+  /// No description provided for @paymentsRefundPending.
+  ///
+  /// In ar, this message translates to:
+  /// **'الاسترجاع قيد المعالجة'**
+  String get paymentsRefundPending;
+
+  /// No description provided for @propertiesTitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'عقاراتي'**
+  String get propertiesTitle;
+
+  /// No description provided for @propertiesAdd.
+  ///
+  /// In ar, this message translates to:
+  /// **'إضافة عقار'**
+  String get propertiesAdd;
+
+  /// No description provided for @propertiesEmptyTitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'لا توجد عقارات'**
+  String get propertiesEmptyTitle;
+
+  /// No description provided for @propertiesEmptyBody.
+  ///
+  /// In ar, this message translates to:
+  /// **'أضف عقاراتك لتسريع إنشاء الطلبات'**
+  String get propertiesEmptyBody;
+
+  /// No description provided for @propertiesLabel.
+  ///
+  /// In ar, this message translates to:
+  /// **'اسم العقار'**
+  String get propertiesLabel;
+
+  /// No description provided for @propertiesSetDefault.
+  ///
+  /// In ar, this message translates to:
+  /// **'تعيين كافتراضي'**
+  String get propertiesSetDefault;
+
+  /// No description provided for @propertiesHistory.
+  ///
+  /// In ar, this message translates to:
+  /// **'سجل الصيانة'**
+  String get propertiesHistory;
+
+  /// No description provided for @supportTitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'الدعم'**
+  String get supportTitle;
+
+  /// No description provided for @supportChatTitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'الدردشة'**
+  String get supportChatTitle;
+
+  /// No description provided for @supportMessageHint.
+  ///
+  /// In ar, this message translates to:
+  /// **'اكتب رسالتك…'**
+  String get supportMessageHint;
+
+  /// No description provided for @supportSend.
+  ///
+  /// In ar, this message translates to:
+  /// **'إرسال'**
+  String get supportSend;
+
+  /// No description provided for @supportComplaintTitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'تقديم شكوى'**
+  String get supportComplaintTitle;
+
+  /// No description provided for @supportComplaintReasons.
+  ///
+  /// In ar, this message translates to:
+  /// **'نوع الشكوى'**
+  String get supportComplaintReasons;
+
+  /// No description provided for @supportComplaintDetails.
+  ///
+  /// In ar, this message translates to:
+  /// **'تفاصيل الشكوى'**
+  String get supportComplaintDetails;
+
+  /// No description provided for @supportComplaintSubmit.
+  ///
+  /// In ar, this message translates to:
+  /// **'إرسال الشكوى'**
+  String get supportComplaintSubmit;
+
+  /// No description provided for @reviewsTitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'تقييماتك'**
+  String get reviewsTitle;
+
+  /// No description provided for @reviewsWrite.
+  ///
+  /// In ar, this message translates to:
+  /// **'اكتب تقييماً'**
+  String get reviewsWrite;
+
+  /// No description provided for @reviewsRatingLabel.
+  ///
+  /// In ar, this message translates to:
+  /// **'تقييمك للخدمة'**
+  String get reviewsRatingLabel;
+
+  /// No description provided for @reviewsCommentHint.
+  ///
+  /// In ar, this message translates to:
+  /// **'اكتب تعليقك (اختياري)'**
+  String get reviewsCommentHint;
+
+  /// No description provided for @reviewsSubmit.
+  ///
+  /// In ar, this message translates to:
+  /// **'إرسال التقييم'**
+  String get reviewsSubmit;
+
+  /// No description provided for @profileTitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'حسابي'**
+  String get profileTitle;
+
+  /// No description provided for @profileEdit.
+  ///
+  /// In ar, this message translates to:
+  /// **'تعديل الملف الشخصي'**
+  String get profileEdit;
+
+  /// No description provided for @profileSettings.
+  ///
+  /// In ar, this message translates to:
+  /// **'الإعدادات'**
+  String get profileSettings;
+
+  /// No description provided for @profileLanguage.
+  ///
+  /// In ar, this message translates to:
+  /// **'اللغة'**
+  String get profileLanguage;
+
+  /// No description provided for @profileTheme.
+  ///
+  /// In ar, this message translates to:
+  /// **'المظهر'**
+  String get profileTheme;
+
+  /// No description provided for @profileNotifications.
+  ///
+  /// In ar, this message translates to:
+  /// **'الإشعارات'**
+  String get profileNotifications;
+
+  /// No description provided for @profileLogout.
+  ///
+  /// In ar, this message translates to:
+  /// **'تسجيل الخروج'**
+  String get profileLogout;
+
+  /// No description provided for @profileSupport.
+  ///
+  /// In ar, this message translates to:
+  /// **'تواصل معنا'**
+  String get profileSupport;
+
+  /// No description provided for @themeLight.
+  ///
+  /// In ar, this message translates to:
+  /// **'فاتح'**
+  String get themeLight;
+
+  /// No description provided for @themeDark.
+  ///
+  /// In ar, this message translates to:
+  /// **'داكن'**
+  String get themeDark;
+
+  /// No description provided for @themeSystem.
+  ///
+  /// In ar, this message translates to:
+  /// **'النظام'**
+  String get themeSystem;
+
+  /// No description provided for @errorNetwork.
+  ///
+  /// In ar, this message translates to:
+  /// **'تعذر الاتصال بالخادم. تحقق من اتصالك وحاول مرة أخرى.'**
+  String get errorNetwork;
+
+  /// No description provided for @errorTimeout.
+  ///
+  /// In ar, this message translates to:
+  /// **'استغرق الطلب وقتًا طويلًا. حاول مرة أخرى.'**
+  String get errorTimeout;
+
+  /// No description provided for @errorUnauthorized.
+  ///
+  /// In ar, this message translates to:
+  /// **'انتهت الجلسة. يرجى تسجيل الدخول مرة أخرى.'**
+  String get errorUnauthorized;
+
+  /// No description provided for @errorForbidden.
+  ///
+  /// In ar, this message translates to:
+  /// **'ليس لديك صلاحية للقيام بهذا الإجراء.'**
+  String get errorForbidden;
+
+  /// No description provided for @errorNotFound.
+  ///
+  /// In ar, this message translates to:
+  /// **'العنصر المطلوب غير موجود.'**
+  String get errorNotFound;
+
+  /// No description provided for @errorConflict.
+  ///
+  /// In ar, this message translates to:
+  /// **'تم تعديل البيانات بالفعل. حدّث الصفحة وحاول مجددًا.'**
+  String get errorConflict;
+
+  /// No description provided for @errorRateLimited.
+  ///
+  /// In ar, this message translates to:
+  /// **'طلبات كثيرة جدًا. حاول مرة أخرى بعد قليل.'**
+  String get errorRateLimited;
+
+  /// No description provided for @errorServer.
+  ///
+  /// In ar, this message translates to:
+  /// **'خدمة غير متاحة مؤقتًا. حاول مرة أخرى.'**
+  String get errorServer;
+
+  /// No description provided for @errorGeneric.
+  ///
+  /// In ar, this message translates to:
+  /// **'حدث خطأ غير متوقع. حاول مرة أخرى.'**
+  String get errorGeneric;
+}
+
+class _AppLocalizationsDelegate
+    extends LocalizationsDelegate<AppLocalizations> {
+  const _AppLocalizationsDelegate();
+
+  @override
+  Future<AppLocalizations> load(Locale locale) {
+    return SynchronousFuture<AppLocalizations>(lookupAppLocalizations(locale));
+  }
+
+  @override
+  bool isSupported(Locale locale) =>
+      <String>['ar', 'en'].contains(locale.languageCode);
+
+  @override
+  bool shouldReload(_AppLocalizationsDelegate old) => false;
+}
+
+AppLocalizations lookupAppLocalizations(Locale locale) {
+  // Lookup logic when only language code is specified.
+  switch (locale.languageCode) {
+    case 'ar':
+      return AppLocalizationsAr();
+    case 'en':
+      return AppLocalizationsEn();
+  }
+
+  throw FlutterError(
+    'AppLocalizations.delegate failed to load unsupported locale "$locale". This is likely '
+    'an issue with the localizations generation tool. Please file an issue '
+    'on GitHub with a reproducible sample app and the gen-l10n configuration '
+    'that was used.',
+  );
+}
