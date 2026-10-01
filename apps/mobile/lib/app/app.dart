@@ -5,7 +5,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'localization/app_localizations.dart';
 import 'router/app_router.dart';
 import 'theme/app_theme.dart';
-import 'theme/app_theme_mode_provider.dart';
+import 'theme/theme_mode_provider.dart';
 
 /// Root widget.
 ///

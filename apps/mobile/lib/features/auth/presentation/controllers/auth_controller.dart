@@ -1,7 +1,7 @@
 import 'package:equatable/equatable.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../../../app/bootstrap/providers.dart';
+import '../../../../app/bootstrap/app_bootstrap.dart';
 import '../../../../core/logging/app_logger.dart';
 import '../../../../core/errors/failure.dart';
 import '../../data/datasources/auth_remote_data_source.dart';

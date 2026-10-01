@@ -4,7 +4,7 @@ import 'package:go_router/go_router.dart';
 
 import '../localization/app_localizations.dart';
 import '../../core/widgets/app_icon.dart';
-import '../router/route_names.dart';
+import '../router/app_routes.dart';
 import '../theme/app_colors.dart';
 import '../theme/app_spacing.dart';
 

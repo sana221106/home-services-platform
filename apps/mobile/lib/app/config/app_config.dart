@@ -1,4 +1,5 @@
 import 'environment.dart';
+import 'flavor_config.dart';
 
 /// Build-time configuration.
 ///
@@ -6,8 +7,6 @@ import 'environment.dart';
 /// so no environment secrets end up in the repository (§12).
 abstract final class AppConfig {
   static const String _envRaw = String.fromEnvironment('ENVIRONMENT');
-  static const String _baseUrlRaw = String.fromEnvironment('API_BASE_URL');
-  static const String _webSocketRaw = String.fromEnvironment('API_WS_URL');
   static const bool _enableLogging = bool.fromEnvironment(
     'ENABLE_NETWORK_LOGGING',
     defaultValue: true,
@@ -15,15 +14,13 @@ abstract final class AppConfig {
 
   static final Environment environment = Environment.fromDartDefine(_envRaw);
 
-  /// Base URL without a trailing slash. Android emulators reach the host
-  /// machine through 10.0.2.2 rather than localhost.
-  static final String baseUrl = _resolveBaseUrl(_baseUrlRaw);
+  /// Host and API prefix for this build.
+  static final String baseUrl = FlavorConfig.baseUrl(environment);
 
-  static final String? webSocketUrl = _webSocketRaw.isEmpty
-      ? null
-      : _webSocketRaw;
+  /// Realtime endpoint, or null when the build has none.
+  static final String? webSocketUrl = FlavorConfig.webSocketUrl();
 
-  /// Never log credentials or bodies in production (§59).
+  /// Never log request bodies or credentials in production (§93).
   static final bool enableNetworkLogging =
       _enableLogging && environment != Environment.production;
 
@@ -31,22 +28,7 @@ abstract final class AppConfig {
 
   static const Duration connectTimeout = Duration(seconds: 15);
   static const Duration receiveTimeout = Duration(seconds: 20);
+
+  /// Longer because request submission and media upload are both writes.
   static const Duration sendTimeout = Duration(seconds: 30);
-
-  /// Network images are fetched with the bearer token instead of a URL query
-  /// parameter, so there is nothing to append here.
-  static String _resolveBaseUrl(String raw) {
-    if (raw.isNotEmpty) {
-      return raw.endsWith('/') ? raw.substring(0, raw.length - 1) : raw;
-    }
-
-    switch (environment) {
-      case Environment.production:
-        return 'https://api.homeservices.example.com';
-      case Environment.staging:
-        return 'https://staging-api.homeservices.example.com';
-      case Environment.development:
-        return 'http://10.0.2.2:8000';
-    }
-  }
 }

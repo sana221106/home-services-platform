@@ -1,7 +1,7 @@
 import 'package:dio/dio.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../../../app/bootstrap/providers.dart';
+import '../../../../app/bootstrap/app_bootstrap.dart';
 import '../../../../core/network/api_client.dart';
 import '../../../../core/errors/failure.dart';
 import '../../../../core/network/paginated.dart';

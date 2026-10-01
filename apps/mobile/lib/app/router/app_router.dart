@@ -12,7 +12,8 @@ import '../../features/home/presentation/home_screen.dart';
 import '../../features/properties/presentation/pages/properties_page.dart';
 import '../../features/properties/presentation/pages/property_history_page.dart';
 import '../shell/app_shell.dart';
-import 'route_names.dart';
+import 'app_routes.dart';
+import 'route_guards.dart';
 
 /// Route table and the single place navigation is decided.
 ///
@@ -25,39 +26,10 @@ final Provider<GoRouter> routerProvider = Provider<GoRouter>((Ref ref) {
   return GoRouter(
     navigatorKey: rootKey,
     initialLocation: AppRoute.splash.name,
-    refreshListenable: _SessionListenable(ref),
+    refreshListenable: SessionListenable(ref),
     debugLogDiagnostics: false,
-    redirect: (BuildContext context, GoRouterState state) {
-      final AuthState auth = ref.read(authProvider);
-      final String name = state.name ?? '';
-
-      // Wait for the token store before choosing a first screen, otherwise a
-      // signed-in customer sees the onboarding carousel flash.
-      if (auth.isRestoring) {
-        return name == AppRoute.splash.name ? null : AppRoute.splash.name;
-      }
-
-      final AppRoute? current = _routeByName(name);
-      final bool atSplash = name == AppRoute.splash.name;
-
-      if (auth.isAuthenticated) {
-        if (atSplash) {
-          return AppRoute.home.name;
-        }
-        if (current != null && current.requiresGuest) {
-          return AppRoute.home.name;
-        }
-        return null;
-      }
-
-      if (atSplash) {
-        return AppRoute.onboarding.name;
-      }
-      if (current != null && current.requiresAuth) {
-        return AppRoute.onboarding.name;
-      }
-      return null;
-    },
+    redirect: (BuildContext context, GoRouterState state) =>
+        resolveRedirect(context, ref.read(authProvider), state.name ?? ''),
     routes: <RouteBase>[
       GoRoute(
         path: '/',
@@ -185,30 +157,3 @@ final Provider<GoRouter> routerProvider = Provider<GoRouter>((Ref ref) {
         Scaffold(body: Center(child: Text(state.uri.toString()))),
   );
 });
-
-/// Bridges Riverpod auth changes into go_router's redirect cycle.
-class _SessionListenable extends ChangeNotifier {
-  _SessionListenable(this._ref) {
-    _sub = _ref.listen<AuthState>(
-      authProvider,
-      (AuthState? previous, AuthState next) => notifyListeners(),
-      fireImmediately: false,
-    );
-  }
-
-  final Ref _ref;
-  late final ProviderSubscription<AuthState> _sub;
-
-  @override
-  void dispose() {
-    _sub.close();
-    super.dispose();
-  }
-}
-
-AppRoute? _routeByName(String name) {
-  for (final route in AppRoute.values) {
-    if (route.name == name) return route;
-  }
-  return null;
-}

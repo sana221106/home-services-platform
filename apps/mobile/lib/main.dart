@@ -4,7 +4,7 @@ import 'package:flutter_riverpod/misc.dart' show Override;
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'app/app.dart';
-import 'app/bootstrap/providers.dart';
+import 'app/bootstrap/app_bootstrap.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();

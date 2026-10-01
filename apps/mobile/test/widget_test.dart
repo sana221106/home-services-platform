@@ -7,7 +7,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'package:home_services_app/app/app.dart';
-import 'package:home_services_app/app/bootstrap/providers.dart';
+import 'package:home_services_app/app/bootstrap/app_bootstrap.dart';
 import 'package:home_services_app/core/storage/secure_storage_service.dart';
 import 'package:home_services_app/features/auth/presentation/controllers/auth_controller.dart';
 

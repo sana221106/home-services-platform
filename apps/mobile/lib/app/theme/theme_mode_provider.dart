@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../app/bootstrap/providers.dart';
+import '../../app/bootstrap/app_bootstrap.dart';
 
 /// User-selectable appearance (§44). The app ships Light and Dark themes with
 /// no hard-coded colours, so this only chooses which palette to build.
