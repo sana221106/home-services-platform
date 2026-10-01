@@ -77,9 +77,10 @@ class PropertiesRemoteDataSource {
           'contacts': contacts
               .map(
                 (PropertyContact c) => <String, dynamic>{
-                  'name': c.name,
+                  'contact_name': c.name,
                   if (c.phone != null) 'phone': c.phone,
-                  if (c.role != null) 'role': c.role,
+                  if (c.relation != null) 'relation': c.relation,
+                  if (c.isPrimary) 'is_primary': true,
                 },
               )
               .toList(growable: false),

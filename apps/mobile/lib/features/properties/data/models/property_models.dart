@@ -68,22 +68,35 @@ class Property extends Equatable {
   List<Object?> get props => <Object?>[id, label, displayAddress, isDefault];
 }
 
+/// A person who may be reached at a property.
+///
+/// The wire shape is `PropertyContactResponse`: `contact_name`, `phone`,
+/// `relation`, `is_primary`.
 class PropertyContact extends Equatable {
-  const PropertyContact({required this.name, this.phone, this.role});
+  const PropertyContact({
+    required this.name,
+    this.phone,
+    this.relation,
+    this.isPrimary = false,
+  });
 
   factory PropertyContact.fromJson(Map<String, dynamic> json) =>
       PropertyContact(
-        name: json.strOr('name', ''),
+        name: json.strOr('contact_name', ''),
         phone: json.str('phone'),
-        role: json.str('role'),
+        relation: json.str('relation'),
+        isPrimary: json.flag('is_primary'),
       );
 
   final String name;
   final String? phone;
-  final String? role;
+
+  /// Free text such as "owner" or "tenant"; the backend defines no enum.
+  final String? relation;
+  final bool isPrimary;
 
   @override
-  List<Object?> get props => <Object?>[name, phone, role];
+  List<Object?> get props => <Object?>[name, phone, relation, isPrimary];
 }
 
 /// One completed or in-flight service at a property.
