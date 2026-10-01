@@ -2,7 +2,7 @@ import 'package:dio/dio.dart';
 
 import '../../../../core/network/api_client.dart';
 import '../../../../core/network/api_endpoints.dart';
-import '../../../../core/network/api_failure.dart';
+import '../../../../core/errors/failure.dart';
 import 'models/home_models.dart';
 
 /// Reads the home dashboard.

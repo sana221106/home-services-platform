@@ -7,8 +7,8 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'package:home_services_app/app/app.dart';
-import 'package:home_services_app/core/di/providers.dart';
-import 'package:home_services_app/core/network/token_store.dart';
+import 'package:home_services_app/app/bootstrap/providers.dart';
+import 'package:home_services_app/core/storage/secure_storage_service.dart';
 import 'package:home_services_app/features/auth/presentation/controllers/auth_controller.dart';
 
 /// Shared overrides for every test here: real preferences are mocked, and the

@@ -1,8 +1,8 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import '../network/api_client.dart';
-import '../network/token_store.dart';
+import '../../core/network/api_client.dart';
+import '../../core/storage/secure_storage_service.dart';
 
 /// Non-persistent settings such as the chosen theme mode and locale.
 ///

@@ -470,4 +470,154 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get errorGeneric => 'حدث خطأ غير متوقع. حاول مرة أخرى.';
+
+  @override
+  String get propertiesSubtitle => 'إدارة منازل وعناوينك لطلبات الخدمة.';
+
+  @override
+  String get propertiesDefault => 'افتراضي';
+
+  @override
+  String get propertyHistoryTitle => 'سجل الصيانة';
+
+  @override
+  String get propertyHistorySubtitle => 'كل الزيارات السابقة لهذا العنوان';
+
+  @override
+  String get propertyHistoryEmptyTitle => 'لا يوجد سجل بعد';
+
+  @override
+  String get propertyHistoryEmptyBody =>
+      'ستظهر الزيارات المكتملة هنا بعد أول طلب خدمة.';
+
+  @override
+  String get propertyRecurringChip => 'مشكلة متكررة';
+
+  @override
+  String propertyRecurringBanner(Object count) {
+    return '$count زيارة مرتبطة بنفس المشكلة على هذا العنوان.';
+  }
+
+  @override
+  String get complaintFiledChip => 'تم تقديم شكوى';
+
+  @override
+  String get requestReworkChip => 'زيارة إصلاح';
+
+  @override
+  String get requestInspectionOnly => 'زيارة معاينة فقط';
+
+  @override
+  String get requestUrgencyUrgent => 'عاجل';
+
+  @override
+  String get requestTitleFallback => 'طلب خدمة';
+
+  @override
+  String get requestDiagnosisLabel => 'التشخيص';
+
+  @override
+  String get requestResolutionLabel => 'الحل المنفذ';
+
+  @override
+  String get requestMaterialsLabel => 'الخامات المستخدمة';
+
+  @override
+  String get requestFinalPriceLabel => 'السعر النهائي';
+
+  @override
+  String get requestStatusUnknown => 'حالة غير معروفة';
+
+  @override
+  String get requestStatusDraft => 'مسودة';
+
+  @override
+  String get requestStatusSubmitted => 'تم الإرسال';
+
+  @override
+  String get requestStatusUnderReview => 'قيد المراجعة';
+
+  @override
+  String get requestStatusNeedMoreInfo => 'مطلوب معلومات إضافية';
+
+  @override
+  String get requestStatusInspectionRequired => 'مطلوب معاينة';
+
+  @override
+  String get requestStatusInspectionScheduled => 'معاينة مجدولة';
+
+  @override
+  String get requestStatusInspectionInProgress => 'المعاينة جارية';
+
+  @override
+  String get requestStatusInspectionCompleted => 'انتهت المعاينة';
+
+  @override
+  String get requestStatusQuotePreparation => 'تجهيز عرض السعر';
+
+  @override
+  String get requestStatusQuoteSent => 'تم إرسال عرض السعر';
+
+  @override
+  String get requestStatusAwaitingApproval => 'بانتظار موافقتك';
+
+  @override
+  String get requestStatusQuoteRejected => 'تم رفض عرض السعر';
+
+  @override
+  String get requestStatusDepositPending => 'بانتظار دفع التأمين';
+
+  @override
+  String get requestStatusDepositVerification => 'جاري التحقق من الدفع';
+
+  @override
+  String get requestStatusConfirmed => 'تم التأكيد';
+
+  @override
+  String get requestStatusAssignmentPending => 'بانتظار تعيين فني';
+
+  @override
+  String get requestStatusTechnicianAssigned => 'تم تعيين فني';
+
+  @override
+  String get requestStatusOnTheWay => 'الفني في الطريق';
+
+  @override
+  String get requestStatusArrived => 'وصل الفني';
+
+  @override
+  String get requestStatusWorkInProgress => 'جاري العمل';
+
+  @override
+  String get requestStatusServiceCompleted => 'اكتمل العمل';
+
+  @override
+  String get requestStatusPaymentPending => 'بانتظار الدفع';
+
+  @override
+  String get requestStatusPaymentVerification => 'جاري التحقق من الدفعة';
+
+  @override
+  String get requestStatusPaid => 'تم الدفع';
+
+  @override
+  String get requestStatusAwaitingRating => 'بانتظار تقييمك';
+
+  @override
+  String get requestStatusComplaintOpen => 'شكوى مفتوحة';
+
+  @override
+  String get requestStatusComplaintUnderReview => 'شكوى قيد المراجعة';
+
+  @override
+  String get requestStatusRevisitScheduled => 'زيارة إصلاح مجدولة';
+
+  @override
+  String get requestStatusResolved => 'تم الحل';
+
+  @override
+  String get requestStatusClosed => 'مغلق';
+
+  @override
+  String get requestStatusCancelled => 'ملغي';
 }

@@ -1,9 +1,9 @@
 import 'package:dio/dio.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../../../core/di/providers.dart';
+import '../../../../app/bootstrap/providers.dart';
 import '../../../../core/network/api_client.dart';
-import '../../../../core/network/api_failure.dart';
+import '../../../../core/errors/failure.dart';
 import '../../../../core/network/paginated.dart';
 import '../datasources/properties_remote_data_source.dart';
 import '../models/property_models.dart';

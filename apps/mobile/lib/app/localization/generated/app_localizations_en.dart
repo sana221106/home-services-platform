@@ -477,4 +477,155 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get errorGeneric => 'Something went wrong. Please try again.';
+
+  @override
+  String get propertiesSubtitle =>
+      'Manage your homes and addresses for service requests.';
+
+  @override
+  String get propertiesDefault => 'Default';
+
+  @override
+  String get propertyHistoryTitle => 'Maintenance history';
+
+  @override
+  String get propertyHistorySubtitle => 'Every past visit for this address';
+
+  @override
+  String get propertyHistoryEmptyTitle => 'No history yet';
+
+  @override
+  String get propertyHistoryEmptyBody =>
+      'Completed visits will appear here after your first service request.';
+
+  @override
+  String get propertyRecurringChip => 'Recurring issue';
+
+  @override
+  String propertyRecurringBanner(Object count) {
+    return '$count visits linked to the same issue at this address.';
+  }
+
+  @override
+  String get complaintFiledChip => 'Complaint filed';
+
+  @override
+  String get requestReworkChip => 'Rework visit';
+
+  @override
+  String get requestInspectionOnly => 'Inspection only';
+
+  @override
+  String get requestUrgencyUrgent => 'Urgent';
+
+  @override
+  String get requestTitleFallback => 'Service request';
+
+  @override
+  String get requestDiagnosisLabel => 'Diagnosis';
+
+  @override
+  String get requestResolutionLabel => 'Resolution';
+
+  @override
+  String get requestMaterialsLabel => 'Materials used';
+
+  @override
+  String get requestFinalPriceLabel => 'Final price';
+
+  @override
+  String get requestStatusUnknown => 'Unknown status';
+
+  @override
+  String get requestStatusDraft => 'Draft';
+
+  @override
+  String get requestStatusSubmitted => 'Submitted';
+
+  @override
+  String get requestStatusUnderReview => 'Under review';
+
+  @override
+  String get requestStatusNeedMoreInfo => 'More information needed';
+
+  @override
+  String get requestStatusInspectionRequired => 'Inspection required';
+
+  @override
+  String get requestStatusInspectionScheduled => 'Inspection scheduled';
+
+  @override
+  String get requestStatusInspectionInProgress => 'Inspection in progress';
+
+  @override
+  String get requestStatusInspectionCompleted => 'Inspection completed';
+
+  @override
+  String get requestStatusQuotePreparation => 'Preparing quote';
+
+  @override
+  String get requestStatusQuoteSent => 'Quote sent';
+
+  @override
+  String get requestStatusAwaitingApproval => 'Awaiting your approval';
+
+  @override
+  String get requestStatusQuoteRejected => 'Quote rejected';
+
+  @override
+  String get requestStatusDepositPending => 'Deposit pending';
+
+  @override
+  String get requestStatusDepositVerification => 'Verifying deposit';
+
+  @override
+  String get requestStatusConfirmed => 'Confirmed';
+
+  @override
+  String get requestStatusAssignmentPending => 'Assigning technician';
+
+  @override
+  String get requestStatusTechnicianAssigned => 'Technician assigned';
+
+  @override
+  String get requestStatusOnTheWay => 'Technician on the way';
+
+  @override
+  String get requestStatusArrived => 'Technician arrived';
+
+  @override
+  String get requestStatusWorkInProgress => 'Work in progress';
+
+  @override
+  String get requestStatusServiceCompleted => 'Service completed';
+
+  @override
+  String get requestStatusPaymentPending => 'Payment pending';
+
+  @override
+  String get requestStatusPaymentVerification => 'Verifying payment';
+
+  @override
+  String get requestStatusPaid => 'Paid';
+
+  @override
+  String get requestStatusAwaitingRating => 'Awaiting your rating';
+
+  @override
+  String get requestStatusComplaintOpen => 'Complaint open';
+
+  @override
+  String get requestStatusComplaintUnderReview => 'Complaint under review';
+
+  @override
+  String get requestStatusRevisitScheduled => 'Rework visit scheduled';
+
+  @override
+  String get requestStatusResolved => 'Resolved';
+
+  @override
+  String get requestStatusClosed => 'Closed';
+
+  @override
+  String get requestStatusCancelled => 'Cancelled';
 }

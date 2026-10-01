@@ -1,7 +1,7 @@
 import 'package:equatable/equatable.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../../../core/network/api_failure.dart';
+import '../../../../core/errors/failure.dart';
 import '../../data/models/property_models.dart';
 import '../../data/repositories/properties_repository.dart';
 

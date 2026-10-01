@@ -997,6 +997,300 @@ abstract class AppLocalizations {
   /// In ar, this message translates to:
   /// **'حدث خطأ غير متوقع. حاول مرة أخرى.'**
   String get errorGeneric;
+
+  /// No description provided for @propertiesSubtitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'إدارة منازل وعناوينك لطلبات الخدمة.'**
+  String get propertiesSubtitle;
+
+  /// No description provided for @propertiesDefault.
+  ///
+  /// In ar, this message translates to:
+  /// **'افتراضي'**
+  String get propertiesDefault;
+
+  /// No description provided for @propertyHistoryTitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'سجل الصيانة'**
+  String get propertyHistoryTitle;
+
+  /// No description provided for @propertyHistorySubtitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'كل الزيارات السابقة لهذا العنوان'**
+  String get propertyHistorySubtitle;
+
+  /// No description provided for @propertyHistoryEmptyTitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'لا يوجد سجل بعد'**
+  String get propertyHistoryEmptyTitle;
+
+  /// No description provided for @propertyHistoryEmptyBody.
+  ///
+  /// In ar, this message translates to:
+  /// **'ستظهر الزيارات المكتملة هنا بعد أول طلب خدمة.'**
+  String get propertyHistoryEmptyBody;
+
+  /// No description provided for @propertyRecurringChip.
+  ///
+  /// In ar, this message translates to:
+  /// **'مشكلة متكررة'**
+  String get propertyRecurringChip;
+
+  /// No description provided for @propertyRecurringBanner.
+  ///
+  /// In ar, this message translates to:
+  /// **'{count} زيارة مرتبطة بنفس المشكلة على هذا العنوان.'**
+  String propertyRecurringBanner(Object count);
+
+  /// No description provided for @complaintFiledChip.
+  ///
+  /// In ar, this message translates to:
+  /// **'تم تقديم شكوى'**
+  String get complaintFiledChip;
+
+  /// No description provided for @requestReworkChip.
+  ///
+  /// In ar, this message translates to:
+  /// **'زيارة إصلاح'**
+  String get requestReworkChip;
+
+  /// No description provided for @requestInspectionOnly.
+  ///
+  /// In ar, this message translates to:
+  /// **'زيارة معاينة فقط'**
+  String get requestInspectionOnly;
+
+  /// No description provided for @requestUrgencyUrgent.
+  ///
+  /// In ar, this message translates to:
+  /// **'عاجل'**
+  String get requestUrgencyUrgent;
+
+  /// No description provided for @requestTitleFallback.
+  ///
+  /// In ar, this message translates to:
+  /// **'طلب خدمة'**
+  String get requestTitleFallback;
+
+  /// No description provided for @requestDiagnosisLabel.
+  ///
+  /// In ar, this message translates to:
+  /// **'التشخيص'**
+  String get requestDiagnosisLabel;
+
+  /// No description provided for @requestResolutionLabel.
+  ///
+  /// In ar, this message translates to:
+  /// **'الحل المنفذ'**
+  String get requestResolutionLabel;
+
+  /// No description provided for @requestMaterialsLabel.
+  ///
+  /// In ar, this message translates to:
+  /// **'الخامات المستخدمة'**
+  String get requestMaterialsLabel;
+
+  /// No description provided for @requestFinalPriceLabel.
+  ///
+  /// In ar, this message translates to:
+  /// **'السعر النهائي'**
+  String get requestFinalPriceLabel;
+
+  /// No description provided for @requestStatusUnknown.
+  ///
+  /// In ar, this message translates to:
+  /// **'حالة غير معروفة'**
+  String get requestStatusUnknown;
+
+  /// No description provided for @requestStatusDraft.
+  ///
+  /// In ar, this message translates to:
+  /// **'مسودة'**
+  String get requestStatusDraft;
+
+  /// No description provided for @requestStatusSubmitted.
+  ///
+  /// In ar, this message translates to:
+  /// **'تم الإرسال'**
+  String get requestStatusSubmitted;
+
+  /// No description provided for @requestStatusUnderReview.
+  ///
+  /// In ar, this message translates to:
+  /// **'قيد المراجعة'**
+  String get requestStatusUnderReview;
+
+  /// No description provided for @requestStatusNeedMoreInfo.
+  ///
+  /// In ar, this message translates to:
+  /// **'مطلوب معلومات إضافية'**
+  String get requestStatusNeedMoreInfo;
+
+  /// No description provided for @requestStatusInspectionRequired.
+  ///
+  /// In ar, this message translates to:
+  /// **'مطلوب معاينة'**
+  String get requestStatusInspectionRequired;
+
+  /// No description provided for @requestStatusInspectionScheduled.
+  ///
+  /// In ar, this message translates to:
+  /// **'معاينة مجدولة'**
+  String get requestStatusInspectionScheduled;
+
+  /// No description provided for @requestStatusInspectionInProgress.
+  ///
+  /// In ar, this message translates to:
+  /// **'المعاينة جارية'**
+  String get requestStatusInspectionInProgress;
+
+  /// No description provided for @requestStatusInspectionCompleted.
+  ///
+  /// In ar, this message translates to:
+  /// **'انتهت المعاينة'**
+  String get requestStatusInspectionCompleted;
+
+  /// No description provided for @requestStatusQuotePreparation.
+  ///
+  /// In ar, this message translates to:
+  /// **'تجهيز عرض السعر'**
+  String get requestStatusQuotePreparation;
+
+  /// No description provided for @requestStatusQuoteSent.
+  ///
+  /// In ar, this message translates to:
+  /// **'تم إرسال عرض السعر'**
+  String get requestStatusQuoteSent;
+
+  /// No description provided for @requestStatusAwaitingApproval.
+  ///
+  /// In ar, this message translates to:
+  /// **'بانتظار موافقتك'**
+  String get requestStatusAwaitingApproval;
+
+  /// No description provided for @requestStatusQuoteRejected.
+  ///
+  /// In ar, this message translates to:
+  /// **'تم رفض عرض السعر'**
+  String get requestStatusQuoteRejected;
+
+  /// No description provided for @requestStatusDepositPending.
+  ///
+  /// In ar, this message translates to:
+  /// **'بانتظار دفع التأمين'**
+  String get requestStatusDepositPending;
+
+  /// No description provided for @requestStatusDepositVerification.
+  ///
+  /// In ar, this message translates to:
+  /// **'جاري التحقق من الدفع'**
+  String get requestStatusDepositVerification;
+
+  /// No description provided for @requestStatusConfirmed.
+  ///
+  /// In ar, this message translates to:
+  /// **'تم التأكيد'**
+  String get requestStatusConfirmed;
+
+  /// No description provided for @requestStatusAssignmentPending.
+  ///
+  /// In ar, this message translates to:
+  /// **'بانتظار تعيين فني'**
+  String get requestStatusAssignmentPending;
+
+  /// No description provided for @requestStatusTechnicianAssigned.
+  ///
+  /// In ar, this message translates to:
+  /// **'تم تعيين فني'**
+  String get requestStatusTechnicianAssigned;
+
+  /// No description provided for @requestStatusOnTheWay.
+  ///
+  /// In ar, this message translates to:
+  /// **'الفني في الطريق'**
+  String get requestStatusOnTheWay;
+
+  /// No description provided for @requestStatusArrived.
+  ///
+  /// In ar, this message translates to:
+  /// **'وصل الفني'**
+  String get requestStatusArrived;
+
+  /// No description provided for @requestStatusWorkInProgress.
+  ///
+  /// In ar, this message translates to:
+  /// **'جاري العمل'**
+  String get requestStatusWorkInProgress;
+
+  /// No description provided for @requestStatusServiceCompleted.
+  ///
+  /// In ar, this message translates to:
+  /// **'اكتمل العمل'**
+  String get requestStatusServiceCompleted;
+
+  /// No description provided for @requestStatusPaymentPending.
+  ///
+  /// In ar, this message translates to:
+  /// **'بانتظار الدفع'**
+  String get requestStatusPaymentPending;
+
+  /// No description provided for @requestStatusPaymentVerification.
+  ///
+  /// In ar, this message translates to:
+  /// **'جاري التحقق من الدفعة'**
+  String get requestStatusPaymentVerification;
+
+  /// No description provided for @requestStatusPaid.
+  ///
+  /// In ar, this message translates to:
+  /// **'تم الدفع'**
+  String get requestStatusPaid;
+
+  /// No description provided for @requestStatusAwaitingRating.
+  ///
+  /// In ar, this message translates to:
+  /// **'بانتظار تقييمك'**
+  String get requestStatusAwaitingRating;
+
+  /// No description provided for @requestStatusComplaintOpen.
+  ///
+  /// In ar, this message translates to:
+  /// **'شكوى مفتوحة'**
+  String get requestStatusComplaintOpen;
+
+  /// No description provided for @requestStatusComplaintUnderReview.
+  ///
+  /// In ar, this message translates to:
+  /// **'شكوى قيد المراجعة'**
+  String get requestStatusComplaintUnderReview;
+
+  /// No description provided for @requestStatusRevisitScheduled.
+  ///
+  /// In ar, this message translates to:
+  /// **'زيارة إصلاح مجدولة'**
+  String get requestStatusRevisitScheduled;
+
+  /// No description provided for @requestStatusResolved.
+  ///
+  /// In ar, this message translates to:
+  /// **'تم الحل'**
+  String get requestStatusResolved;
+
+  /// No description provided for @requestStatusClosed.
+  ///
+  /// In ar, this message translates to:
+  /// **'مغلق'**
+  String get requestStatusClosed;
+
+  /// No description provided for @requestStatusCancelled.
+  ///
+  /// In ar, this message translates to:
+  /// **'ملغي'**
+  String get requestStatusCancelled;
 }
 
 class _AppLocalizationsDelegate

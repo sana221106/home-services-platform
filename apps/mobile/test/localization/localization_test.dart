@@ -3,10 +3,10 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:home_services_app/l10n/app_localizations.dart';
+import 'package:home_services_app/app/localization/app_localizations.dart';
 
 Map<String, dynamic> _arb(String name) {
-  final file = File('lib/l10n/arb/$name');
+  final file = File('lib/app/localization/arb/$name');
   return jsonDecode(file.readAsStringSync()) as Map<String, dynamic>;
 }
 

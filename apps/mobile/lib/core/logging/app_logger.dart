@@ -1,11 +1,13 @@
 import 'package:flutter/foundation.dart';
 
+import '../security/sensitive_data.dart';
+
 /// Minimal logger.
 ///
 /// Redaction is the default, not an option: this app handles OTPs, JWTs,
 /// addresses and payment references, none of which may reach a log sink
-/// (§59). Callers pass structured fields, and anything that looks like a secret
-/// is replaced before printing.
+/// (§93, §99). Callers pass structured fields, and everything is filtered by
+/// [SensitiveData] before printing.
 abstract final class AppLogger {
   static bool get enabled => kDebugMode;
 
@@ -22,24 +24,22 @@ abstract final class AppLogger {
   }) {
     if (!enabled) return;
     debugPrint('[error] $message${_format(context)}');
-    if (error != null) debugPrint('  cause: ${_redact(error.toString())}');
-    if (stackTrace != null) debugPrint('  $stackTrace');
+    if (error != null) {
+      debugPrint('  cause: ${SensitiveData.redact('$error')}');
+    }
+    if (stackTrace != null) {
+      debugPrint('  $stackTrace');
+    }
   }
 
   static String _format(Map<String, Object?> context) {
     if (context.isEmpty) return '';
-    final parts = context.entries.map(
-      (MapEntry<String, Object?> e) => '${e.key}=${_redact('${e.value}')}',
-    );
+    final Map<String, String> safe = SensitiveData.redactFields(context);
+    final List<String> parts = <String>[
+      for (final MapEntry<String, String> entry in safe.entries)
+        '${entry.key}=${entry.value}',
+    ];
     return ' ${parts.join(' ')}';
-  }
-
-  /// Keeps values that look like credentials out of the output while staying
-  /// useful for debugging identifiers and status codes.
-  static String _redact(String value) {
-    return value
-        .replaceAll(RegExp(r'\b(eyJ[A-Za-z0-9_\-]{8,})'), '[jwt]')
-        .replaceAll(RegExp(r'\b(\+?\d{8,15})\b'), '[phone]');
   }
 }
 

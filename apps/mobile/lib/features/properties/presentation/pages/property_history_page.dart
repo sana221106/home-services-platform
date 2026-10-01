@@ -6,10 +6,11 @@ import '../../../../app/router/route_names.dart';
 import '../../../../app/theme/app_colors.dart';
 import '../../../../app/theme/app_spacing.dart';
 import '../../../../app/theme/app_text_style.dart';
+import '../../../../core/constants/request_status.dart';
 import '../../../../core/network/json_readers.dart';
-import '../../../../l10n/app_localizations.dart';
-import '../../../../shared/widgets/app_icon.dart';
-import '../../../../shared/widgets/app_widgets.dart';
+import '../../../../app/localization/app_localizations.dart';
+import '../../../../core/widgets/app_icon.dart';
+import '../../../../core/widgets/app_widgets.dart';
 import '../../data/models/property_models.dart';
 import '../controllers/property_history_controller.dart';
 
@@ -26,7 +27,7 @@ class PropertyHistoryPage extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final PropertyHistoryState state = ref.watch(
-      propertyHistoryProvider(this.propertyId),
+      propertyHistoryProvider(propertyId),
     );
     final l10n = context.l10n;
 
@@ -40,39 +41,39 @@ class PropertyHistoryPage extends ConsumerWidget {
         PropertyHistoryStatus.failed => ErrorRetry(
           message: state.error ?? l10n.commonRetry,
           onRetry: () =>
-              ref.read(propertyHistoryProvider(this.propertyId).notifier).load(),
+              ref.read(propertyHistoryProvider(propertyId).notifier).load(),
         ),
         PropertyHistoryStatus.ready =>
           state.items.isEmpty
               ? EmptyState(
-                icon: 'assets/icons/history.svg',
-                title: l10n.propertyHistoryEmptyTitle,
-                body: l10n.propertyHistoryEmptyBody,
-              )
+                  icon: 'assets/icons/history.svg',
+                  title: l10n.propertyHistoryEmptyTitle,
+                  body: l10n.propertyHistoryEmptyBody,
+                )
               : RefreshIndicator(
-                onRefresh: () =>
-                    ref
-                        .read(propertyHistoryProvider(this.propertyId).notifier)
-                        .load(),
-                child: ListView(
-                  padding: const EdgeInsets.fromLTRB(
-                    AppSpacing.screenHorizontal,
-                    AppSpacing.sm,
-                    AppSpacing.screenHorizontal,
-                    96,
+                  onRefresh: () => ref
+                      .read(propertyHistoryProvider(propertyId).notifier)
+                      .load(),
+                  child: ListView(
+                    padding: const EdgeInsets.fromLTRB(
+                      AppSpacing.screenHorizontal,
+                      AppSpacing.sm,
+                      AppSpacing.screenHorizontal,
+                      96,
+                    ),
+                    children: <Widget>[
+                      if (state.recurringCount > 0) ...<Widget>[
+                        RecurringIssueBanner(count: state.recurringCount),
+                        const SizedBox(height: AppSpacing.sm),
+                      ],
+                      for (final MaintenanceHistoryItem item
+                          in state.items) ...<Widget>[
+                        MaintenanceHistoryCard(item: item),
+                        const SizedBox(height: AppSpacing.sm),
+                      ],
+                    ],
                   ),
-                  children: <Widget>[
-                    if (state.recurringCount > 0) ...<Widget>[
-                      RecurringIssueBanner(count: state.recurringCount),
-                      const SizedBox(height: AppSpacing.sm),
-                    ],
-                    for (final MaintenanceHistoryItem item in state.items) ...<Widget>[
-                      MaintenanceHistoryCard(item: item),
-                      const SizedBox(height: AppSpacing.sm),
-                    ],
-                  ],
                 ),
-              ),
       },
     );
   }
@@ -136,13 +137,17 @@ class MaintenanceHistoryCard extends StatelessWidget {
               const Spacer(),
               Text(
                 formatDate(item.completedAt ?? item.createdAt),
-                style: context.text.caption.copyWith(color: colors.textSecondary),
+                style: context.text.caption.copyWith(
+                  color: colors.textSecondary,
+                ),
               ),
             ],
           ),
           const SizedBox(height: AppSpacing.xs),
           Text(
-            item.problemTypeName ?? item.categoryName ?? l10n.requestTitleFallback,
+            item.problemTypeName ??
+                item.categoryName ??
+                l10n.requestTitleFallback,
             style: context.text.title,
           ),
           if (item.problemDescription != null) ...<Widget>[
@@ -160,7 +165,10 @@ class MaintenanceHistoryCard extends StatelessWidget {
             runSpacing: AppSpacing.xs,
             children: <Widget>[
               if (item.categoryName != null)
-                AppChip(label: item.categoryName!, icon: 'assets/icons/wrench.svg'),
+                AppChip(
+                  label: item.categoryName!,
+                  icon: 'assets/icons/wrench.svg',
+                ),
               if (item.urgency == 'URGENT')
                 AppChip(
                   label: l10n.requestUrgencyUrgent,
@@ -192,7 +200,8 @@ class MaintenanceHistoryCard extends StatelessWidget {
                 ),
             ],
           ),
-          if (item.finalDiagnosis != null || item.resolution != null) ...<Widget>[
+          if (item.finalDiagnosis != null ||
+              item.resolution != null) ...<Widget>[
             const SizedBox(height: AppSpacing.sm),
             if (item.finalDiagnosis != null)
               InfoRow(
@@ -200,7 +209,10 @@ class MaintenanceHistoryCard extends StatelessWidget {
                 value: item.finalDiagnosis!,
               ),
             if (item.resolution != null)
-              InfoRow(label: l10n.requestResolutionLabel, value: item.resolution!),
+              InfoRow(
+                label: l10n.requestResolutionLabel,
+                value: item.resolution!,
+              ),
             if (item.materials.isNotEmpty)
               InfoRow(
                 label: l10n.requestMaterialsLabel,
@@ -214,7 +226,8 @@ class MaintenanceHistoryCard extends StatelessWidget {
               child: ListView.separated(
                 scrollDirection: Axis.horizontal,
                 itemCount: item.photoUrls.length,
-                separatorBuilder: (_, _) => const SizedBox(width: AppSpacing.xs),
+                separatorBuilder: (_, _) =>
+                    const SizedBox(width: AppSpacing.xs),
                 itemBuilder: (BuildContext context, int index) => ClipRRect(
                   borderRadius: BorderRadius.circular(10),
                   child: Image.network(
@@ -226,7 +239,11 @@ class MaintenanceHistoryCard extends StatelessWidget {
                       width: 62,
                       height: 62,
                       color: colors.surfaceVariant,
-                      child: AppIcon('assets/icons/image.svg', size: 20, color: colors.textSecondary),
+                      child: AppIcon(
+                        'assets/icons/image.svg',
+                        size: 20,
+                        color: colors.textSecondary,
+                      ),
                     ),
                   ),
                 ),
@@ -254,13 +271,8 @@ class MaintenanceHistoryCard extends StatelessWidget {
 
 /// Maps a backend request status onto the palette. Unknown statuses fall back to
 /// the neutral secondary colour rather than a random hue (§117).
-Color statusColor(AppColors colors, String status) => switch (status) {
-  'COMPLETED' || 'CLOSED' => colors.success,
-  'CANCELLED' || 'REJECTED' => colors.danger,
-  'IN_PROGRESS' || 'ON_THE_WAY' || 'ASSIGNED' => colors.primary,
-  'AWAITING_CONFIRMATION' || 'PENDING' || 'SUBMITTED' => colors.warning,
-  _ => colors.textSecondary,
-};
+Color statusColor(AppColors colors, String status) =>
+    (AppRequestStatus.fromCode(status)?.color(colors)) ?? colors.textSecondary;
 
 String statusLabel(BuildContext context, String status) =>
-    context.l10n.requestStatusLabel(status);
+    requestStatusPresentation(context, status).label;

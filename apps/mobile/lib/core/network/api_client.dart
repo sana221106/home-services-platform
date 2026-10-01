@@ -1,19 +1,24 @@
 import 'dart:async';
-import 'dart:math';
 
 import 'package:dio/dio.dart';
 
 import '../../app/config/app_config.dart';
-import '../logging/app_logger.dart';
+import '../errors/error_mapper.dart';
+import '../errors/failure.dart';
+import '../storage/secure_storage_service.dart';
 import 'api_endpoints.dart';
-import 'api_failure.dart';
-import 'token_store.dart';
+import 'auth_interceptor.dart';
+import 'logging_interceptor.dart';
 
 /// Single Dio entry point for the whole app.
 ///
 /// Repositories depend on this, never on Dio directly, so auth, timeouts,
 /// correlation ids and error translation live in exactly one place (§20).
-class ApiClient {
+///
+/// Also implements [AuthTokenDelegate] so the token lifecycle lives in
+/// `core/network/auth_interceptor.dart` while the refresh implementation, which
+/// needs the token store, stays here.
+class ApiClient implements AuthTokenDelegate {
   ApiClient({
     required TokenStore tokenStore,
     Dio? dio,
@@ -32,9 +37,9 @@ class ApiClient {
       validateStatus: (int? status) => status != null && status < 400,
     );
     _dio.interceptors.addAll(<Interceptor>[
-      _AuthInterceptor(this),
-      _CorrelationInterceptor(),
-      if (AppConfig.enableNetworkLogging) _LogInterceptor(),
+      AuthInterceptor(this),
+      CorrelationInterceptor(),
+      if (AppConfig.enableNetworkLogging) LoggingInterceptor(),
     ]);
   }
 
@@ -173,20 +178,18 @@ class ApiClient {
     );
   }
 
-  /// Endpoints that must not carry a bearer token or trigger a refresh loop.
-  static const Set<String> _publicPaths = <String>{
-    ApiEndpoints.authRequestOtp,
-    ApiEndpoints.authVerifyOtp,
-    ApiEndpoints.authRefresh,
-  };
+  /// Re-issues a request that already ran through the interceptors.
+  ///
+  /// Called by [AuthInterceptor] after a successful refresh so the retried call
+  /// carries the new token and the original correlation id.
+  @override
+  Future<Response<dynamic>> fetch(RequestOptions options) =>
+      _dio.fetch<dynamic>(options);
 
-  /// Marks a request as the refresh call itself so the auth interceptor skips
-  /// it. Prevents an infinite refresh loop without a second Dio instance.
-  static const String skipAuthFlag = 'skip_auth';
-
+  @override
   Future<void> attachAuth(RequestOptions options) async {
-    if (options.extra[skipAuthFlag] == true) return;
-    if (_publicPaths.contains(options.path)) return;
+    if (options.extra[AuthInterceptor.skipAuthFlag] == true) return;
+    if (AuthInterceptor.publicPaths.contains(options.path)) return;
     final tokens = await _tokenStore.read();
     if (tokens != null && tokens.accessToken.isNotEmpty) {
       options.headers['Authorization'] =
@@ -195,6 +198,7 @@ class ApiClient {
   }
 
   /// Returns true when a new access token is available.
+  @override
   Future<bool> refreshTokens() {
     return _refreshInFlight ??= _performRefresh().whenComplete(() {
       _refreshInFlight = null;
@@ -209,7 +213,9 @@ class ApiClient {
       final response = await _dio.post<Map<String, dynamic>>(
         ApiEndpoints.authRefresh,
         data: <String, dynamic>{'refresh_token': current.refreshToken},
-        options: Options(extra: <String, dynamic>{skipAuthFlag: true}),
+        options: Options(
+          extra: <String, dynamic>{AuthInterceptor.skipAuthFlag: true},
+        ),
       );
       final body = response.data;
       if (body == null) return false;
@@ -221,6 +227,7 @@ class ApiClient {
   }
 
   /// Called once per expired session so the router can bounce to onboarding.
+  @override
   void notifySessionExpired() {
     unawaited(_tokenStore.clear());
     final callback = _onSessionExpired;
@@ -228,220 +235,12 @@ class ApiClient {
   }
 
   /// Translates a transport-level failure into a displayable [ApiFailure].
-  ApiFailure translate(DioException error) {
-    switch (error.type) {
-      case DioExceptionType.connectionTimeout:
-      case DioExceptionType.sendTimeout:
-      case DioExceptionType.receiveTimeout:
-        return const ApiFailure.timeout();
-      case DioExceptionType.cancel:
-        return const ApiFailure.cancelled();
-      case DioExceptionType.connectionError:
-      case DioExceptionType.unknown:
-        return const ApiFailure.network();
-      case DioExceptionType.badCertificate:
-        return const ApiFailure(
-          code: 'BAD_CERTIFICATE',
-          message: 'تعذر التحقق من اتصال الخادم الآمن.',
-        );
-      case DioExceptionType.badResponse:
-        return fromResponse(error.response);
-      case DioExceptionType.transformTimeout:
-        return const ApiFailure.timeout();
-    }
-  }
+  ///
+  /// Delegates to [ErrorMapper] so the mapping has one owner and can be
+  /// tested without constructing a client.
+  ApiFailure translate(DioException error) => ErrorMapper.toFailure(error);
 
   /// Maps the backend's single error envelope `{code, message, details}`.
-  ApiFailure fromResponse(Response<dynamic>? response) {
-    final status = response?.statusCode;
-    final correlationId =
-        response?.headers.value('X-Correlation-ID') ??
-        (response?.requestOptions.headers['X-Correlation-ID'] as String?);
-    final data = response?.data;
-
-    if (data is Map) {
-      final code = data['code'] as String? ?? _defaultCode(status);
-      final rawMessage = data['message'] as String?;
-      return ApiFailure(
-        code: code,
-        message: rawMessage ?? _fallbackMessage(status),
-        statusCode: status,
-        details:
-            (data['details'] as Map?)?.cast<String, dynamic>() ??
-            const <String, dynamic>{},
-        fieldErrors: _fieldErrors(data['details']),
-        correlationId: correlationId,
-      );
-    }
-
-    return ApiFailure(
-      code: _defaultCode(status),
-      message: _fallbackMessage(status),
-      statusCode: status,
-      correlationId: correlationId,
-    );
-  }
-
-  Map<String, String> _fieldErrors(Object? details) {
-    if (details is! Map) return const <String, String>{};
-    final out = <String, String>{};
-    details.forEach((Object? key, Object? value) {
-      if (key is String && value is String && value.isNotEmpty) {
-        out[key] = value;
-      } else if (key is String && value is List && value.isNotEmpty) {
-        out[key] = value.first.toString();
-      }
-    });
-    return out;
-  }
-
-  static String _defaultCode(int? status) => switch (status) {
-    400 || 422 => ApiErrorCodes.validationError,
-    401 => ApiErrorCodes.unauthenticated,
-    403 => ApiErrorCodes.forbidden,
-    404 => ApiErrorCodes.notFound,
-    409 => ApiErrorCodes.conflict,
-    413 => ApiErrorCodes.uploadRejected,
-    429 => ApiErrorCodes.rateLimited,
-    null => 'NETWORK_UNAVAILABLE',
-    _ => 'HTTP_$status',
-  };
-
-  static String _fallbackMessage(int? status) {
-    if (status == null) return 'تعذر الاتصال بالخادم.';
-    if (status >= 500) return 'خدمة غير متاحة مؤقتًا. حاول مرة أخرى.';
-    return switch (status) {
-      401 => 'انتهت الجلسة. يرجى تسجيل الدخول مرة أخرى.',
-      403 => 'ليس لديك صلاحية للقيام بهذا الإجراء.',
-      404 => 'العنصر المطلوب غير موجود.',
-      409 => 'تم تعديل البيانات بالفعل. حدّث الصفحة وحاول مجددًا.',
-      429 => 'طلبات كثيرة جدًا. حاول مرة أخرى بعد قليل.',
-      _ => 'حدث خطأ غير متوقع.',
-    };
-  }
-}
-
-class _AuthInterceptor extends Interceptor {
-  _AuthInterceptor(this._client);
-
-  final ApiClient _client;
-  static const String _retryFlag = 'auth_retry';
-
-  @override
-  void onRequest(RequestOptions options, RequestInterceptorHandler handler) {
-    unawaited(_authorize(options, handler));
-  }
-
-  Future<void> _authorize(
-    RequestOptions options,
-    RequestInterceptorHandler handler,
-  ) async {
-    try {
-      await _client.attachAuth(options);
-    } catch (_) {
-      // A storage read failure must not block the request; the server decides.
-    }
-    handler.next(options);
-  }
-
-  @override
-  void onResponse(
-    Response<dynamic> response,
-    ResponseInterceptorHandler handler,
-  ) {
-    handler.next(response);
-  }
-
-  @override
-  void onError(DioException err, ErrorInterceptorHandler handler) {
-    unawaited(_handleError(err, handler));
-  }
-
-  static bool _isAuthEndpoint(String path) =>
-      path == ApiEndpoints.authRefresh ||
-      path == ApiEndpoints.authVerifyOtp ||
-      path == ApiEndpoints.authRequestOtp;
-
-  Future<void> _handleError(
-    DioException err,
-    ErrorInterceptorHandler handler,
-  ) async {
-    final RequestOptions options = err.requestOptions;
-    final is401 = err.response?.statusCode == 401;
-    final alreadyRetried = options.extra[_retryFlag] == true;
-
-    if (is401 && !alreadyRetried && !_isAuthEndpoint(options.path)) {
-      options.extra[_retryFlag] = true;
-      final bool refreshed = await _client.refreshTokens();
-
-      if (!refreshed) {
-        _client.notifySessionExpired();
-        handler.next(err);
-        return;
-      }
-
-      try {
-        options.headers.remove('Authorization');
-        await _client.attachAuth(options);
-        handler.resolve(await _client.raw.fetch<dynamic>(options));
-      } catch (_) {
-        // The retry failed too; surface the original 401 so the router can
-        // send the customer back to onboarding.
-        handler.next(err);
-      }
-      return;
-    }
-
-    if (is401) {
-      _client.notifySessionExpired();
-    }
-
-    handler.next(err);
-  }
-}
-
-class _CorrelationInterceptor extends Interceptor {
-  @override
-  void onRequest(RequestOptions options, RequestInterceptorHandler handler) {
-    options.headers['X-Correlation-ID'] =
-        options.headers['X-Correlation-ID'] ?? _generate();
-    handler.next(options);
-  }
-
-  static final Random _random = Random();
-
-  static String _generate() {
-    final int a = _random.nextInt(1 << 32);
-    final int b = _random.nextInt(1 << 32);
-    return a.toRadixString(16).padLeft(8, '0') +
-        b.toRadixString(16).padLeft(8, '0');
-  }
-}
-
-class _LogInterceptor extends Interceptor {
-  @override
-  void onRequest(RequestOptions options, RequestInterceptorHandler handler) {
-    // Method, path and status only: never headers or bodies, which carry
-    // tokens, OTPs, addresses and payment references.
-    debugLog('→ ${options.method} ${options.path}');
-    handler.next(options);
-  }
-
-  @override
-  void onResponse(
-    Response<dynamic> response,
-    ResponseInterceptorHandler handler,
-  ) {
-    debugLog('← ${response.statusCode} ${response.requestOptions.path}');
-    handler.next(response);
-  }
-
-  @override
-  void onError(DioException err, ErrorInterceptorHandler handler) {
-    debugLog(
-      '✗ ${err.response?.statusCode ?? err.type.name} '
-      '${err.requestOptions.path}',
-    );
-    handler.next(err);
-  }
+  ApiFailure fromResponse(Response<dynamic>? response) =>
+      ErrorMapper.failureFromResponse(response);
 }

@@ -1,8 +1,8 @@
 import 'package:dio/dio.dart';
 
 import '../../../../core/network/api_client.dart';
-import '../../../../core/network/api_failure.dart';
-import '../../../../core/network/token_store.dart';
+import '../../../../core/errors/failure.dart';
+import '../../../../core/storage/secure_storage_service.dart';
 import '../datasources/auth_remote_data_source.dart';
 import '../models/auth_models.dart';
 

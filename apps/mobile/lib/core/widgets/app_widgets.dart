@@ -5,7 +5,7 @@ import '../../app/theme/app_radius.dart';
 import '../../app/theme/app_shadows.dart';
 import '../../app/theme/app_spacing.dart';
 import '../../app/theme/app_text_style.dart';
-import '../../l10n/app_localizations.dart';
+import '../../app/localization/app_localizations.dart';
 import 'app_icon.dart';
 
 /// Standard page chrome: title, optional back affordance and subtitle.

@@ -6,8 +6,9 @@ import 'package:go_router/go_router.dart';
 import '../../../../app/router/route_names.dart';
 import '../../../../app/theme/app_colors.dart';
 import '../../../../app/theme/app_spacing.dart';
-import '../../../../l10n/app_localizations.dart';
-import '../../../../shared/widgets/app_icon.dart';
+import '../../../../app/localization/app_localizations.dart';
+import '../../../../core/utils/phone_number.dart';
+import '../../../../core/widgets/app_icon.dart';
 import '../../presentation/controllers/auth_controller.dart';
 
 /// Asks for the phone number that the OTP will be sent to.
@@ -28,7 +29,7 @@ class _PhoneEntryScreenState extends ConsumerState<PhoneEntryScreen> {
 
   /// Prefixed dial code. Kept as a constant rather than a picker because the
   /// platform is a single market; the backend still validates the full number.
-  static const String _dialCode = '+20';
+  static const String _dialCode = PhoneNumber.defaultDialCode;
 
   @override
   void dispose() {
@@ -37,26 +38,11 @@ class _PhoneEntryScreenState extends ConsumerState<PhoneEntryScreen> {
     super.dispose();
   }
 
-  /// Accepts local `01xxxxxxxxx` and normalises it to E.164, which is what the
-  /// backend pattern `^\+?[0-9]{8,15}$` expects.
-  static String? normaliseEgyptianPhone(String raw) {
-    final digits = raw.replaceAll(RegExp(r'[\s\-()]'), '');
-    if (digits.isEmpty) return null;
-
-    final String local = digits.startsWith('+')
-        ? digits
-        : digits.startsWith('0')
-        ? '$_dialCode${digits.substring(1)}'
-        : '$_dialCode$digits';
-
-    return RegExp(r'^\+[0-9]{8,15}$').hasMatch(local) ? local : null;
-  }
-
   Future<void> _submit() async {
     FocusScope.of(context).unfocus();
     if (!(_formKey.currentState?.validate() ?? false)) return;
 
-    final String? normalised = normaliseEgyptianPhone(_phoneController.text);
+    final String? normalised = PhoneNumber.normalize(_phoneController.text);
     if (normalised == null) return;
 
     final bool sent = await ref
@@ -130,7 +116,7 @@ class _PhoneEntryScreenState extends ConsumerState<PhoneEntryScreen> {
                       if (value == null || value.trim().isEmpty) {
                         return l10n.commonRequiredField;
                       }
-                      return normaliseEgyptianPhone(value) == null
+                      return PhoneNumber.normalize(value) == null
                           ? l10n.authPhoneInvalid
                           : null;
                     },

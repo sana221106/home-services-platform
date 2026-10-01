@@ -2,13 +2,15 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
-import '../../l10n/app_localizations.dart';
+import '../localization/app_localizations.dart';
 
 import '../../features/auth/presentation/controllers/auth_controller.dart';
 import '../../features/auth/presentation/screens/onboarding_screen.dart';
 import '../../features/auth/presentation/screens/otp_verify_screen.dart';
 import '../../features/auth/presentation/screens/phone_entry_screen.dart';
 import '../../features/home/presentation/home_screen.dart';
+import '../../features/properties/presentation/pages/properties_page.dart';
+import '../../features/properties/presentation/pages/property_history_page.dart';
 import '../shell/app_shell.dart';
 import 'route_names.dart';
 
@@ -115,7 +117,7 @@ final Provider<GoRouter> routerProvider = Provider<GoRouter>((Ref ref) {
                 path: '/properties',
                 name: AppRoute.properties.name,
                 builder: (BuildContext context, GoRouterState state) =>
-                    ComingSoonScreen(title: context.l10n.propertiesTitle),
+                    const PropertiesPage(),
               ),
             ],
           ),
@@ -154,6 +156,29 @@ final Provider<GoRouter> routerProvider = Provider<GoRouter>((Ref ref) {
         parentNavigatorKey: rootKey,
         builder: (BuildContext context, GoRouterState state) =>
             const ComingSoonScreen(title: ''),
+      ),
+      GoRoute(
+        path: '/properties/new',
+        name: AppRoute.propertyNew.name,
+        parentNavigatorKey: rootKey,
+        builder: (BuildContext context, GoRouterState state) =>
+            const ComingSoonScreen(title: ''),
+      ),
+      GoRoute(
+        path: '/properties/:propertyId',
+        name: AppRoute.propertyDetail.name,
+        parentNavigatorKey: rootKey,
+        builder: (BuildContext context, GoRouterState state) =>
+            const ComingSoonScreen(title: ''),
+      ),
+      GoRoute(
+        path: '/properties/:propertyId/history',
+        name: AppRoute.propertyHistory.name,
+        parentNavigatorKey: rootKey,
+        builder: (BuildContext context, GoRouterState state) =>
+            PropertyHistoryPage(
+              propertyId: state.pathParameters['propertyId']!,
+            ),
       ),
     ],
     errorBuilder: (BuildContext context, GoRouterState state) =>

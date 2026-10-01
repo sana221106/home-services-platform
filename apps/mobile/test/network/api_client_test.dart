@@ -6,7 +6,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:home_services_app/core/network/api_client.dart';
 import 'package:home_services_app/core/network/api_endpoints.dart';
 import 'package:home_services_app/core/network/paginated.dart';
-import 'package:home_services_app/core/network/token_store.dart';
+import 'package:home_services_app/core/storage/secure_storage_service.dart';
 
 /// Records every outbound request and replies from a scripted handler.
 class _FakeAdapter implements HttpClientAdapter {

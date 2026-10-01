@@ -1,7 +1,7 @@
 import 'package:dio/dio.dart';
 
 import '../../../../core/network/api_endpoints.dart';
-import '../../../../core/network/api_failure.dart';
+import '../../../../core/errors/failure.dart';
 import '../models/auth_models.dart';
 
 /// Authenticated session: tokens plus the customer they belong to.

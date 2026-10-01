@@ -8,8 +8,8 @@ import 'package:go_router/go_router.dart';
 import '../../../../app/theme/app_colors.dart';
 import '../../../../app/theme/app_spacing.dart';
 import '../../../../app/theme/app_text_style.dart';
-import '../../../../l10n/app_localizations.dart';
-import '../../../../shared/widgets/app_icon.dart';
+import '../../../../app/localization/app_localizations.dart';
+import '../../../../core/widgets/app_icon.dart';
 import '../../presentation/controllers/auth_controller.dart';
 
 /// Enters the OTP that was sent to the phone captured in [AuthState.phone].

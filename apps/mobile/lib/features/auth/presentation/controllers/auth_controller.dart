@@ -1,9 +1,9 @@
 import 'package:equatable/equatable.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../../../core/di/providers.dart';
+import '../../../../app/bootstrap/providers.dart';
 import '../../../../core/logging/app_logger.dart';
-import '../../../../core/network/api_failure.dart';
+import '../../../../core/errors/failure.dart';
 import '../../data/datasources/auth_remote_data_source.dart';
 import '../../data/models/auth_models.dart';
 import '../../data/repositories/auth_repository.dart';

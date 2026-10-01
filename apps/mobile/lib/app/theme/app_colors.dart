@@ -11,6 +11,7 @@ class AppColors extends ThemeExtension<AppColors> {
     required this.backgroundSecondary,
     required this.surface,
     required this.surfaceSecondary,
+    required this.surfaceVariant,
     required this.glass,
     required this.textPrimary,
     required this.textSecondary,
@@ -21,6 +22,7 @@ class AppColors extends ThemeExtension<AppColors> {
     required this.urgent,
     required this.danger,
     required this.success,
+    required this.warning,
     required this.warningSoft,
     required this.primarySoft,
     required this.accentSoft,
@@ -32,6 +34,11 @@ class AppColors extends ThemeExtension<AppColors> {
   final Color backgroundSecondary;
   final Color surface;
   final Color surfaceSecondary;
+
+  /// Recessed fill for nested rows, placeholders and image fallbacks. Distinct
+  /// from [surface] so a card on a card still reads as two layers (§45).
+  final Color surfaceVariant;
+
   final Color glass;
 
   final Color textPrimary;
@@ -47,6 +54,9 @@ class AppColors extends ThemeExtension<AppColors> {
   final Color danger;
   final Color success;
 
+  /// Amber used for "needs attention" states. [warningSoft] is its fill.
+  final Color warning;
+
   final Color warningSoft;
   final Color primarySoft;
   final Color accentSoft;
@@ -57,6 +67,7 @@ class AppColors extends ThemeExtension<AppColors> {
     backgroundSecondary: Color(0xFFEDF3FB),
     surface: Color(0xFFFFFFFF),
     surfaceSecondary: Color(0xFFF7F9FC),
+    surfaceVariant: Color(0xFFEDF1F7),
     glass: Color(0xFFFFFFFF),
     textPrimary: Color(0xFF0F172A),
     textSecondary: Color(0xFF667085),
@@ -68,6 +79,7 @@ class AppColors extends ThemeExtension<AppColors> {
     urgent: Color(0xFFFF8A3D),
     danger: Color(0xFFE84A5F),
     success: Color(0xFF2EAD6B),
+    warning: Color(0xFFF2A33C),
     warningSoft: Color(0xFFFFF3E8),
     primarySoft: Color(0xFFEEF4FF),
     accentSoft: Color(0xFFE8FAF6),
@@ -79,6 +91,7 @@ class AppColors extends ThemeExtension<AppColors> {
     backgroundSecondary: Color(0xFF0C172A),
     surface: Color(0xFF101C30),
     surfaceSecondary: Color(0xFF15243C),
+    surfaceVariant: Color(0xFF1C2E49),
     glass: Color(0xFF14233A),
     textPrimary: Color(0xFFF8FAFC),
     textSecondary: Color(0xFF9AA9BD),
@@ -90,6 +103,7 @@ class AppColors extends ThemeExtension<AppColors> {
     urgent: Color(0xFFFF8A3D),
     danger: Color(0xFFE84A5F),
     success: Color(0xFF2EAD6B),
+    warning: Color(0xFFF2A33C),
     warningSoft: Color(0xFF3A281D),
     primarySoft: Color(0xFF172D5E),
     accentSoft: Color(0xFF12372F),
@@ -102,6 +116,7 @@ class AppColors extends ThemeExtension<AppColors> {
     Color? backgroundSecondary,
     Color? surface,
     Color? surfaceSecondary,
+    Color? surfaceVariant,
     Color? glass,
     Color? textPrimary,
     Color? textSecondary,
@@ -113,6 +128,7 @@ class AppColors extends ThemeExtension<AppColors> {
     Color? urgent,
     Color? danger,
     Color? success,
+    Color? warning,
     Color? warningSoft,
     Color? primarySoft,
     Color? accentSoft,
@@ -123,6 +139,7 @@ class AppColors extends ThemeExtension<AppColors> {
       backgroundSecondary: backgroundSecondary ?? this.backgroundSecondary,
       surface: surface ?? this.surface,
       surfaceSecondary: surfaceSecondary ?? this.surfaceSecondary,
+      surfaceVariant: surfaceVariant ?? this.surfaceVariant,
       glass: glass ?? this.glass,
       textPrimary: textPrimary ?? this.textPrimary,
       textSecondary: textSecondary ?? this.textSecondary,
@@ -134,6 +151,7 @@ class AppColors extends ThemeExtension<AppColors> {
       urgent: urgent ?? this.urgent,
       danger: danger ?? this.danger,
       success: success ?? this.success,
+      warning: warning ?? this.warning,
       warningSoft: warningSoft ?? this.warningSoft,
       primarySoft: primarySoft ?? this.primarySoft,
       accentSoft: accentSoft ?? this.accentSoft,
@@ -157,6 +175,7 @@ class AppColors extends ThemeExtension<AppColors> {
         other.surfaceSecondary,
         t,
       )!,
+      surfaceVariant: Color.lerp(surfaceVariant, other.surfaceVariant, t)!,
       glass: Color.lerp(glass, other.glass, t)!,
       textPrimary: Color.lerp(textPrimary, other.textPrimary, t)!,
       textSecondary: Color.lerp(textSecondary, other.textSecondary, t)!,
@@ -168,6 +187,7 @@ class AppColors extends ThemeExtension<AppColors> {
       urgent: Color.lerp(urgent, other.urgent, t)!,
       danger: Color.lerp(danger, other.danger, t)!,
       success: Color.lerp(success, other.success, t)!,
+      warning: Color.lerp(warning, other.warning, t)!,
       warningSoft: Color.lerp(warningSoft, other.warningSoft, t)!,
       primarySoft: Color.lerp(primarySoft, other.primarySoft, t)!,
       accentSoft: Color.lerp(accentSoft, other.accentSoft, t)!,

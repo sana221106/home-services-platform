@@ -6,9 +6,9 @@ import '../../../../app/router/route_names.dart';
 import '../../../../app/theme/app_colors.dart';
 import '../../../../app/theme/app_spacing.dart';
 import '../../../../app/theme/app_text_style.dart';
-import '../../../../l10n/app_localizations.dart';
-import '../../../../shared/widgets/app_icon.dart';
-import '../../../../shared/widgets/app_widgets.dart';
+import '../../../../app/localization/app_localizations.dart';
+import '../../../../core/widgets/app_icon.dart';
+import '../../../../core/widgets/app_widgets.dart';
 import '../../data/models/property_models.dart';
 import '../controllers/properties_controller.dart';
 
@@ -40,8 +40,7 @@ class PropertiesPage extends ConsumerWidget {
         ),
       ],
       body: switch (state.status) {
-        PropertiesStatus.initial ||
-        PropertiesStatus.loading => const Center(
+        PropertiesStatus.initial || PropertiesStatus.loading => const Center(
           child: CircularProgressIndicator(),
         ),
         PropertiesStatus.failed => ErrorRetry(
@@ -51,37 +50,38 @@ class PropertiesPage extends ConsumerWidget {
         PropertiesStatus.ready =>
           state.properties.isEmpty
               ? EmptyState(
-                icon: 'assets/icons/building.svg',
-                title: l10n.propertiesEmptyTitle,
-                body: l10n.propertiesEmptyBody,
-                actionLabel: l10n.propertiesAdd,
-                onAction: () => context.goNamed(AppRoute.propertyNew.name),
-              )
+                  icon: 'assets/icons/building.svg',
+                  title: l10n.propertiesEmptyTitle,
+                  body: l10n.propertiesEmptyBody,
+                  actionLabel: l10n.propertiesAdd,
+                  onAction: () => context.goNamed(AppRoute.propertyNew.name),
+                )
               : RefreshIndicator(
-                onRefresh: () => ref.read(propertiesProvider.notifier).load(),
-                child: ListView.separated(
-                  padding: const EdgeInsets.fromLTRB(
-                    AppSpacing.screenHorizontal,
-                    AppSpacing.sm,
-                    AppSpacing.screenHorizontal,
-                    96,
+                  onRefresh: () => ref.read(propertiesProvider.notifier).load(),
+                  child: ListView.separated(
+                    padding: const EdgeInsets.fromLTRB(
+                      AppSpacing.screenHorizontal,
+                      AppSpacing.sm,
+                      AppSpacing.screenHorizontal,
+                      96,
+                    ),
+                    itemCount: state.properties.length,
+                    separatorBuilder: (_, _) =>
+                        const SizedBox(height: AppSpacing.sm),
+                    itemBuilder: (BuildContext context, int index) {
+                      final Property property = state.properties[index];
+                      return PropertyCard(
+                        property: property,
+                        onTap: () => context.goNamed(
+                          AppRoute.propertyDetail.name,
+                          pathParameters: <String, String>{
+                            'propertyId': property.id,
+                          },
+                        ),
+                      );
+                    },
                   ),
-                  itemCount: state.properties.length,
-                  separatorBuilder: (_, _) =>
-                      const SizedBox(height: AppSpacing.sm),
-                  itemBuilder: (BuildContext context, int index) {
-                    final Property property = state.properties[index];
-                    return PropertyCard(
-                      property: property,
-                      onTap: () =>
-                          context.goNamed(AppRoute.propertyDetail.name,
-                              pathParameters: <String, String>{
-                                'propertyId': property.id,
-                              }),
-                    );
-                  },
                 ),
-              ),
       },
     );
   }
@@ -110,7 +110,11 @@ class PropertyCard extends StatelessWidget {
               color: colors.primarySoft,
               borderRadius: BorderRadius.circular(14),
             ),
-            child: AppIcon('assets/icons/building.svg', size: 24, color: colors.primary),
+            child: AppIcon(
+              'assets/icons/building.svg',
+              size: 24,
+              color: colors.primary,
+            ),
           ),
           const SizedBox(width: AppSpacing.md),
           Expanded(
@@ -139,17 +143,15 @@ class PropertyCard extends StatelessWidget {
                 const SizedBox(height: 2),
                 Text(
                   property.displayAddress,
-                  style: context.text.caption.copyWith(color: colors.textSecondary),
+                  style: context.text.caption.copyWith(
+                    color: colors.textSecondary,
+                  ),
                   overflow: TextOverflow.ellipsis,
                 ),
               ],
             ),
           ),
-          Icon(
-            Icons.chevron_right,
-            color: colors.textSecondary,
-            size: 20,
-          ),
+          Icon(Icons.chevron_right, color: colors.textSecondary, size: 20),
         ],
       ),
     );

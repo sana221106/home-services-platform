@@ -1,11 +1,13 @@
-# Localization configuration (§ Arabic-first, RTL).
+# Localization configuration (Arabic-first, RTL).
 #
 # Arabic is the source locale; English is provided so the codebase does not
 # hard-code a single language before copy is finalised.
-arb-dir: lib/l10n/arb
+#
+# Lives under app/localization per §22 so all app-level wiring sits together.
+arb-dir: lib/app/localization/arb
 template-arb-file: app_ar.arb
 output-localization-file: app_localizations.dart
 output-class: AppLocalizations
-output-dir: lib/l10n/generated
+output-dir: lib/app/localization/generated
 nullable-getter: false
 use-escaping: true
