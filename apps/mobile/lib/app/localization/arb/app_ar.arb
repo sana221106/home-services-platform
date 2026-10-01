@@ -519,5 +519,129 @@
   "description":  "Requests tab list count. {count} is a number."
 },
 "requestsListCount":  "{count} طلب"
-
+,
+  "@commonCurrency": {
+    "description": "commonCurrency copy"
+  },
+  "commonCurrency": "{amount} ج.م",
+  "@requestDetailProblemTitle": {
+    "description": "requestDetailProblemTitle copy"
+  },
+  "requestDetailProblemTitle": "وصف المشكلة",
+  "@requestDetailPhotos": {
+    "description": "requestDetailPhotos copy"
+  },
+  "requestDetailPhotos": "الصور ({count})",
+  "@requestDetailAddressTitle": {
+    "description": "requestDetailAddressTitle copy"
+  },
+  "requestDetailAddressTitle": "عنوان الزيارة",
+  "@requestDetailTechnicianTitle": {
+    "description": "requestDetailTechnicianTitle copy"
+  },
+  "requestDetailTechnicianTitle": "الفني",
+  "@requestDetailNoTimeline": {
+    "description": "requestDetailNoTimeline copy"
+  },
+  "requestDetailNoTimeline": "لا توجد تحديثات بعد",
+  "@requestDetailAddedByYou": {
+    "description": "requestDetailAddedByYou copy"
+  },
+  "requestDetailAddedByYou": "أضافته أنت",
+  "@requestDetailAddedByTeam": {
+    "description": "requestDetailAddedByTeam copy"
+  },
+  "requestDetailAddedByTeam": "أضافه فريق الخدمة",
+  "@quoteServiceCost": {
+    "description": "quoteServiceCost copy"
+  },
+  "quoteServiceCost": "الخدمة",
+  "@quoteMaterialsCost": {
+    "description": "quoteMaterialsCost copy"
+  },
+  "quoteMaterialsCost": "المواد",
+  "@quoteUrgencyFee": {
+    "description": "quoteUrgencyFee copy"
+  },
+  "quoteUrgencyFee": "رسوم العاجل",
+  "@quoteInspectionFee": {
+    "description": "quoteInspectionFee copy"
+  },
+  "quoteInspectionFee": "رسوم المعاينة",
+  "@quoteDiscount": {
+    "description": "quoteDiscount copy"
+  },
+  "quoteDiscount": "الخصم",
+  "@quoteSubtotal": {
+    "description": "quoteSubtotal copy"
+  },
+  "quoteSubtotal": "المجموع الفرعي",
+  "@quoteTotal": {
+    "description": "quoteTotal copy"
+  },
+  "quoteTotal": "الإجمالي",
+  "@quoteDuration": {
+    "description": "quoteDuration copy"
+  },
+  "quoteDuration": "المدة التقديرية",
+  "@quoteDurationValue": {
+    "description": "quoteDurationValue copy"
+  },
+  "quoteDurationValue": "{count} دقيقة",
+  "@quoteRevision": {
+    "description": "quoteRevision copy"
+  },
+  "quoteRevision": "العرض رقم {count}",
+  "@quoteValidUntil": {
+    "description": "quoteValidUntil copy"
+  },
+  "quoteValidUntil": "صالح حتى {date}",
+  "@quoteNotes": {
+    "description": "quoteNotes copy"
+  },
+  "quoteNotes": "ملاحظات",
+  "@quoteItemsTitle": {
+    "description": "quoteItemsTitle copy"
+  },
+  "quoteItemsTitle": "ما يشمله العرض",
+  "@quoteActionableEnded": {
+    "description": "quoteActionableEnded copy"
+  },
+  "quoteActionableEnded": "لم يعد هذا العرض قابلًا للقبول",
+  "@cancelRefundPreview": {
+    "description": "cancelRefundPreview copy"
+  },
+  "cancelRefundPreview": "معاينة الاسترداد",
+  "@cancelRefundAmount": {
+    "description": "cancelRefundAmount copy"
+  },
+  "cancelRefundAmount": "سيتم رد لك",
+  "@cancelDeductionAmount": {
+    "description": "cancelDeductionAmount copy"
+  },
+  "cancelDeductionAmount": "يُخصم من العربون",
+  "@cancelNeedsApproval": {
+    "description": "cancelNeedsApproval copy"
+  },
+  "cancelNeedsApproval": "هذا الطلب يحتاج موافقة الفريق قبل الإلغاء",
+  "@cancelReasonLabel": {
+    "description": "cancelReasonLabel copy"
+  },
+  "cancelReasonLabel": "سبب الإلغاء (اختياري)",
+  "@cancelReasonHint": {
+    "description": "cancelReasonHint copy"
+  },
+  "cancelReasonHint": "أخبرنا بما حدث حتى نتحسن",
+  "@requestCancelAction": {
+    "description": "requestCancelAction copy"
+  },
+  "requestCancelAction": "إلغاء الطلب",
+  "@requestRateAction": {
+    "description": "requestRateAction copy"
+  },
+  "requestRateAction": "تقييم الخدمة",
+  "@requestComplainAction": {
+    "description": "requestComplainAction copy"
+  },
+  "requestComplainAction": "الإبلاغ عن مشكلة"
 }

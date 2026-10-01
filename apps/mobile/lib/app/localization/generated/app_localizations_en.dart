@@ -846,7 +846,111 @@ class AppLocalizationsEn extends AppLocalizations {
   String get requestsNewActivity => 'New activity';
 
   @override
-  String requestsListCount(Object count) {
+  String requestsListCount(int count) {
     return '$count total';
   }
+
+  @override
+  String commonCurrency(Object amount) {
+    return '$amount EGP';
+  }
+
+  @override
+  String get requestDetailProblemTitle => 'Problem description';
+
+  @override
+  String requestDetailPhotos(Object count) {
+    return 'Photos ($count)';
+  }
+
+  @override
+  String get requestDetailAddressTitle => 'Visit address';
+
+  @override
+  String get requestDetailTechnicianTitle => 'Technician';
+
+  @override
+  String get requestDetailNoTimeline => 'No updates yet';
+
+  @override
+  String get requestDetailAddedByYou => 'Added by you';
+
+  @override
+  String get requestDetailAddedByTeam => 'Added by the service team';
+
+  @override
+  String get quoteServiceCost => 'Service';
+
+  @override
+  String get quoteMaterialsCost => 'Materials';
+
+  @override
+  String get quoteUrgencyFee => 'Urgency fee';
+
+  @override
+  String get quoteInspectionFee => 'Inspection fee';
+
+  @override
+  String get quoteDiscount => 'Discount';
+
+  @override
+  String get quoteSubtotal => 'Subtotal';
+
+  @override
+  String get quoteTotal => 'Total';
+
+  @override
+  String get quoteDuration => 'Estimated duration';
+
+  @override
+  String quoteDurationValue(Object count) {
+    return '$count minutes';
+  }
+
+  @override
+  String quoteRevision(Object count) {
+    return 'Quote #$count';
+  }
+
+  @override
+  String quoteValidUntil(Object date) {
+    return 'Valid until $date';
+  }
+
+  @override
+  String get quoteNotes => 'Notes';
+
+  @override
+  String get quoteItemsTitle => 'What is included';
+
+  @override
+  String get quoteActionableEnded => 'This quote is no longer open';
+
+  @override
+  String get cancelRefundPreview => 'Refund preview';
+
+  @override
+  String get cancelRefundAmount => 'You will get back';
+
+  @override
+  String get cancelDeductionAmount => 'Deducted from the deposit';
+
+  @override
+  String get cancelNeedsApproval =>
+      'This request needs staff approval before it is cancelled';
+
+  @override
+  String get cancelReasonLabel => 'Why are you cancelling? (optional)';
+
+  @override
+  String get cancelReasonHint => 'Tell us what went wrong so we can improve';
+
+  @override
+  String get requestCancelAction => 'Cancel request';
+
+  @override
+  String get requestRateAction => 'Rate service';
+
+  @override
+  String get requestComplainAction => 'Report a problem';
 }

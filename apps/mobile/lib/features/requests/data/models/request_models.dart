@@ -654,8 +654,8 @@ class QuoteItem extends Equatable {
 class CancellationPreview extends Equatable {
   const CancellationPreview({
     required this.requestId,
-    required this.depositRequired,
-    required this.depositPaid,
+    required this.depositRequiredAmount,
+    required this.depositPaidAmount,
     required this.refundPercent,
     required this.refundableAmount,
     required this.deductionAmount,
@@ -666,8 +666,10 @@ class CancellationPreview extends Equatable {
   factory CancellationPreview.fromJson(Map<String, dynamic> json) {
     return CancellationPreview(
       requestId: json.strOr('request_id', ''),
-      depositRequired: json.flag('deposit_required'),
-      depositPaid: json.flag('deposit_paid'),
+      // These are money amounts on the backend (`Decimal`), not flags. Reading
+      // them as bools collapsed 250.00 and 0.01 both to `true`.
+      depositRequiredAmount: json.decimal('deposit_required') ?? 0,
+      depositPaidAmount: json.decimal('deposit_paid') ?? 0,
       refundPercent: json.decimal('refund_percent') ?? 0,
       refundableAmount: json.decimal('refundable_amount') ?? 0,
       deductionAmount: json.decimal('deduction_amount') ?? 0,
@@ -677,8 +679,12 @@ class CancellationPreview extends Equatable {
   }
 
   final String requestId;
-  final bool depositRequired;
-  final bool depositPaid;
+  final double depositRequiredAmount;
+  final double depositPaidAmount;
+
+  /// Whether any deposit was taken, which is what the refund copy turns on.
+  bool get depositPaid => depositPaidAmount > 0;
+  bool get depositRequired => depositRequiredAmount > 0;
   final double refundPercent;
   final double refundableAmount;
   final double deductionAmount;
@@ -688,10 +694,13 @@ class CancellationPreview extends Equatable {
   @override
   List<Object?> get props => <Object?>[
     requestId,
+    depositRequiredAmount,
+    depositPaidAmount,
     refundPercent,
     refundableAmount,
     deductionAmount,
     requiresApproval,
+    policyNoteAr,
   ];
 }
 

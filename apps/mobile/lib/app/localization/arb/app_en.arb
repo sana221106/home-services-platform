@@ -521,5 +521,129 @@
                              }
                  },
   "description":  "Requests tab list count. {count} is a number."
-}
+},
+  "@commonCurrency": {
+    "description": "commonCurrency copy"
+  },
+  "commonCurrency": "{amount} EGP",
+  "@requestDetailProblemTitle": {
+    "description": "requestDetailProblemTitle copy"
+  },
+  "requestDetailProblemTitle": "Problem description",
+  "@requestDetailPhotos": {
+    "description": "requestDetailPhotos copy"
+  },
+  "requestDetailPhotos": "Photos ({count})",
+  "@requestDetailAddressTitle": {
+    "description": "requestDetailAddressTitle copy"
+  },
+  "requestDetailAddressTitle": "Visit address",
+  "@requestDetailTechnicianTitle": {
+    "description": "requestDetailTechnicianTitle copy"
+  },
+  "requestDetailTechnicianTitle": "Technician",
+  "@requestDetailNoTimeline": {
+    "description": "requestDetailNoTimeline copy"
+  },
+  "requestDetailNoTimeline": "No updates yet",
+  "@requestDetailAddedByYou": {
+    "description": "requestDetailAddedByYou copy"
+  },
+  "requestDetailAddedByYou": "Added by you",
+  "@requestDetailAddedByTeam": {
+    "description": "requestDetailAddedByTeam copy"
+  },
+  "requestDetailAddedByTeam": "Added by the service team",
+  "@quoteServiceCost": {
+    "description": "quoteServiceCost copy"
+  },
+  "quoteServiceCost": "Service",
+  "@quoteMaterialsCost": {
+    "description": "quoteMaterialsCost copy"
+  },
+  "quoteMaterialsCost": "Materials",
+  "@quoteUrgencyFee": {
+    "description": "quoteUrgencyFee copy"
+  },
+  "quoteUrgencyFee": "Urgency fee",
+  "@quoteInspectionFee": {
+    "description": "quoteInspectionFee copy"
+  },
+  "quoteInspectionFee": "Inspection fee",
+  "@quoteDiscount": {
+    "description": "quoteDiscount copy"
+  },
+  "quoteDiscount": "Discount",
+  "@quoteSubtotal": {
+    "description": "quoteSubtotal copy"
+  },
+  "quoteSubtotal": "Subtotal",
+  "@quoteTotal": {
+    "description": "quoteTotal copy"
+  },
+  "quoteTotal": "Total",
+  "@quoteDuration": {
+    "description": "quoteDuration copy"
+  },
+  "quoteDuration": "Estimated duration",
+  "@quoteDurationValue": {
+    "description": "quoteDurationValue copy"
+  },
+  "quoteDurationValue": "{count} minutes",
+  "@quoteRevision": {
+    "description": "quoteRevision copy"
+  },
+  "quoteRevision": "Quote #{count}",
+  "@quoteValidUntil": {
+    "description": "quoteValidUntil copy"
+  },
+  "quoteValidUntil": "Valid until {date}",
+  "@quoteNotes": {
+    "description": "quoteNotes copy"
+  },
+  "quoteNotes": "Notes",
+  "@quoteItemsTitle": {
+    "description": "quoteItemsTitle copy"
+  },
+  "quoteItemsTitle": "What is included",
+  "@quoteActionableEnded": {
+    "description": "quoteActionableEnded copy"
+  },
+  "quoteActionableEnded": "This quote is no longer open",
+  "@cancelRefundPreview": {
+    "description": "cancelRefundPreview copy"
+  },
+  "cancelRefundPreview": "Refund preview",
+  "@cancelRefundAmount": {
+    "description": "cancelRefundAmount copy"
+  },
+  "cancelRefundAmount": "You will get back",
+  "@cancelDeductionAmount": {
+    "description": "cancelDeductionAmount copy"
+  },
+  "cancelDeductionAmount": "Deducted from the deposit",
+  "@cancelNeedsApproval": {
+    "description": "cancelNeedsApproval copy"
+  },
+  "cancelNeedsApproval": "This request needs staff approval before it is cancelled",
+  "@cancelReasonLabel": {
+    "description": "cancelReasonLabel copy"
+  },
+  "cancelReasonLabel": "Why are you cancelling? (optional)",
+  "@cancelReasonHint": {
+    "description": "cancelReasonHint copy"
+  },
+  "cancelReasonHint": "Tell us what went wrong so we can improve",
+  "@requestCancelAction": {
+    "description": "requestCancelAction copy"
+  },
+  "requestCancelAction": "Cancel request",
+  "@requestRateAction": {
+    "description": "requestRateAction copy"
+  },
+  "requestRateAction": "Rate service",
+  "@requestComplainAction": {
+    "description": "requestComplainAction copy"
+  },
+  "requestComplainAction": "Report a problem"
 }

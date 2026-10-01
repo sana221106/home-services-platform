@@ -838,7 +838,110 @@ class AppLocalizationsAr extends AppLocalizations {
   String get requestsNewActivity => 'تحديث جديد';
 
   @override
-  String requestsListCount(Object count) {
-    return '1575160415731580160515751604 15731604160515801605: $count';
+  String requestsListCount(int count) {
+    return '$count طلب';
   }
+
+  @override
+  String commonCurrency(Object amount) {
+    return '$amount ج.م';
+  }
+
+  @override
+  String get requestDetailProblemTitle => 'وصف المشكلة';
+
+  @override
+  String requestDetailPhotos(Object count) {
+    return 'الصور ($count)';
+  }
+
+  @override
+  String get requestDetailAddressTitle => 'عنوان الزيارة';
+
+  @override
+  String get requestDetailTechnicianTitle => 'الفني';
+
+  @override
+  String get requestDetailNoTimeline => 'لا توجد تحديثات بعد';
+
+  @override
+  String get requestDetailAddedByYou => 'أضافته أنت';
+
+  @override
+  String get requestDetailAddedByTeam => 'أضافه فريق الخدمة';
+
+  @override
+  String get quoteServiceCost => 'الخدمة';
+
+  @override
+  String get quoteMaterialsCost => 'المواد';
+
+  @override
+  String get quoteUrgencyFee => 'رسوم العاجل';
+
+  @override
+  String get quoteInspectionFee => 'رسوم المعاينة';
+
+  @override
+  String get quoteDiscount => 'الخصم';
+
+  @override
+  String get quoteSubtotal => 'المجموع الفرعي';
+
+  @override
+  String get quoteTotal => 'الإجمالي';
+
+  @override
+  String get quoteDuration => 'المدة التقديرية';
+
+  @override
+  String quoteDurationValue(Object count) {
+    return '$count دقيقة';
+  }
+
+  @override
+  String quoteRevision(Object count) {
+    return 'العرض رقم $count';
+  }
+
+  @override
+  String quoteValidUntil(Object date) {
+    return 'صالح حتى $date';
+  }
+
+  @override
+  String get quoteNotes => 'ملاحظات';
+
+  @override
+  String get quoteItemsTitle => 'ما يشمله العرض';
+
+  @override
+  String get quoteActionableEnded => 'لم يعد هذا العرض قابلًا للقبول';
+
+  @override
+  String get cancelRefundPreview => 'معاينة الاسترداد';
+
+  @override
+  String get cancelRefundAmount => 'سيتم رد لك';
+
+  @override
+  String get cancelDeductionAmount => 'يُخصم من العربون';
+
+  @override
+  String get cancelNeedsApproval => 'هذا الطلب يحتاج موافقة الفريق قبل الإلغاء';
+
+  @override
+  String get cancelReasonLabel => 'سبب الإلغاء (اختياري)';
+
+  @override
+  String get cancelReasonHint => 'أخبرنا بما حدث حتى نتحسن';
+
+  @override
+  String get requestCancelAction => 'إلغاء الطلب';
+
+  @override
+  String get requestRateAction => 'تقييم الخدمة';
+
+  @override
+  String get requestComplainAction => 'الإبلاغ عن مشكلة';
 }

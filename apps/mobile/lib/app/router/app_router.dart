@@ -14,6 +14,7 @@ import '../../features/properties/presentation/pages/property_history_page.dart'
 import '../../features/requests/presentation/pages/location_page.dart';
 import '../../features/requests/presentation/pages/problem_details_page.dart';
 import '../../features/requests/presentation/pages/photo_annotation_page.dart';
+import '../../features/requests/presentation/pages/request_detail_page.dart';
 import '../../features/requests/presentation/pages/requests_page.dart';
 import '../../features/requests/presentation/pages/review_request_page.dart';
 import '../../features/requests/presentation/pages/select_service_page.dart';
@@ -167,7 +168,7 @@ final Provider<GoRouter> routerProvider = Provider<GoRouter>((Ref ref) {
         name: AppRoute.requestDetail.name,
         parentNavigatorKey: rootKey,
         builder: (BuildContext context, GoRouterState state) =>
-            const ComingSoonScreen(title: ''),
+            RequestDetailPage(requestId: state.pathParameters['requestId']!),
       ),
       GoRoute(
         path: '/properties/new',

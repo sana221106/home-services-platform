@@ -1685,8 +1685,194 @@ abstract class AppLocalizations {
   /// Requests tab list count. {count} is a number.
   ///
   /// In ar, this message translates to:
-  /// **'1575160415731580160515751604 15731604160515801605: {count}'**
-  String requestsListCount(Object count);
+  /// **'{count} طلب'**
+  String requestsListCount(int count);
+
+  /// commonCurrency copy
+  ///
+  /// In ar, this message translates to:
+  /// **'{amount} ج.م'**
+  String commonCurrency(Object amount);
+
+  /// requestDetailProblemTitle copy
+  ///
+  /// In ar, this message translates to:
+  /// **'وصف المشكلة'**
+  String get requestDetailProblemTitle;
+
+  /// requestDetailPhotos copy
+  ///
+  /// In ar, this message translates to:
+  /// **'الصور ({count})'**
+  String requestDetailPhotos(Object count);
+
+  /// requestDetailAddressTitle copy
+  ///
+  /// In ar, this message translates to:
+  /// **'عنوان الزيارة'**
+  String get requestDetailAddressTitle;
+
+  /// requestDetailTechnicianTitle copy
+  ///
+  /// In ar, this message translates to:
+  /// **'الفني'**
+  String get requestDetailTechnicianTitle;
+
+  /// requestDetailNoTimeline copy
+  ///
+  /// In ar, this message translates to:
+  /// **'لا توجد تحديثات بعد'**
+  String get requestDetailNoTimeline;
+
+  /// requestDetailAddedByYou copy
+  ///
+  /// In ar, this message translates to:
+  /// **'أضافته أنت'**
+  String get requestDetailAddedByYou;
+
+  /// requestDetailAddedByTeam copy
+  ///
+  /// In ar, this message translates to:
+  /// **'أضافه فريق الخدمة'**
+  String get requestDetailAddedByTeam;
+
+  /// quoteServiceCost copy
+  ///
+  /// In ar, this message translates to:
+  /// **'الخدمة'**
+  String get quoteServiceCost;
+
+  /// quoteMaterialsCost copy
+  ///
+  /// In ar, this message translates to:
+  /// **'المواد'**
+  String get quoteMaterialsCost;
+
+  /// quoteUrgencyFee copy
+  ///
+  /// In ar, this message translates to:
+  /// **'رسوم العاجل'**
+  String get quoteUrgencyFee;
+
+  /// quoteInspectionFee copy
+  ///
+  /// In ar, this message translates to:
+  /// **'رسوم المعاينة'**
+  String get quoteInspectionFee;
+
+  /// quoteDiscount copy
+  ///
+  /// In ar, this message translates to:
+  /// **'الخصم'**
+  String get quoteDiscount;
+
+  /// quoteSubtotal copy
+  ///
+  /// In ar, this message translates to:
+  /// **'المجموع الفرعي'**
+  String get quoteSubtotal;
+
+  /// quoteTotal copy
+  ///
+  /// In ar, this message translates to:
+  /// **'الإجمالي'**
+  String get quoteTotal;
+
+  /// quoteDuration copy
+  ///
+  /// In ar, this message translates to:
+  /// **'المدة التقديرية'**
+  String get quoteDuration;
+
+  /// quoteDurationValue copy
+  ///
+  /// In ar, this message translates to:
+  /// **'{count} دقيقة'**
+  String quoteDurationValue(Object count);
+
+  /// quoteRevision copy
+  ///
+  /// In ar, this message translates to:
+  /// **'العرض رقم {count}'**
+  String quoteRevision(Object count);
+
+  /// quoteValidUntil copy
+  ///
+  /// In ar, this message translates to:
+  /// **'صالح حتى {date}'**
+  String quoteValidUntil(Object date);
+
+  /// quoteNotes copy
+  ///
+  /// In ar, this message translates to:
+  /// **'ملاحظات'**
+  String get quoteNotes;
+
+  /// quoteItemsTitle copy
+  ///
+  /// In ar, this message translates to:
+  /// **'ما يشمله العرض'**
+  String get quoteItemsTitle;
+
+  /// quoteActionableEnded copy
+  ///
+  /// In ar, this message translates to:
+  /// **'لم يعد هذا العرض قابلًا للقبول'**
+  String get quoteActionableEnded;
+
+  /// cancelRefundPreview copy
+  ///
+  /// In ar, this message translates to:
+  /// **'معاينة الاسترداد'**
+  String get cancelRefundPreview;
+
+  /// cancelRefundAmount copy
+  ///
+  /// In ar, this message translates to:
+  /// **'سيتم رد لك'**
+  String get cancelRefundAmount;
+
+  /// cancelDeductionAmount copy
+  ///
+  /// In ar, this message translates to:
+  /// **'يُخصم من العربون'**
+  String get cancelDeductionAmount;
+
+  /// cancelNeedsApproval copy
+  ///
+  /// In ar, this message translates to:
+  /// **'هذا الطلب يحتاج موافقة الفريق قبل الإلغاء'**
+  String get cancelNeedsApproval;
+
+  /// cancelReasonLabel copy
+  ///
+  /// In ar, this message translates to:
+  /// **'سبب الإلغاء (اختياري)'**
+  String get cancelReasonLabel;
+
+  /// cancelReasonHint copy
+  ///
+  /// In ar, this message translates to:
+  /// **'أخبرنا بما حدث حتى نتحسن'**
+  String get cancelReasonHint;
+
+  /// requestCancelAction copy
+  ///
+  /// In ar, this message translates to:
+  /// **'إلغاء الطلب'**
+  String get requestCancelAction;
+
+  /// requestRateAction copy
+  ///
+  /// In ar, this message translates to:
+  /// **'تقييم الخدمة'**
+  String get requestRateAction;
+
+  /// requestComplainAction copy
+  ///
+  /// In ar, this message translates to:
+  /// **'الإبلاغ عن مشكلة'**
+  String get requestComplainAction;
 }
 
 class _AppLocalizationsDelegate
