@@ -572,12 +572,6 @@ abstract class AppLocalizations {
   /// **'سنحاول خدمتك في أقرب وقت متاح'**
   String get requestsScheduleUrgentHint;
 
-  /// No description provided for @requestsReviewTitle.
-  ///
-  /// In ar, this message translates to:
-  /// **'راجع الطلب'**
-  String get requestsReviewTitle;
-
   /// No description provided for @requestsSubmit.
   ///
   /// In ar, this message translates to:
@@ -1345,6 +1339,342 @@ abstract class AppLocalizations {
   /// In ar, this message translates to:
   /// **'م'**
   String get meridiemPm;
+
+  /// Requests list filter: every request
+  ///
+  /// In ar, this message translates to:
+  /// **'الكل'**
+  String get requestsFilterAll;
+
+  /// Requests list filter: in-flight requests
+  ///
+  /// In ar, this message translates to:
+  /// **'نشطة'**
+  String get requestsFilterActive;
+
+  /// Requests list filter: waiting on the customer
+  ///
+  /// In ar, this message translates to:
+  /// **'تحتاج إجراء'**
+  String get requestsFilterAction;
+
+  /// Requests list filter: finished requests
+  ///
+  /// In ar, this message translates to:
+  /// **'مكتملة'**
+  String get requestsFilterDone;
+
+  /// Wizard step 1 of 5
+  ///
+  /// In ar, this message translates to:
+  /// **'الخدمة'**
+  String get requestsStepService;
+
+  /// Wizard step 2 of 5
+  ///
+  /// In ar, this message translates to:
+  /// **'التفاصيل'**
+  String get requestsStepDetails;
+
+  /// Wizard step 3 of 5
+  ///
+  /// In ar, this message translates to:
+  /// **'الصور'**
+  String get requestsStepPhotos;
+
+  /// Wizard step 4 of 5
+  ///
+  /// In ar, this message translates to:
+  /// **'الموقع'**
+  String get requestsStepLocation;
+
+  /// Wizard step 5 of 5
+  ///
+  /// In ar, this message translates to:
+  /// **'المراجعة'**
+  String get requestsStepReview;
+
+  /// Wizard progress. {current} and {total} are numbers.
+  ///
+  /// In ar, this message translates to:
+  /// **'الخطوة {current} من {total}'**
+  String requestsStepCounter(Object current, Object total);
+
+  /// Service picker prompt
+  ///
+  /// In ar, this message translates to:
+  /// **'اختر الخدمة'**
+  String get requestsServiceChoose;
+
+  /// Catalogue came back empty
+  ///
+  /// In ar, this message translates to:
+  /// **'لا توجد خدمات متاحة'**
+  String get requestsServiceEmpty;
+
+  /// Catalogue load failure body
+  ///
+  /// In ar, this message translates to:
+  /// **'تعذر تحميل قائمة الخدمات، حاول مرة أخرى'**
+  String get requestsServiceEmptyBody;
+
+  /// Problem type is optional on create
+  ///
+  /// In ar, this message translates to:
+  /// **'نوع المشكلة (اختياري)'**
+  String get requestsProblemOptional;
+
+  /// Skip choosing a problem type
+  ///
+  /// In ar, this message translates to:
+  /// **'تخطي'**
+  String get requestsProblemSkip;
+
+  /// problem_description minimum length hint
+  ///
+  /// In ar, this message translates to:
+  /// **'اكتب 10 أحرف على الأقل'**
+  String get requestsDescTooShort;
+
+  /// problem_description maximum length hint
+  ///
+  /// In ar, this message translates to:
+  /// **'الحد الأقصى 4000 حرف'**
+  String get requestsDescTooLong;
+
+  /// Photo picker button
+  ///
+  /// In ar, this message translates to:
+  /// **'إضافة صورة'**
+  String get requestsPhotosAdd;
+
+  /// Submit needs media_count > 0
+  ///
+  /// In ar, this message translates to:
+  /// **'يلزم صورة واحدة على الأقل للمتابعة'**
+  String get requestsPhotosRequired;
+
+  /// Photo cap. {max} is a number.
+  ///
+  /// In ar, this message translates to:
+  /// **'وصلت للحد الأقصى {max} صور'**
+  String requestsPhotosLimit(Object max);
+
+  /// Accepted formats and size
+  ///
+  /// In ar, this message translates to:
+  /// **'JPG أو PNG أو WebP، بحد أقصى 12 ميجابايت للصورة'**
+  String get requestsPhotosHintSize;
+
+  /// While photos upload
+  ///
+  /// In ar, this message translates to:
+  /// **'جارٍ رفع الصور...'**
+  String get requestsPhotosUploading;
+
+  /// Photo counter. Both numbers.
+  ///
+  /// In ar, this message translates to:
+  /// **'{count} من {max} صور'**
+  String requestsPhotosCount(Object count, Object max);
+
+  /// Property picker prompt
+  ///
+  /// In ar, this message translates to:
+  /// **'اختر العقار'**
+  String get requestsLocationPick;
+
+  /// No properties exist yet
+  ///
+  /// In ar, this message translates to:
+  /// **'أضف عقاراً أولاً من صفحة العقارات'**
+  String get requestsLocationNoProperty;
+
+  /// Address field, required
+  ///
+  /// In ar, this message translates to:
+  /// **'المحافظة'**
+  String get requestsAddressGovernorate;
+
+  /// Address field, required
+  ///
+  /// In ar, this message translates to:
+  /// **'المدينة'**
+  String get requestsAddressCity;
+
+  /// Address field
+  ///
+  /// In ar, this message translates to:
+  /// **'المنطقة'**
+  String get requestsAddressZone;
+
+  /// Address field
+  ///
+  /// In ar, this message translates to:
+  /// **'الحي'**
+  String get requestsAddressDistrict;
+
+  /// Address field
+  ///
+  /// In ar, this message translates to:
+  /// **'الشارع'**
+  String get requestsAddressStreet;
+
+  /// Address field
+  ///
+  /// In ar, this message translates to:
+  /// **'المبنى'**
+  String get requestsAddressBuilding;
+
+  /// Address field
+  ///
+  /// In ar, this message translates to:
+  /// **'الدور'**
+  String get requestsAddressFloor;
+
+  /// Address field
+  ///
+  /// In ar, this message translates to:
+  /// **'الشقة'**
+  String get requestsAddressApartment;
+
+  /// Address field
+  ///
+  /// In ar, this message translates to:
+  /// **'علامة مميزة'**
+  String get requestsAddressLandmark;
+
+  /// Address field
+  ///
+  /// In ar, this message translates to:
+  /// **'ملاحظات للوصول'**
+  String get requestsAddressNotes;
+
+  /// Address field; requires a phone
+  ///
+  /// In ar, this message translates to:
+  /// **'اسم جهة الاتصال'**
+  String get requestsAddressContactName;
+
+  /// Address field; required with contact_name
+  ///
+  /// In ar, this message translates to:
+  /// **'رقم جهة الاتصال'**
+  String get requestsAddressContactPhone;
+
+  /// latitude/longitude required
+  ///
+  /// In ar, this message translates to:
+  /// **'حدد الموقع على الخريطة'**
+  String get requestsAddressCoordsMissing;
+
+  /// Review step heading
+  ///
+  /// In ar, this message translates to:
+  /// **'راجع طلبك'**
+  String get requestsReviewTitle;
+
+  /// Jump back to a step from review
+  ///
+  /// In ar, this message translates to:
+  /// **'تعديل'**
+  String get requestsReviewEdit;
+
+  /// Blockers list heading on review
+  ///
+  /// In ar, this message translates to:
+  /// **'ينقصك التالي:'**
+  String get requestsReviewMissing;
+
+  /// Blocker
+  ///
+  /// In ar, this message translates to:
+  /// **'اختر الخدمة'**
+  String get requestsReviewMissingService;
+
+  /// Blocker
+  ///
+  /// In ar, this message translates to:
+  /// **'أكمل العنوان'**
+  String get requestsReviewMissingLocation;
+
+  /// Blocker
+  ///
+  /// In ar, this message translates to:
+  /// **'اكتب وصف المشكلة'**
+  String get requestsReviewMissingDetails;
+
+  /// Blocker
+  ///
+  /// In ar, this message translates to:
+  /// **'أضف صورة واحدة على الأقل'**
+  String get requestsReviewMissingPhotos;
+
+  /// While the request is created and uploaded
+  ///
+  /// In ar, this message translates to:
+  /// **'جارٍ إرسال الطلب...'**
+  String get requestsSubmitting;
+
+  /// Retry after a partial submit failure
+  ///
+  /// In ar, this message translates to:
+  /// **'حاول مرة أخرى'**
+  String get requestsSubmitRetry;
+
+  /// Progress note during submit
+  ///
+  /// In ar, this message translates to:
+  /// **'تم إنشاء مسودة، سنكمل الرفع'**
+  String get requestsCreatedDraft;
+
+  /// Empty property list in the wizard
+  ///
+  /// In ar, this message translates to:
+  /// **'لا يوجد عقار مسجل'**
+  String get requestsNoProperty;
+
+  /// Urgency option
+  ///
+  /// In ar, this message translates to:
+  /// **'عادي'**
+  String get requestsUrgencyNormal;
+
+  /// Urgency option
+  ///
+  /// In ar, this message translates to:
+  /// **'عاجل'**
+  String get requestsUrgencyUrgentLabel;
+
+  /// inspection_only explanation
+  ///
+  /// In ar, this message translates to:
+  /// **'فحص فقط بدون تنفيذ'**
+  String get requestsInspectionOnlyHint;
+
+  /// customer_notes field
+  ///
+  /// In ar, this message translates to:
+  /// **'ملاحظات إضافية'**
+  String get requestsNoteLabel;
+
+  /// request reference_code label
+  ///
+  /// In ar, this message translates to:
+  /// **'رقم الطلب'**
+  String get requestsReferenceCode;
+
+  /// List count. {count} is a number.
+  ///
+  /// In ar, this message translates to:
+  /// **'{count} طلب'**
+  String requestsCountLabel(Object count);
+
+  /// Cross-field validation message
+  ///
+  /// In ar, this message translates to:
+  /// **'أدخل رقم جهة الاتصال عند تحديد اسم جهة الاتصال'**
+  String get requestsAddressContactPairError;
 }
 
 class _AppLocalizationsDelegate

@@ -44,8 +44,9 @@ void main() {
     });
 
     test('no Arabic string leaks Latin words', () {
-      // The phone hint is intentionally Latin digits/x placeholders.
-      const allowlisted = <String>{'authPhoneHint'};
+      // Values that are deliberately non-Arabic: a phone placeholder, and the
+      // image format names the backend actually accepts (JPEG/PNG/WebP).
+      const allowlisted = <String>{'authPhoneHint', 'requestsPhotosHintSize'};
       final ar = _arb('app_ar.arb');
       final offenders = <String>[];
 
@@ -97,6 +98,63 @@ void main() {
             .toSet();
         expect(enNames, arNames, reason: 'placeholder mismatch in $key');
       });
+    });
+
+    test('no Arabic string is mojibake from a bad decode', () {
+      // PowerShell 5.1 reads BOM-less UTF-8 as ANSI, so writing an ARB back
+      // through Get-Content silently turns Arabic into Latin-1 box-drawing and
+      // shade characters. It rendered as plausible text in the console, so it
+      // shipped once as `requestsReviewTitle`. These ranges are the signature
+      // of that decode; real Arabic copy never contains them.
+      final mojibakeRanges = <String, RegExp>{
+        'box drawing': RegExp(r'[\u2500-\u257F]'),
+        'block elements': RegExp(r'[\u2580-\u259F]'),
+        'Latin-1 supplement': RegExp(r'[\u00A0-\u00BF]'),
+        'replacement char': RegExp('�'),
+      };
+
+      final offenders = <String>[];
+      for (final MapEntry<String, dynamic> entry in _arb(
+        'app_ar.arb',
+      ).entries) {
+        if (entry.key.startsWith('@') || entry.value is! String) continue;
+        final String value = entry.value! as String;
+        for (final MapEntry<String, RegExp> range in mojibakeRanges.entries) {
+          if (range.value.hasMatch(value)) {
+            offenders.add('${entry.key} contains ${range.key}');
+          }
+        }
+      }
+
+      expect(
+        offenders,
+        isEmpty,
+        reason:
+            'mojibake means the ARB was rewritten through a lossy decode; '
+            'edit ARB with UTF-8 aware tools, not PowerShell Get-Content',
+      );
+    });
+
+    test('Arabic values that claim to be Arabic contain Arabic letters', () {
+      // Catches the inverse failure: a value that lost its Arabic entirely and
+      // became punctuation or digits only.
+      final offenders = <String>[];
+      _arb('app_ar.arb').forEach((String key, Object? value) {
+        if (key.startsWith('@') || value is! String) return;
+        if ((value! as String).trim().isEmpty) return;
+        // These are deliberately non-Arabic values.
+        const allowlisted = <String>{'authPhoneHint', 'requestsPhotosHintSize'};
+        if (allowlisted.contains(key)) return;
+
+        final bool hasArabicLetter = RegExp(r'[\u0620-\u064A]').hasMatch(value);
+        if (!hasArabicLetter) offenders.add('$key -> $value');
+      });
+
+      expect(
+        offenders,
+        isEmpty,
+        reason: 'a non-Arabic value in the Arabic catalogue is usually damage',
+      );
     });
   });
 

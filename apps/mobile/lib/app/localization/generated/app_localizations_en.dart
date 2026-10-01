@@ -261,9 +261,6 @@ class AppLocalizationsEn extends AppLocalizations {
       'We will serve you at the earliest available slot';
 
   @override
-  String get requestsReviewTitle => 'Review request';
-
-  @override
   String get requestsSubmit => 'Submit request';
 
   @override
@@ -665,4 +662,183 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get meridiemPm => 'PM';
+
+  @override
+  String get requestsFilterAll => 'All';
+
+  @override
+  String get requestsFilterActive => 'Active';
+
+  @override
+  String get requestsFilterAction => 'Needs action';
+
+  @override
+  String get requestsFilterDone => 'Completed';
+
+  @override
+  String get requestsStepService => 'Service';
+
+  @override
+  String get requestsStepDetails => 'Details';
+
+  @override
+  String get requestsStepPhotos => 'Photos';
+
+  @override
+  String get requestsStepLocation => 'Location';
+
+  @override
+  String get requestsStepReview => 'Review';
+
+  @override
+  String requestsStepCounter(Object current, Object total) {
+    return 'Step $current of $total';
+  }
+
+  @override
+  String get requestsServiceChoose => 'Choose a service';
+
+  @override
+  String get requestsServiceEmpty => 'No services available';
+
+  @override
+  String get requestsServiceEmptyBody =>
+      'Could not load the service list. Try again.';
+
+  @override
+  String get requestsProblemOptional => 'Problem type (optional)';
+
+  @override
+  String get requestsProblemSkip => 'Skip';
+
+  @override
+  String get requestsDescTooShort => 'Write at least 10 characters';
+
+  @override
+  String get requestsDescTooLong => 'Maximum 4000 characters';
+
+  @override
+  String get requestsPhotosAdd => 'Add a photo';
+
+  @override
+  String get requestsPhotosRequired => 'At least one photo is required';
+
+  @override
+  String requestsPhotosLimit(Object max) {
+    return 'Maximum $max photos reached';
+  }
+
+  @override
+  String get requestsPhotosHintSize => 'JPG, PNG or WebP, up to 12 MB each';
+
+  @override
+  String get requestsPhotosUploading => 'Uploading photos...';
+
+  @override
+  String requestsPhotosCount(Object count, Object max) {
+    return '$count of $max photos';
+  }
+
+  @override
+  String get requestsLocationPick => 'Choose a property';
+
+  @override
+  String get requestsLocationNoProperty =>
+      'Add a property first from the Properties tab';
+
+  @override
+  String get requestsAddressGovernorate => 'Governorate';
+
+  @override
+  String get requestsAddressCity => 'City';
+
+  @override
+  String get requestsAddressZone => 'Zone';
+
+  @override
+  String get requestsAddressDistrict => 'District';
+
+  @override
+  String get requestsAddressStreet => 'Street';
+
+  @override
+  String get requestsAddressBuilding => 'Building';
+
+  @override
+  String get requestsAddressFloor => 'Floor';
+
+  @override
+  String get requestsAddressApartment => 'Apartment';
+
+  @override
+  String get requestsAddressLandmark => 'Landmark';
+
+  @override
+  String get requestsAddressNotes => 'Access notes';
+
+  @override
+  String get requestsAddressContactName => 'Contact name';
+
+  @override
+  String get requestsAddressContactPhone => 'Contact phone';
+
+  @override
+  String get requestsAddressCoordsMissing => 'Pick the location on the map';
+
+  @override
+  String get requestsReviewTitle => 'Review your request';
+
+  @override
+  String get requestsReviewEdit => 'Edit';
+
+  @override
+  String get requestsReviewMissing => 'Still needed:';
+
+  @override
+  String get requestsReviewMissingService => 'Choose a service';
+
+  @override
+  String get requestsReviewMissingLocation => 'Complete the address';
+
+  @override
+  String get requestsReviewMissingDetails => 'Describe the problem';
+
+  @override
+  String get requestsReviewMissingPhotos => 'Add at least one photo';
+
+  @override
+  String get requestsSubmitting => 'Submitting...';
+
+  @override
+  String get requestsSubmitRetry => 'Try again';
+
+  @override
+  String get requestsCreatedDraft => 'Draft created, continuing upload';
+
+  @override
+  String get requestsNoProperty => 'No property saved';
+
+  @override
+  String get requestsUrgencyNormal => 'Normal';
+
+  @override
+  String get requestsUrgencyUrgentLabel => 'Urgent';
+
+  @override
+  String get requestsInspectionOnlyHint => 'Inspection only, no repair';
+
+  @override
+  String get requestsNoteLabel => 'Additional notes';
+
+  @override
+  String get requestsReferenceCode => 'Reference';
+
+  @override
+  String requestsCountLabel(Object count) {
+    return '$count requests';
+  }
+
+  @override
+  String get requestsAddressContactPairError =>
+      'Enter a contact phone when you set a contact name';
 }

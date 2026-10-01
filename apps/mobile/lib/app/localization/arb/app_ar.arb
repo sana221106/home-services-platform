@@ -79,7 +79,6 @@
     "requestsScheduleTitle":  "موعد الزيارة",
     "requestsScheduleUrgent":  "طارئ",
     "requestsScheduleUrgentHint":  "سنحاول خدمتك في أقرب وقت متاح",
-    "requestsReviewTitle":  "راجع الطلب",
     "requestsSubmit":  "إرسال الطلب",
     "requestsSubmitSuccess":  "تم إرسال طلبك بنجاح",
     "requestDetailTitle":  "تفاصيل الطلب",
@@ -259,5 +258,229 @@
                     },
     "@meridiemPm":  {
                         "description":  "12-hour clock meridiem, after noon"
-                    }
+                    },
+    "@requestsFilterAll":  {
+                               "description":  "Requests list filter: every request"
+                           },
+    "requestsFilterAll":  "الكل",
+    "@requestsFilterActive":  {
+                                  "description":  "Requests list filter: in-flight requests"
+                              },
+    "requestsFilterActive":  "نشطة",
+    "@requestsFilterAction":  {
+                                  "description":  "Requests list filter: waiting on the customer"
+                              },
+    "requestsFilterAction":  "تحتاج إجراء",
+    "@requestsFilterDone":  {
+                                "description":  "Requests list filter: finished requests"
+                            },
+    "requestsFilterDone":  "مكتملة",
+    "@requestsStepService":  {
+                                 "description":  "Wizard step 1 of 5"
+                             },
+    "requestsStepService":  "الخدمة",
+    "@requestsStepDetails":  {
+                                 "description":  "Wizard step 2 of 5"
+                             },
+    "requestsStepDetails":  "التفاصيل",
+    "@requestsStepPhotos":  {
+                                "description":  "Wizard step 3 of 5"
+                            },
+    "requestsStepPhotos":  "الصور",
+    "@requestsStepLocation":  {
+                                  "description":  "Wizard step 4 of 5"
+                              },
+    "requestsStepLocation":  "الموقع",
+    "@requestsStepReview":  {
+                                "description":  "Wizard step 5 of 5"
+                            },
+    "requestsStepReview":  "المراجعة",
+    "@requestsStepCounter":  {
+                                 "description":  "Wizard progress. {current} and {total} are numbers."
+                             },
+    "requestsStepCounter":  "الخطوة {current} من {total}",
+    "@requestsServiceChoose":  {
+                                   "description":  "Service picker prompt"
+                               },
+    "requestsServiceChoose":  "اختر الخدمة",
+    "@requestsServiceEmpty":  {
+                                  "description":  "Catalogue came back empty"
+                              },
+    "requestsServiceEmpty":  "لا توجد خدمات متاحة",
+    "@requestsServiceEmptyBody":  {
+                                      "description":  "Catalogue load failure body"
+                                  },
+    "requestsServiceEmptyBody":  "تعذر تحميل قائمة الخدمات، حاول مرة أخرى",
+    "@requestsProblemOptional":  {
+                                     "description":  "Problem type is optional on create"
+                                 },
+    "requestsProblemOptional":  "نوع المشكلة (اختياري)",
+    "@requestsProblemSkip":  {
+                                 "description":  "Skip choosing a problem type"
+                             },
+    "requestsProblemSkip":  "تخطي",
+    "@requestsDescTooShort":  {
+                                  "description":  "problem_description minimum length hint"
+                              },
+    "requestsDescTooShort":  "اكتب 10 أحرف على الأقل",
+    "@requestsDescTooLong":  {
+                                 "description":  "problem_description maximum length hint"
+                             },
+    "requestsDescTooLong":  "الحد الأقصى 4000 حرف",
+    "@requestsPhotosAdd":  {
+                               "description":  "Photo picker button"
+                           },
+    "requestsPhotosAdd":  "إضافة صورة",
+    "@requestsPhotosRequired":  {
+                                    "description":  "Submit needs media_count \u003e 0"
+                                },
+    "requestsPhotosRequired":  "يلزم صورة واحدة على الأقل للمتابعة",
+    "@requestsPhotosLimit":  {
+                                 "description":  "Photo cap. {max} is a number."
+                             },
+    "requestsPhotosLimit":  "وصلت للحد الأقصى {max} صور",
+    "@requestsPhotosHintSize":  {
+                                    "description":  "Accepted formats and size"
+                                },
+    "requestsPhotosHintSize":  "JPG أو PNG أو WebP، بحد أقصى 12 ميجابايت للصورة",
+    "@requestsPhotosUploading":  {
+                                     "description":  "While photos upload"
+                                 },
+    "requestsPhotosUploading":  "جارٍ رفع الصور...",
+    "@requestsPhotosCount":  {
+                                 "description":  "Photo counter. Both numbers."
+                             },
+    "requestsPhotosCount":  "{count} من {max} صور",
+    "@requestsLocationPick":  {
+                                  "description":  "Property picker prompt"
+                              },
+    "requestsLocationPick":  "اختر العقار",
+    "@requestsLocationNoProperty":  {
+                                        "description":  "No properties exist yet"
+                                    },
+    "requestsLocationNoProperty":  "أضف عقاراً أولاً من صفحة العقارات",
+    "@requestsAddressGovernorate":  {
+                                        "description":  "Address field, required"
+                                    },
+    "requestsAddressGovernorate":  "المحافظة",
+    "@requestsAddressCity":  {
+                                 "description":  "Address field, required"
+                             },
+    "requestsAddressCity":  "المدينة",
+    "@requestsAddressZone":  {
+                                 "description":  "Address field"
+                             },
+    "requestsAddressZone":  "المنطقة",
+    "@requestsAddressDistrict":  {
+                                     "description":  "Address field"
+                                 },
+    "requestsAddressDistrict":  "الحي",
+    "@requestsAddressStreet":  {
+                                   "description":  "Address field"
+                               },
+    "requestsAddressStreet":  "الشارع",
+    "@requestsAddressBuilding":  {
+                                     "description":  "Address field"
+                                 },
+    "requestsAddressBuilding":  "المبنى",
+    "@requestsAddressFloor":  {
+                                  "description":  "Address field"
+                              },
+    "requestsAddressFloor":  "الدور",
+    "@requestsAddressApartment":  {
+                                      "description":  "Address field"
+                                  },
+    "requestsAddressApartment":  "الشقة",
+    "@requestsAddressLandmark":  {
+                                     "description":  "Address field"
+                                 },
+    "requestsAddressLandmark":  "علامة مميزة",
+    "@requestsAddressNotes":  {
+                                  "description":  "Address field"
+                              },
+    "requestsAddressNotes":  "ملاحظات للوصول",
+    "@requestsAddressContactName":  {
+                                        "description":  "Address field; requires a phone"
+                                    },
+    "requestsAddressContactName":  "اسم جهة الاتصال",
+    "@requestsAddressContactPhone":  {
+                                         "description":  "Address field; required with contact_name"
+                                     },
+    "requestsAddressContactPhone":  "رقم جهة الاتصال",
+    "@requestsAddressContactPairError":  {
+                                             "description":  "Cross-field validation message"
+                                         },
+    "@requestsAddressCoordsMissing":  {
+                                          "description":  "latitude/longitude required"
+                                      },
+    "requestsAddressCoordsMissing":  "حدد الموقع على الخريطة",
+    "@requestsReviewTitle":  {
+                                 "description":  "Review step heading"
+                             },
+    "requestsReviewTitle":  "راجع طلبك",
+    "@requestsReviewEdit":  {
+                                "description":  "Jump back to a step from review"
+                            },
+    "requestsReviewEdit":  "تعديل",
+    "@requestsReviewMissing":  {
+                                   "description":  "Blockers list heading on review"
+                               },
+    "requestsReviewMissing":  "ينقصك التالي:",
+    "@requestsReviewMissingService":  {
+                                          "description":  "Blocker"
+                                      },
+    "requestsReviewMissingService":  "اختر الخدمة",
+    "@requestsReviewMissingLocation":  {
+                                           "description":  "Blocker"
+                                       },
+    "requestsReviewMissingLocation":  "أكمل العنوان",
+    "@requestsReviewMissingDetails":  {
+                                          "description":  "Blocker"
+                                      },
+    "requestsReviewMissingDetails":  "اكتب وصف المشكلة",
+    "@requestsReviewMissingPhotos":  {
+                                         "description":  "Blocker"
+                                     },
+    "requestsReviewMissingPhotos":  "أضف صورة واحدة على الأقل",
+    "@requestsSubmitting":  {
+                                "description":  "While the request is created and uploaded"
+                            },
+    "requestsSubmitting":  "جارٍ إرسال الطلب...",
+    "@requestsSubmitRetry":  {
+                                 "description":  "Retry after a partial submit failure"
+                             },
+    "requestsSubmitRetry":  "حاول مرة أخرى",
+    "@requestsCreatedDraft":  {
+                                  "description":  "Progress note during submit"
+                              },
+    "requestsCreatedDraft":  "تم إنشاء مسودة، سنكمل الرفع",
+    "@requestsNoProperty":  {
+                                "description":  "Empty property list in the wizard"
+                            },
+    "requestsNoProperty":  "لا يوجد عقار مسجل",
+    "@requestsUrgencyNormal":  {
+                                   "description":  "Urgency option"
+                               },
+    "requestsUrgencyNormal":  "عادي",
+    "@requestsUrgencyUrgentLabel":  {
+                                        "description":  "Urgency option"
+                                    },
+    "requestsUrgencyUrgentLabel":  "عاجل",
+    "@requestsInspectionOnlyHint":  {
+                                        "description":  "inspection_only explanation"
+                                    },
+    "requestsInspectionOnlyHint":  "فحص فقط بدون تنفيذ",
+    "@requestsNoteLabel":  {
+                               "description":  "customer_notes field"
+                           },
+    "requestsNoteLabel":  "ملاحظات إضافية",
+    "@requestsReferenceCode":  {
+                                   "description":  "request reference_code label"
+                               },
+    "requestsReferenceCode":  "رقم الطلب",
+    "@requestsCountLabel":  {
+                                "description":  "List count. {count} is a number."
+                            },
+    "requestsCountLabel":  "{count} طلب",
+    "requestsAddressContactPairError":  "أدخل رقم جهة الاتصال عند تحديد اسم جهة الاتصال"
 }

@@ -256,9 +256,6 @@ class AppLocalizationsAr extends AppLocalizations {
   String get requestsScheduleUrgentHint => 'سنحاول خدمتك في أقرب وقت متاح';
 
   @override
-  String get requestsReviewTitle => 'راجع الطلب';
-
-  @override
   String get requestsSubmit => 'إرسال الطلب';
 
   @override
@@ -657,4 +654,183 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get meridiemPm => 'م';
+
+  @override
+  String get requestsFilterAll => 'الكل';
+
+  @override
+  String get requestsFilterActive => 'نشطة';
+
+  @override
+  String get requestsFilterAction => 'تحتاج إجراء';
+
+  @override
+  String get requestsFilterDone => 'مكتملة';
+
+  @override
+  String get requestsStepService => 'الخدمة';
+
+  @override
+  String get requestsStepDetails => 'التفاصيل';
+
+  @override
+  String get requestsStepPhotos => 'الصور';
+
+  @override
+  String get requestsStepLocation => 'الموقع';
+
+  @override
+  String get requestsStepReview => 'المراجعة';
+
+  @override
+  String requestsStepCounter(Object current, Object total) {
+    return 'الخطوة $current من $total';
+  }
+
+  @override
+  String get requestsServiceChoose => 'اختر الخدمة';
+
+  @override
+  String get requestsServiceEmpty => 'لا توجد خدمات متاحة';
+
+  @override
+  String get requestsServiceEmptyBody =>
+      'تعذر تحميل قائمة الخدمات، حاول مرة أخرى';
+
+  @override
+  String get requestsProblemOptional => 'نوع المشكلة (اختياري)';
+
+  @override
+  String get requestsProblemSkip => 'تخطي';
+
+  @override
+  String get requestsDescTooShort => 'اكتب 10 أحرف على الأقل';
+
+  @override
+  String get requestsDescTooLong => 'الحد الأقصى 4000 حرف';
+
+  @override
+  String get requestsPhotosAdd => 'إضافة صورة';
+
+  @override
+  String get requestsPhotosRequired => 'يلزم صورة واحدة على الأقل للمتابعة';
+
+  @override
+  String requestsPhotosLimit(Object max) {
+    return 'وصلت للحد الأقصى $max صور';
+  }
+
+  @override
+  String get requestsPhotosHintSize =>
+      'JPG أو PNG أو WebP، بحد أقصى 12 ميجابايت للصورة';
+
+  @override
+  String get requestsPhotosUploading => 'جارٍ رفع الصور...';
+
+  @override
+  String requestsPhotosCount(Object count, Object max) {
+    return '$count من $max صور';
+  }
+
+  @override
+  String get requestsLocationPick => 'اختر العقار';
+
+  @override
+  String get requestsLocationNoProperty => 'أضف عقاراً أولاً من صفحة العقارات';
+
+  @override
+  String get requestsAddressGovernorate => 'المحافظة';
+
+  @override
+  String get requestsAddressCity => 'المدينة';
+
+  @override
+  String get requestsAddressZone => 'المنطقة';
+
+  @override
+  String get requestsAddressDistrict => 'الحي';
+
+  @override
+  String get requestsAddressStreet => 'الشارع';
+
+  @override
+  String get requestsAddressBuilding => 'المبنى';
+
+  @override
+  String get requestsAddressFloor => 'الدور';
+
+  @override
+  String get requestsAddressApartment => 'الشقة';
+
+  @override
+  String get requestsAddressLandmark => 'علامة مميزة';
+
+  @override
+  String get requestsAddressNotes => 'ملاحظات للوصول';
+
+  @override
+  String get requestsAddressContactName => 'اسم جهة الاتصال';
+
+  @override
+  String get requestsAddressContactPhone => 'رقم جهة الاتصال';
+
+  @override
+  String get requestsAddressCoordsMissing => 'حدد الموقع على الخريطة';
+
+  @override
+  String get requestsReviewTitle => 'راجع طلبك';
+
+  @override
+  String get requestsReviewEdit => 'تعديل';
+
+  @override
+  String get requestsReviewMissing => 'ينقصك التالي:';
+
+  @override
+  String get requestsReviewMissingService => 'اختر الخدمة';
+
+  @override
+  String get requestsReviewMissingLocation => 'أكمل العنوان';
+
+  @override
+  String get requestsReviewMissingDetails => 'اكتب وصف المشكلة';
+
+  @override
+  String get requestsReviewMissingPhotos => 'أضف صورة واحدة على الأقل';
+
+  @override
+  String get requestsSubmitting => 'جارٍ إرسال الطلب...';
+
+  @override
+  String get requestsSubmitRetry => 'حاول مرة أخرى';
+
+  @override
+  String get requestsCreatedDraft => 'تم إنشاء مسودة، سنكمل الرفع';
+
+  @override
+  String get requestsNoProperty => 'لا يوجد عقار مسجل';
+
+  @override
+  String get requestsUrgencyNormal => 'عادي';
+
+  @override
+  String get requestsUrgencyUrgentLabel => 'عاجل';
+
+  @override
+  String get requestsInspectionOnlyHint => 'فحص فقط بدون تنفيذ';
+
+  @override
+  String get requestsNoteLabel => 'ملاحظات إضافية';
+
+  @override
+  String get requestsReferenceCode => 'رقم الطلب';
+
+  @override
+  String requestsCountLabel(Object count) {
+    return '$count طلب';
+  }
+
+  @override
+  String get requestsAddressContactPairError =>
+      'أدخل رقم جهة الاتصال عند تحديد اسم جهة الاتصال';
 }
