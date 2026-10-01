@@ -16,6 +16,7 @@ from app.core.enums import RequestStatus
 from app.core.labels import REQUEST_STATUS_LABELS, URGENCY_LABELS
 from app.db.models.catalog import ServiceCategory
 from app.db.models.properties import Property
+from app.db.models.requests import OrderAddressSnapshot
 from app.db.models.support import Notification
 from app.db.models.workforce import Technician
 from app.schemas.common import Page
@@ -30,6 +31,39 @@ from app.services import (
 )
 
 router = APIRouter(prefix="/orders", tags=["orders"])
+
+
+def _address_line(db: DbSession, request) -> str | None:  # noqa: ANN001, ANN202
+    """One-line visit address, composed the same way the requests detail does.
+
+    The snapshot is what the technician will actually visit, so it is preferred
+    over the property record: the customer can edit the address on the request
+    after the property was saved.
+    """
+    snapshot = db.execute(
+        select(OrderAddressSnapshot).where(
+            OrderAddressSnapshot.request_id == request.id
+        )
+    ).scalar_one_or_none()
+    if snapshot is not None:
+        parts = [
+            snapshot.building,
+            f"شقة {snapshot.apartment}" if snapshot.apartment else None,
+            snapshot.street,
+            snapshot.zone,
+            snapshot.city,
+            snapshot.governorate,
+        ]
+        line = "، ".join(part for part in parts if part)
+        if line:
+            return line
+
+    prop = db.get(Property, request.property_id)
+    if prop is None:
+        return None
+    parts = [prop.building, prop.street, prop.city, prop.governorate]
+    line = "، ".join(part for part in parts if part)
+    return line or None
 
 
 def _owned(db: DbSession, request_id: uuid.UUID, customer):  # noqa: ANN001, ANN202
@@ -143,7 +177,7 @@ def track_order(
         work_completed_at=work_completed_at,
         service_completed_at=request.completed_at,
         technician=technician_summary,
-        address_summary_ar=None,
+        address_summary_ar=_address_line(db, request),
         events=[RequestEventResponse.model_validate(event) for event in events],
         can_cancel=status in order_service.CANCELLABLE_STATUSES,
         can_open_complaint=order_service.can_customer_complain(request),
