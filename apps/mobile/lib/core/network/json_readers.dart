@@ -1,5 +1,7 @@
 import 'package:equatable/equatable.dart';
 
+import '../../app/localization/app_localizations.dart';
+
 /// Tolerant readers for backend JSON.
 ///
 /// The API returns ISO-8601 timestamps, decimal money, and string enums, and a
@@ -116,30 +118,36 @@ String formatMoney(String? amount, {String symbol = 'EGP'}) {
 }
 
 /// Short relative age used by timelines and notifications ("منذ 3 أيام").
-String formatRelative(DateTime? value, {DateTime? now}) {
+///
+/// Takes [AppLocalizations] rather than embedding Arabic, because all copy is
+/// centralised in ARB (§22). `now` is injectable so this is testable.
+String formatRelative(
+  DateTime? value, {
+  required AppLocalizations l10n,
+  DateTime? now,
+}) {
   if (value == null) return '';
   final DateTime reference = now ?? DateTime.now();
   final Duration gap = reference.difference(value.toLocal());
 
   if (gap.isNegative) return '';
-  if (gap.inMinutes < 1) return 'الآن';
-  if (gap.inMinutes < 60) return 'منذ ${gap.inMinutes} دقيقة';
-  if (gap.inHours < 24) return 'منذ ${gap.inHours} ساعة';
-  if (gap.inDays == 1) return 'أمس';
-  if (gap.inDays < 30) return 'منذ ${gap.inDays} يوم';
-  if (gap.inDays < 365) return 'منذ ${gap.inDays ~/ 30} شهر';
-  return 'منذ ${gap.inDays ~/ 365} سنة';
+  if (gap.inMinutes < 1) return l10n.timeNow;
+  if (gap.inMinutes < 60) return l10n.timeMinutes(gap.inMinutes);
+  if (gap.inHours < 24) return l10n.timeHours(gap.inHours);
+  if (gap.inDays == 1) return l10n.timeYesterday;
+  if (gap.inDays < 30) return l10n.timeDays(gap.inDays);
+  if (gap.inDays < 365) return l10n.timeMonths(gap.inDays ~/ 30);
+  return l10n.timeYears(gap.inDays ~/ 365);
 }
 
 /// Calendar date and 12-hour clock, used by timelines and arrival windows.
-String formatDateTime(DateTime? value) {
+String formatDateTime(DateTime? value, {required AppLocalizations l10n}) {
   if (value == null) return '';
   final DateTime local = value.toLocal();
-  final String date =
-      '${local.day.toString().padLeft(2, '0')}/${local.month.toString().padLeft(2, '0')}/${local.year}';
+  final String date = formatDate(value);
   final int hour = local.hour % 12 == 0 ? 12 : local.hour % 12;
   final String minute = local.minute.toString().padLeft(2, '0');
-  final String meridiem = local.hour < 12 ? 'ص' : 'م';
+  final String meridiem = local.hour < 12 ? l10n.meridiemAm : l10n.meridiemPm;
   return '$date · $hour:$minute $meridiem';
 }
 

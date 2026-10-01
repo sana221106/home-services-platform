@@ -47,12 +47,80 @@ void main() {
   });
 
   group('terminal states', () {
-    test('only finished states are terminal', () {
+    test('only CLOSED and CANCELLED are terminal', () {
       expect(AppRequestStatus.closed.isTerminal, isTrue);
       expect(AppRequestStatus.cancelled.isTerminal, isTrue);
-      expect(AppRequestStatus.resolved.isTerminal, isTrue);
+      // RESOLVED is deliberately NOT terminal: the backend still allows
+      // RESOLVED -> CLOSED and RESOLVED -> REVISIT_SCHEDULED, so treating it
+      // as final would hide a real action from the customer.
+      expect(AppRequestStatus.resolved.isTerminal, isFalse);
       expect(AppRequestStatus.workInProgress.isTerminal, isFalse);
       expect(AppRequestStatus.quoteSent.isTerminal, isFalse);
+    });
+
+    test('terminal set matches the backend TERMINAL_REQUEST_STATUSES', () {
+      final Set<AppRequestStatus> terminal = AppRequestStatus.values
+          .where((AppRequestStatus s) => s.isTerminal)
+          .toSet();
+      expect(terminal, <AppRequestStatus>{
+        AppRequestStatus.closed,
+        AppRequestStatus.cancelled,
+      });
+    });
+
+    // These mirrors exist only for optimistic rendering. The server publishes
+    // can_cancel / can_rate / can_open_complaint on GET /orders/{id} and
+    // enforces the same sets, so these must not drift from those lists.
+    test('canCancelOptimistically matches backend CANCELLABLE_STATUSES', () {
+      final Set<AppRequestStatus> cancellable = AppRequestStatus.values
+          .where((AppRequestStatus s) => s.canCancelOptimistically)
+          .toSet();
+      expect(cancellable, <AppRequestStatus>{
+        AppRequestStatus.draft,
+        AppRequestStatus.submitted,
+        AppRequestStatus.underReview,
+        AppRequestStatus.needMoreInformation,
+        AppRequestStatus.inspectionRequired,
+        AppRequestStatus.inspectionScheduled,
+        AppRequestStatus.quotePreparation,
+        AppRequestStatus.quoteSent,
+        AppRequestStatus.awaitingCustomerApproval,
+        AppRequestStatus.depositPending,
+        AppRequestStatus.depositVerification,
+        AppRequestStatus.confirmed,
+        AppRequestStatus.technicianAssignmentPending,
+        AppRequestStatus.technicianAssigned,
+        AppRequestStatus.onTheWay,
+        AppRequestStatus.arrived,
+      });
+      // 16 statuses, and none of them may be terminal.
+      expect(cancellable.length, 16);
+      expect(cancellable.where((AppRequestStatus s) => s.isTerminal), isEmpty);
+    });
+
+    test('canRateOptimistically matches backend can_rate', () {
+      final Set<AppRequestStatus> ratable = AppRequestStatus.values
+          .where((AppRequestStatus s) => s.canRateOptimistically)
+          .toSet();
+      expect(ratable, <AppRequestStatus>{
+        AppRequestStatus.paid,
+        AppRequestStatus.awaitingRating,
+      });
+    });
+
+    test('canComplainOptimistically matches backend can_open_complaint', () {
+      final Set<AppRequestStatus> complainable = AppRequestStatus.values
+          .where((AppRequestStatus s) => s.canComplainOptimistically)
+          .toSet();
+      expect(complainable, <AppRequestStatus>{
+        AppRequestStatus.workInProgress,
+        AppRequestStatus.serviceCompleted,
+        AppRequestStatus.paymentPending,
+        AppRequestStatus.paymentVerification,
+        AppRequestStatus.paid,
+        AppRequestStatus.awaitingRating,
+        AppRequestStatus.closed,
+      });
     });
   });
 

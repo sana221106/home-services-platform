@@ -5,7 +5,6 @@ import '../../../../../core/errors/failure.dart';
 import '../../data/repositories/home_repository.dart';
 import '../../data/models/home_models.dart';
 
-
 enum HomeStatus { initial, loading, ready, failed }
 
 class HomeState extends Equatable {

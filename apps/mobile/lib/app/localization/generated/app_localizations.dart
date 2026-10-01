@@ -1291,6 +1291,60 @@ abstract class AppLocalizations {
   /// In ar, this message translates to:
   /// **'ملغي'**
   String get requestStatusCancelled;
+
+  /// Relative time: just now
+  ///
+  /// In ar, this message translates to:
+  /// **'الآن'**
+  String get timeNow;
+
+  /// Relative time in minutes. {count} is a number.
+  ///
+  /// In ar, this message translates to:
+  /// **'منذ {count} دقيقة'**
+  String timeMinutes(int count);
+
+  /// Relative time in hours. {count} is a number.
+  ///
+  /// In ar, this message translates to:
+  /// **'منذ {count} ساعة'**
+  String timeHours(int count);
+
+  /// Relative time in days. {count} is a number.
+  ///
+  /// In ar, this message translates to:
+  /// **'منذ {count} يوم'**
+  String timeDays(int count);
+
+  /// Relative time in months. {count} is a number.
+  ///
+  /// In ar, this message translates to:
+  /// **'منذ {count} شهر'**
+  String timeMonths(int count);
+
+  /// Relative time in years. {count} is a number.
+  ///
+  /// In ar, this message translates to:
+  /// **'منذ {count} سنة'**
+  String timeYears(int count);
+
+  /// 12-hour clock meridiem, before noon
+  ///
+  /// In ar, this message translates to:
+  /// **'ص'**
+  String get meridiemAm;
+
+  /// Relative time: yesterday
+  ///
+  /// In ar, this message translates to:
+  /// **'أمس'**
+  String get timeYesterday;
+
+  /// 12-hour clock meridiem, after noon
+  ///
+  /// In ar, this message translates to:
+  /// **'م'**
+  String get meridiemPm;
 }
 
 class _AppLocalizationsDelegate

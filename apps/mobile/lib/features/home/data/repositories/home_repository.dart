@@ -45,10 +45,11 @@ final Provider<HomeRemoteDataSource> homeRemoteDataSourceProvider =
       name: 'homeRemoteDataSource',
     );
 
-final Provider<HomeRepository> homeRepositoryProvider = Provider<HomeRepository>(
-  (Ref ref) => HomeRepository(
-    ref.watch(homeRemoteDataSourceProvider),
-    ref.watch(apiClientProvider),
-  ),
-  name: 'homeRepository',
-);
+final Provider<HomeRepository> homeRepositoryProvider =
+    Provider<HomeRepository>(
+      (Ref ref) => HomeRepository(
+        ref.watch(homeRemoteDataSourceProvider),
+        ref.watch(apiClientProvider),
+      ),
+      name: 'homeRepository',
+    );

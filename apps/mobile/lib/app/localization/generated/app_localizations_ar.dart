@@ -620,4 +620,41 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get requestStatusCancelled => 'ملغي';
+
+  @override
+  String get timeNow => 'الآن';
+
+  @override
+  String timeMinutes(int count) {
+    return 'منذ $count دقيقة';
+  }
+
+  @override
+  String timeHours(int count) {
+    return 'منذ $count ساعة';
+  }
+
+  @override
+  String timeDays(int count) {
+    return 'منذ $count يوم';
+  }
+
+  @override
+  String timeMonths(int count) {
+    return 'منذ $count شهر';
+  }
+
+  @override
+  String timeYears(int count) {
+    return 'منذ $count سنة';
+  }
+
+  @override
+  String get meridiemAm => 'ص';
+
+  @override
+  String get timeYesterday => 'أمس';
+
+  @override
+  String get meridiemPm => 'م';
 }

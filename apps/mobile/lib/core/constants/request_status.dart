@@ -65,11 +65,54 @@ enum AppRequestStatus {
     return null;
   }
 
-  /// Whether the request can still be cancelled. Mirrors the backend policy
-  /// rather than re-deciding it, so the client never hides a button the server
-  /// would refuse (§8).
+  /// Whether the request has no further lifecycle moves.
+  ///
+  /// Mirrors `TERMINAL_REQUEST_STATUSES`, which is `CLOSED` and `CANCELLED`
+  /// only. `RESOLVED` is deliberately absent: the backend still allows
+  /// `RESOLVED -> CLOSED` and `RESOLVED -> REVISIT_SCHEDULED`, so treating it
+  /// as final would hide a real action (§8).
   bool get isTerminal =>
-      const <AppRequestStatus>{closed, cancelled, resolved}.contains(this);
+      const <AppRequestStatus>{closed, cancelled}.contains(this);
+
+  /// Whether a cancel button should be offered.
+  ///
+  /// The backend publishes `can_cancel` on `GET /orders/{request_id}` and
+  /// enforces `CANCELLABLE_STATUSES` on the cancel endpoint. This mirror is only
+  /// for optimistic rendering before that detail has loaded; once it arrives,
+  /// prefer the server's flag so the two can never disagree.
+  bool get canCancelOptimistically => const <AppRequestStatus>{
+    draft,
+    submitted,
+    underReview,
+    needMoreInformation,
+    inspectionRequired,
+    inspectionScheduled,
+    quotePreparation,
+    quoteSent,
+    awaitingCustomerApproval,
+    depositPending,
+    depositVerification,
+    confirmed,
+    technicianAssignmentPending,
+    technicianAssigned,
+    onTheWay,
+    arrived,
+  }.contains(this);
+
+  /// Whether a rating prompt should be offered. Mirrors `can_rate`.
+  bool get canRateOptimistically =>
+      const <AppRequestStatus>{paid, awaitingRating}.contains(this);
+
+  /// Whether a complaint should be offered. Mirrors `can_open_complaint`.
+  bool get canComplainOptimistically => const <AppRequestStatus>{
+    workInProgress,
+    serviceCompleted,
+    paymentPending,
+    paymentVerification,
+    paid,
+    awaitingRating,
+    closed,
+  }.contains(this);
 }
 
 extension AppRequestStatusL10n on AppRequestStatus {

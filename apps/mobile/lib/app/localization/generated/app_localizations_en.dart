@@ -628,4 +628,41 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get requestStatusCancelled => 'Cancelled';
+
+  @override
+  String get timeNow => 'now';
+
+  @override
+  String timeMinutes(int count) {
+    return '$count min ago';
+  }
+
+  @override
+  String timeHours(int count) {
+    return '$count h ago';
+  }
+
+  @override
+  String timeDays(int count) {
+    return '$count d ago';
+  }
+
+  @override
+  String timeMonths(int count) {
+    return '$count mo ago';
+  }
+
+  @override
+  String timeYears(int count) {
+    return '$count y ago';
+  }
+
+  @override
+  String get meridiemAm => 'AM';
+
+  @override
+  String get timeYesterday => 'yesterday';
+
+  @override
+  String get meridiemPm => 'PM';
 }
