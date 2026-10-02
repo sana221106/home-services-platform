@@ -987,4 +987,101 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get ordersEmptyCta => 'Book a service';
+
+  @override
+  String get supportDefaultSubject => 'Support request';
+
+  @override
+  String get supportThreadClosed => 'Closed';
+
+  @override
+  String supportUnreadCount(Object count) {
+    return 'Unread ($count)';
+  }
+
+  @override
+  String get supportThreadsTitle => 'Your conversations';
+
+  @override
+  String get supportThreadsEmptyTitle => 'No conversations yet';
+
+  @override
+  String get supportThreadsEmptyBody =>
+      'Message the team and the reply will appear here';
+
+  @override
+  String get supportNewConversation => 'New message';
+
+  @override
+  String get supportComplaintsTitle => 'My complaints';
+
+  @override
+  String get supportComplaintsEmptyTitle => 'No complaints';
+
+  @override
+  String get supportComplaintsEmptyBody =>
+      'Report a problem with a completed service here';
+
+  @override
+  String get complaintStatusOpen => 'Open';
+
+  @override
+  String get complaintStatusUnderReview => 'Under review';
+
+  @override
+  String get complaintStatusQcRequired => 'Quality check';
+
+  @override
+  String get complaintStatusRevisitRequired => 'Revisit required';
+
+  @override
+  String get complaintStatusRevisitScheduled => 'Revisit scheduled';
+
+  @override
+  String get complaintStatusResolved => 'Resolved';
+
+  @override
+  String get complaintStatusClosed => 'Closed';
+
+  @override
+  String get complaintReworkScheduled => 'Return visit scheduled';
+
+  @override
+  String get complaintSubjectHint => 'What is it about?';
+
+  @override
+  String get complaintMessageHint => 'Describe the problem in detail';
+
+  @override
+  String get complaintSubmitHint => 'At least 10 characters';
+
+  @override
+  String get complaintFiledSuccess => 'Complaint submitted';
+
+  @override
+  String get complaintPickReason => 'Select a complaint type';
+
+  @override
+  String get supportMessagesEmpty => 'No messages yet';
+
+  @override
+  String get complaintReasonWorkNotDone => 'Work not completed';
+
+  @override
+  String get complaintReasonPoorQuality => 'Poor quality';
+
+  @override
+  String get complaintReasonOvercharge => 'Overcharged';
+
+  @override
+  String get complaintReasonTechnicianLate => 'Technician arrived late';
+
+  @override
+  String get complaintReasonDamage => 'Damage caused';
+
+  @override
+  String get complaintReasonRecurringFault => 'Problem came back';
+
+  @override
+  String get complaintReasonOther => 'Other reason';
 }

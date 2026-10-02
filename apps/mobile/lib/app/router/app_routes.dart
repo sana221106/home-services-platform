@@ -22,6 +22,9 @@ enum AppRoute {
   propertyDetail('property-detail'),
   propertyHistory('property-history'),
   support('support'),
+  conversationNew('conversation-new'),
+  conversationMessages('conversation-messages'),
+  complaintNew('complaint-new'),
   reviews('reviews'),
   profile('profile');
 
@@ -46,6 +49,9 @@ enum AppRoute {
     AppRoute.propertyDetail,
     AppRoute.propertyHistory,
     AppRoute.support,
+    AppRoute.conversationNew,
+    AppRoute.conversationMessages,
+    AppRoute.complaintNew,
     AppRoute.reviews,
     AppRoute.profile,
   }.contains(this);

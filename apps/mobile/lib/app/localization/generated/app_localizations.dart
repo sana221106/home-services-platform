@@ -1939,6 +1939,192 @@ abstract class AppLocalizations {
   /// In ar, this message translates to:
   /// **'احجز خدمة'**
   String get ordersEmptyCta;
+
+  /// supportDefaultSubject copy
+  ///
+  /// In ar, this message translates to:
+  /// **'طلب دعم'**
+  String get supportDefaultSubject;
+
+  /// supportThreadClosed copy
+  ///
+  /// In ar, this message translates to:
+  /// **'مغلق'**
+  String get supportThreadClosed;
+
+  /// supportUnreadCount copy
+  ///
+  /// In ar, this message translates to:
+  /// **'غير مقروء ({count})'**
+  String supportUnreadCount(Object count);
+
+  /// supportThreadsTitle copy
+  ///
+  /// In ar, this message translates to:
+  /// **'محادثاتك'**
+  String get supportThreadsTitle;
+
+  /// supportThreadsEmptyTitle copy
+  ///
+  /// In ar, this message translates to:
+  /// **'لا توجد محادثات بعد'**
+  String get supportThreadsEmptyTitle;
+
+  /// supportThreadsEmptyBody copy
+  ///
+  /// In ar, this message translates to:
+  /// **'راسل الفريق وستظهر الردود هنا'**
+  String get supportThreadsEmptyBody;
+
+  /// supportNewConversation copy
+  ///
+  /// In ar, this message translates to:
+  /// **'رسالة جديدة'**
+  String get supportNewConversation;
+
+  /// supportComplaintsTitle copy
+  ///
+  /// In ar, this message translates to:
+  /// **'شكاواي'**
+  String get supportComplaintsTitle;
+
+  /// supportComplaintsEmptyTitle copy
+  ///
+  /// In ar, this message translates to:
+  /// **'لا توجد شكاوى'**
+  String get supportComplaintsEmptyTitle;
+
+  /// supportComplaintsEmptyBody copy
+  ///
+  /// In ar, this message translates to:
+  /// **'أبلغ عن مشكلة في خدمة منجزة من هنا'**
+  String get supportComplaintsEmptyBody;
+
+  /// complaintStatusOpen copy
+  ///
+  /// In ar, this message translates to:
+  /// **'مفتوحة'**
+  String get complaintStatusOpen;
+
+  /// complaintStatusUnderReview copy
+  ///
+  /// In ar, this message translates to:
+  /// **'قيد المراجعة'**
+  String get complaintStatusUnderReview;
+
+  /// complaintStatusQcRequired copy
+  ///
+  /// In ar, this message translates to:
+  /// **'فحص جودة'**
+  String get complaintStatusQcRequired;
+
+  /// complaintStatusRevisitRequired copy
+  ///
+  /// In ar, this message translates to:
+  /// **'زيارة أخرى مطلوبة'**
+  String get complaintStatusRevisitRequired;
+
+  /// complaintStatusRevisitScheduled copy
+  ///
+  /// In ar, this message translates to:
+  /// **'تمت جدولة زيارة أخرى'**
+  String get complaintStatusRevisitScheduled;
+
+  /// complaintStatusResolved copy
+  ///
+  /// In ar, this message translates to:
+  /// **'تم الحل'**
+  String get complaintStatusResolved;
+
+  /// complaintStatusClosed copy
+  ///
+  /// In ar, this message translates to:
+  /// **'مغلقة'**
+  String get complaintStatusClosed;
+
+  /// complaintReworkScheduled copy
+  ///
+  /// In ar, this message translates to:
+  /// **'تمت جدولة زيارة إصلاح'**
+  String get complaintReworkScheduled;
+
+  /// complaintSubjectHint copy
+  ///
+  /// In ar, this message translates to:
+  /// **'ما موضوع الرسالة؟'**
+  String get complaintSubjectHint;
+
+  /// complaintMessageHint copy
+  ///
+  /// In ar, this message translates to:
+  /// **'اشرح المشكلة بالتفصيل'**
+  String get complaintMessageHint;
+
+  /// complaintSubmitHint copy
+  ///
+  /// In ar, this message translates to:
+  /// **'10 أحرف على الأقل'**
+  String get complaintSubmitHint;
+
+  /// complaintFiledSuccess copy
+  ///
+  /// In ar, this message translates to:
+  /// **'تم إرسال الشكوى'**
+  String get complaintFiledSuccess;
+
+  /// complaintPickReason copy
+  ///
+  /// In ar, this message translates to:
+  /// **'اختر نوع الشكوى'**
+  String get complaintPickReason;
+
+  /// supportMessagesEmpty copy
+  ///
+  /// In ar, this message translates to:
+  /// **'لا توجد رسائل بعد'**
+  String get supportMessagesEmpty;
+
+  /// complaintReasonWorkNotDone copy
+  ///
+  /// In ar, this message translates to:
+  /// **'لم يتم إنجاز العمل'**
+  String get complaintReasonWorkNotDone;
+
+  /// complaintReasonPoorQuality copy
+  ///
+  /// In ar, this message translates to:
+  /// **'جودة عمل غير مقبولة'**
+  String get complaintReasonPoorQuality;
+
+  /// complaintReasonOvercharge copy
+  ///
+  /// In ar, this message translates to:
+  /// **'سعر أعلى من المتفق'**
+  String get complaintReasonOvercharge;
+
+  /// complaintReasonTechnicianLate copy
+  ///
+  /// In ar, this message translates to:
+  /// **'تأخر الفني عن موعده'**
+  String get complaintReasonTechnicianLate;
+
+  /// complaintReasonDamage copy
+  ///
+  /// In ar, this message translates to:
+  /// **'تسبب في ضرر'**
+  String get complaintReasonDamage;
+
+  /// complaintReasonRecurringFault copy
+  ///
+  /// In ar, this message translates to:
+  /// **'المشكلة تكررت'**
+  String get complaintReasonRecurringFault;
+
+  /// complaintReasonOther copy
+  ///
+  /// In ar, this message translates to:
+  /// **'سبب آخر'**
+  String get complaintReasonOther;
 }
 
 class _AppLocalizationsDelegate

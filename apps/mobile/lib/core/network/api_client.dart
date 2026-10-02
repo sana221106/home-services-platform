@@ -97,6 +97,24 @@ class ApiClient implements AuthTokenDelegate {
     );
   }
 
+  /// For endpoints that answer with a bare array of scalars.
+  ///
+  /// `GET /complaints/reasons` is declared `response_model=list[str]`, so Dio
+  /// must decode into `List<String>`; reading it as `List<Map<String, dynamic>>`
+  /// would throw on every call.
+  Future<Response<List<String>>> getStringList(
+    String path, {
+    Map<String, dynamic>? query,
+  }) async {
+    return _send<List<String>>(
+      () => _dio.get<List<String>>(
+        path,
+        queryParameters: query,
+        options: _rejectNonSuccess(null),
+      ),
+    );
+  }
+
   Future<Response<Map<String, dynamic>>> post(
     String path, {
     Object? data,

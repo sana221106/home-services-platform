@@ -11,6 +11,9 @@ import '../../features/auth/presentation/pages/phone_entry_screen.dart';
 import '../../features/home/presentation/pages/home_page.dart';
 import '../../features/orders/presentation/pages/order_tracking_page.dart';
 import '../../features/orders/presentation/pages/orders_page.dart';
+import '../../features/support/presentation/pages/complaint_pages.dart';
+import '../../features/support/presentation/pages/conversation_page.dart';
+import '../../features/support/presentation/pages/support_page.dart';
 import '../../features/properties/presentation/pages/properties_page.dart';
 import '../../features/properties/presentation/pages/property_history_page.dart';
 import '../../features/requests/presentation/pages/location_page.dart';
@@ -108,7 +111,7 @@ final Provider<GoRouter> routerProvider = Provider<GoRouter>((Ref ref) {
                 path: '/support',
                 name: AppRoute.support.name,
                 builder: (BuildContext context, GoRouterState state) =>
-                    ComingSoonScreen(title: context.l10n.supportTitle),
+                    const SupportPage(),
               ),
             ],
           ),
@@ -171,6 +174,34 @@ final Provider<GoRouter> routerProvider = Provider<GoRouter>((Ref ref) {
         parentNavigatorKey: rootKey,
         builder: (BuildContext context, GoRouterState state) =>
             RequestDetailPage(requestId: state.pathParameters['requestId']!),
+      ),
+      GoRoute(
+        path: '/support/new',
+        name: AppRoute.conversationNew.name,
+        parentNavigatorKey: rootKey,
+        builder: (BuildContext context, GoRouterState state) {
+          final String? requestId = state.uri.queryParameters['requestId'];
+          return NewConversationPage(requestId: requestId);
+        },
+      ),
+      GoRoute(
+        path: '/support/complaint/new',
+        name: AppRoute.complaintNew.name,
+        parentNavigatorKey: rootKey,
+        builder: (BuildContext context, GoRouterState state) {
+          final String? requestId = state.uri.queryParameters['requestId'];
+          return NewComplaintPage(requestId: requestId);
+        },
+      ),
+      GoRoute(
+        path: '/support/conversation/:conversationId',
+        name: AppRoute.conversationMessages.name,
+        parentNavigatorKey: rootKey,
+        builder: (BuildContext context, GoRouterState state) =>
+            ConversationPage(
+              conversationId: state.pathParameters['conversationId']!,
+              subject: state.uri.queryParameters['subject'],
+            ),
       ),
       GoRoute(
         path: '/orders',

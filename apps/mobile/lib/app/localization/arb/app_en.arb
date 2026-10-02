@@ -689,5 +689,129 @@
   "@ordersEmptyCta":  {
     "description":  "ordersEmptyCta copy"
   },
-  "ordersEmptyCta":  "Book a service"
+  "ordersEmptyCta":  "Book a service",
+  "@supportDefaultSubject":  {
+    "description":  "supportDefaultSubject copy"
+  },
+  "supportDefaultSubject":  "Support request",
+  "@supportThreadClosed":  {
+    "description":  "supportThreadClosed copy"
+  },
+  "supportThreadClosed":  "Closed",
+  "@supportUnreadCount":  {
+    "description":  "supportUnreadCount copy"
+  },
+  "supportUnreadCount":  "Unread ({count})",
+  "@supportThreadsTitle":  {
+    "description":  "supportThreadsTitle copy"
+  },
+  "supportThreadsTitle":  "Your conversations",
+  "@supportThreadsEmptyTitle":  {
+    "description":  "supportThreadsEmptyTitle copy"
+  },
+  "supportThreadsEmptyTitle":  "No conversations yet",
+  "@supportThreadsEmptyBody":  {
+    "description":  "supportThreadsEmptyBody copy"
+  },
+  "supportThreadsEmptyBody":  "Message the team and the reply will appear here",
+  "@supportNewConversation":  {
+    "description":  "supportNewConversation copy"
+  },
+  "supportNewConversation":  "New message",
+  "@supportComplaintsTitle":  {
+    "description":  "supportComplaintsTitle copy"
+  },
+  "supportComplaintsTitle":  "My complaints",
+  "@supportComplaintsEmptyTitle":  {
+    "description":  "supportComplaintsEmptyTitle copy"
+  },
+  "supportComplaintsEmptyTitle":  "No complaints",
+  "@supportComplaintsEmptyBody":  {
+    "description":  "supportComplaintsEmptyBody copy"
+  },
+  "supportComplaintsEmptyBody":  "Report a problem with a completed service here",
+  "@complaintStatusOpen":  {
+    "description":  "complaintStatusOpen copy"
+  },
+  "complaintStatusOpen":  "Open",
+  "@complaintStatusUnderReview":  {
+    "description":  "complaintStatusUnderReview copy"
+  },
+  "complaintStatusUnderReview":  "Under review",
+  "@complaintStatusQcRequired":  {
+    "description":  "complaintStatusQcRequired copy"
+  },
+  "complaintStatusQcRequired":  "Quality check",
+  "@complaintStatusRevisitRequired":  {
+    "description":  "complaintStatusRevisitRequired copy"
+  },
+  "complaintStatusRevisitRequired":  "Revisit required",
+  "@complaintStatusRevisitScheduled":  {
+    "description":  "complaintStatusRevisitScheduled copy"
+  },
+  "complaintStatusRevisitScheduled":  "Revisit scheduled",
+  "@complaintStatusResolved":  {
+    "description":  "complaintStatusResolved copy"
+  },
+  "complaintStatusResolved":  "Resolved",
+  "@complaintStatusClosed":  {
+    "description":  "complaintStatusClosed copy"
+  },
+  "complaintStatusClosed":  "Closed",
+  "@complaintReworkScheduled":  {
+    "description":  "complaintReworkScheduled copy"
+  },
+  "complaintReworkScheduled":  "Return visit scheduled",
+  "@complaintSubjectHint":  {
+    "description":  "complaintSubjectHint copy"
+  },
+  "complaintSubjectHint":  "What is it about?",
+  "@complaintMessageHint":  {
+    "description":  "complaintMessageHint copy"
+  },
+  "complaintMessageHint":  "Describe the problem in detail",
+  "@complaintSubmitHint":  {
+    "description":  "complaintSubmitHint copy"
+  },
+  "complaintSubmitHint":  "At least 10 characters",
+  "@complaintFiledSuccess":  {
+    "description":  "complaintFiledSuccess copy"
+  },
+  "complaintFiledSuccess":  "Complaint submitted",
+  "@complaintPickReason":  {
+    "description":  "complaintPickReason copy"
+  },
+  "complaintPickReason":  "Select a complaint type",
+  "@supportMessagesEmpty":  {
+    "description":  "supportMessagesEmpty copy"
+  },
+  "supportMessagesEmpty":  "No messages yet",
+  "@complaintReasonWorkNotDone":  {
+    "description":  "complaintReasonWorkNotDone copy"
+  },
+  "complaintReasonWorkNotDone":  "Work not completed",
+  "@complaintReasonPoorQuality":  {
+    "description":  "complaintReasonPoorQuality copy"
+  },
+  "complaintReasonPoorQuality":  "Poor quality",
+  "@complaintReasonOvercharge":  {
+    "description":  "complaintReasonOvercharge copy"
+  },
+  "complaintReasonOvercharge":  "Overcharged",
+  "@complaintReasonTechnicianLate":  {
+    "description":  "complaintReasonTechnicianLate copy"
+  },
+  "complaintReasonTechnicianLate":  "Technician arrived late",
+  "@complaintReasonDamage":  {
+    "description":  "complaintReasonDamage copy"
+  },
+  "complaintReasonDamage":  "Damage caused",
+  "@complaintReasonRecurringFault":  {
+    "description":  "complaintReasonRecurringFault copy"
+  },
+  "complaintReasonRecurringFault":  "Problem came back",
+  "@complaintReasonOther":  {
+    "description":  "complaintReasonOther copy"
+  },
+  "complaintReasonOther":  "Other reason"
 }

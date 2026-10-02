@@ -978,4 +978,99 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get ordersEmptyCta => 'احجز خدمة';
+
+  @override
+  String get supportDefaultSubject => 'طلب دعم';
+
+  @override
+  String get supportThreadClosed => 'مغلق';
+
+  @override
+  String supportUnreadCount(Object count) {
+    return 'غير مقروء ($count)';
+  }
+
+  @override
+  String get supportThreadsTitle => 'محادثاتك';
+
+  @override
+  String get supportThreadsEmptyTitle => 'لا توجد محادثات بعد';
+
+  @override
+  String get supportThreadsEmptyBody => 'راسل الفريق وستظهر الردود هنا';
+
+  @override
+  String get supportNewConversation => 'رسالة جديدة';
+
+  @override
+  String get supportComplaintsTitle => 'شكاواي';
+
+  @override
+  String get supportComplaintsEmptyTitle => 'لا توجد شكاوى';
+
+  @override
+  String get supportComplaintsEmptyBody => 'أبلغ عن مشكلة في خدمة منجزة من هنا';
+
+  @override
+  String get complaintStatusOpen => 'مفتوحة';
+
+  @override
+  String get complaintStatusUnderReview => 'قيد المراجعة';
+
+  @override
+  String get complaintStatusQcRequired => 'فحص جودة';
+
+  @override
+  String get complaintStatusRevisitRequired => 'زيارة أخرى مطلوبة';
+
+  @override
+  String get complaintStatusRevisitScheduled => 'تمت جدولة زيارة أخرى';
+
+  @override
+  String get complaintStatusResolved => 'تم الحل';
+
+  @override
+  String get complaintStatusClosed => 'مغلقة';
+
+  @override
+  String get complaintReworkScheduled => 'تمت جدولة زيارة إصلاح';
+
+  @override
+  String get complaintSubjectHint => 'ما موضوع الرسالة؟';
+
+  @override
+  String get complaintMessageHint => 'اشرح المشكلة بالتفصيل';
+
+  @override
+  String get complaintSubmitHint => '10 أحرف على الأقل';
+
+  @override
+  String get complaintFiledSuccess => 'تم إرسال الشكوى';
+
+  @override
+  String get complaintPickReason => 'اختر نوع الشكوى';
+
+  @override
+  String get supportMessagesEmpty => 'لا توجد رسائل بعد';
+
+  @override
+  String get complaintReasonWorkNotDone => 'لم يتم إنجاز العمل';
+
+  @override
+  String get complaintReasonPoorQuality => 'جودة عمل غير مقبولة';
+
+  @override
+  String get complaintReasonOvercharge => 'سعر أعلى من المتفق';
+
+  @override
+  String get complaintReasonTechnicianLate => 'تأخر الفني عن موعده';
+
+  @override
+  String get complaintReasonDamage => 'تسبب في ضرر';
+
+  @override
+  String get complaintReasonRecurringFault => 'المشكلة تكررت';
+
+  @override
+  String get complaintReasonOther => 'سبب آخر';
 }

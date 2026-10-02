@@ -687,5 +687,129 @@
   "@ordersEmptyCta":  {
     "description":  "ordersEmptyCta copy"
   },
-  "ordersEmptyCta":  "احجز خدمة"
+  "ordersEmptyCta":  "احجز خدمة",
+  "@supportDefaultSubject":  {
+    "description":  "supportDefaultSubject copy"
+  },
+  "supportDefaultSubject":  "طلب دعم",
+  "@supportThreadClosed":  {
+    "description":  "supportThreadClosed copy"
+  },
+  "supportThreadClosed":  "مغلق",
+  "@supportUnreadCount":  {
+    "description":  "supportUnreadCount copy"
+  },
+  "supportUnreadCount":  "غير مقروء ({count})",
+  "@supportThreadsTitle":  {
+    "description":  "supportThreadsTitle copy"
+  },
+  "supportThreadsTitle":  "محادثاتك",
+  "@supportThreadsEmptyTitle":  {
+    "description":  "supportThreadsEmptyTitle copy"
+  },
+  "supportThreadsEmptyTitle":  "لا توجد محادثات بعد",
+  "@supportThreadsEmptyBody":  {
+    "description":  "supportThreadsEmptyBody copy"
+  },
+  "supportThreadsEmptyBody":  "راسل الفريق وستظهر الردود هنا",
+  "@supportNewConversation":  {
+    "description":  "supportNewConversation copy"
+  },
+  "supportNewConversation":  "رسالة جديدة",
+  "@supportComplaintsTitle":  {
+    "description":  "supportComplaintsTitle copy"
+  },
+  "supportComplaintsTitle":  "شكاواي",
+  "@supportComplaintsEmptyTitle":  {
+    "description":  "supportComplaintsEmptyTitle copy"
+  },
+  "supportComplaintsEmptyTitle":  "لا توجد شكاوى",
+  "@supportComplaintsEmptyBody":  {
+    "description":  "supportComplaintsEmptyBody copy"
+  },
+  "supportComplaintsEmptyBody":  "أبلغ عن مشكلة في خدمة منجزة من هنا",
+  "@complaintStatusOpen":  {
+    "description":  "complaintStatusOpen copy"
+  },
+  "complaintStatusOpen":  "مفتوحة",
+  "@complaintStatusUnderReview":  {
+    "description":  "complaintStatusUnderReview copy"
+  },
+  "complaintStatusUnderReview":  "قيد المراجعة",
+  "@complaintStatusQcRequired":  {
+    "description":  "complaintStatusQcRequired copy"
+  },
+  "complaintStatusQcRequired":  "فحص جودة",
+  "@complaintStatusRevisitRequired":  {
+    "description":  "complaintStatusRevisitRequired copy"
+  },
+  "complaintStatusRevisitRequired":  "زيارة أخرى مطلوبة",
+  "@complaintStatusRevisitScheduled":  {
+    "description":  "complaintStatusRevisitScheduled copy"
+  },
+  "complaintStatusRevisitScheduled":  "تمت جدولة زيارة أخرى",
+  "@complaintStatusResolved":  {
+    "description":  "complaintStatusResolved copy"
+  },
+  "complaintStatusResolved":  "تم الحل",
+  "@complaintStatusClosed":  {
+    "description":  "complaintStatusClosed copy"
+  },
+  "complaintStatusClosed":  "مغلقة",
+  "@complaintReworkScheduled":  {
+    "description":  "complaintReworkScheduled copy"
+  },
+  "complaintReworkScheduled":  "تمت جدولة زيارة إصلاح",
+  "@complaintSubjectHint":  {
+    "description":  "complaintSubjectHint copy"
+  },
+  "complaintSubjectHint":  "ما موضوع الرسالة؟",
+  "@complaintMessageHint":  {
+    "description":  "complaintMessageHint copy"
+  },
+  "complaintMessageHint":  "اشرح المشكلة بالتفصيل",
+  "@complaintSubmitHint":  {
+    "description":  "complaintSubmitHint copy"
+  },
+  "complaintSubmitHint":  "10 أحرف على الأقل",
+  "@complaintFiledSuccess":  {
+    "description":  "complaintFiledSuccess copy"
+  },
+  "complaintFiledSuccess":  "تم إرسال الشكوى",
+  "@complaintPickReason":  {
+    "description":  "complaintPickReason copy"
+  },
+  "complaintPickReason":  "اختر نوع الشكوى",
+  "@supportMessagesEmpty":  {
+    "description":  "supportMessagesEmpty copy"
+  },
+  "supportMessagesEmpty":  "لا توجد رسائل بعد",
+  "@complaintReasonWorkNotDone":  {
+    "description":  "complaintReasonWorkNotDone copy"
+  },
+  "complaintReasonWorkNotDone":  "لم يتم إنجاز العمل",
+  "@complaintReasonPoorQuality":  {
+    "description":  "complaintReasonPoorQuality copy"
+  },
+  "complaintReasonPoorQuality":  "جودة عمل غير مقبولة",
+  "@complaintReasonOvercharge":  {
+    "description":  "complaintReasonOvercharge copy"
+  },
+  "complaintReasonOvercharge":  "سعر أعلى من المتفق",
+  "@complaintReasonTechnicianLate":  {
+    "description":  "complaintReasonTechnicianLate copy"
+  },
+  "complaintReasonTechnicianLate":  "تأخر الفني عن موعده",
+  "@complaintReasonDamage":  {
+    "description":  "complaintReasonDamage copy"
+  },
+  "complaintReasonDamage":  "تسبب في ضرر",
+  "@complaintReasonRecurringFault":  {
+    "description":  "complaintReasonRecurringFault copy"
+  },
+  "complaintReasonRecurringFault":  "المشكلة تكررت",
+  "@complaintReasonOther":  {
+    "description":  "complaintReasonOther copy"
+  },
+  "complaintReasonOther":  "سبب آخر"
 }
