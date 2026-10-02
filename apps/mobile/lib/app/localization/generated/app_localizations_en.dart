@@ -76,9 +76,6 @@ class AppLocalizationsEn extends AppLocalizations {
   String get commonOptional => 'Optional';
 
   @override
-  String get comingSoon => 'This screen is still being built.';
-
-  @override
   String get homeTabLabel => 'Home';
 
   @override

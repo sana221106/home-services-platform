@@ -201,6 +201,12 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
                 label: l10n.profileNotifications,
                 onTap: () => context.pushNamed(AppRoute.notifications.name),
               ),
+              ProfileMenuItem(
+                key: const Key('profile-reviews'),
+                icon: 'assets/icons/star.svg',
+                label: l10n.reviewsTitle,
+                onTap: () => context.pushNamed(AppRoute.reviews.name),
+              ),
               const SizedBox(height: AppSpacing.md),
               SectionHeader(title: l10n.profileSectionPreferences),
               ProfileMenuItem(

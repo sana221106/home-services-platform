@@ -75,9 +75,6 @@ class AppLocalizationsAr extends AppLocalizations {
   String get commonOptional => 'اختياري';
 
   @override
-  String get comingSoon => 'هذه الشاشة قيد الإنشاء.';
-
-  @override
   String get homeTabLabel => 'الرئيسية';
 
   @override

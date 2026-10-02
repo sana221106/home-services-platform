@@ -10,6 +10,7 @@ import 'package:home_services_app/app/app.dart';
 import 'package:home_services_app/app/bootstrap/app_bootstrap.dart';
 import 'package:home_services_app/core/storage/secure_storage_service.dart';
 import 'package:home_services_app/features/auth/presentation/controllers/auth_controller.dart';
+import 'package:home_services_app/features/auth/presentation/pages/onboarding_screen.dart';
 
 /// Shared overrides for every test here: real preferences are mocked, and the
 /// keystore is swapped for an in-memory store so nothing touches a platform
@@ -41,9 +42,20 @@ void main() {
     'app boots and resolves the unauthenticated splash to onboarding',
     (WidgetTester tester) async {
       await tester.pumpWidget(await _buildApp());
-      await tester.pump();
+      // The in-memory token store restores on a microtask, then the splash
+      // redirect runs for the guest session. Pump a bounded number of frames
+      // rather than pumpAndSettle: the splash spinner animates forever while
+      // the session is still restoring.
+      for (int i = 0; i < 20; i++) {
+        await tester.pump(const Duration(milliseconds: 20));
+        if (find.byType(OnboardingScreen).evaluate().isNotEmpty) break;
+      }
 
-      expect(find.byType(MaterialApp), findsOneWidget);
+      // This is the regression guard for the router using a route *name* where
+      // a *location* was required, which rendered the errorBuilder's raw URI
+      // ("splash") as a blank white screen.
+      expect(find.byType(OnboardingScreen), findsOneWidget);
+      expect(find.text('splash'), findsNothing);
     },
   );
 

@@ -28,6 +28,7 @@ import '../../features/requests/presentation/pages/request_detail_page.dart';
 import '../../features/requests/presentation/pages/requests_page.dart';
 import '../../features/requests/presentation/pages/review_request_page.dart';
 import '../../features/requests/presentation/pages/select_service_page.dart';
+import '../localization/app_localizations.dart';
 import '../shell/app_shell.dart';
 import 'app_routes.dart';
 import 'route_guards.dart';
@@ -42,32 +43,36 @@ final Provider<GoRouter> routerProvider = Provider<GoRouter>((Ref ref) {
 
   return GoRouter(
     navigatorKey: rootKey,
-    initialLocation: AppRoute.splash.name,
+    // A location, not a route name: go_router parses this as a URL, and the
+    // splash route lives at '/'.
+    initialLocation: AppRoute.splash.path,
     refreshListenable: SessionListenable(ref),
     debugLogDiagnostics: false,
+    // The redirect works in locations because go_router's top-level callback
+    // never receives the matched route's name.
     redirect: (BuildContext context, GoRouterState state) =>
-        resolveRedirect(context, ref.read(authProvider), state.name ?? ''),
+        resolveRedirect(ref.read(authProvider), state.matchedLocation),
     routes: <RouteBase>[
       GoRoute(
-        path: '/',
+        path: AppRoute.splash.path,
         name: AppRoute.splash.name,
         builder: (BuildContext context, GoRouterState state) =>
             const SplashScreen(),
       ),
       GoRoute(
-        path: '/welcome',
+        path: AppRoute.onboarding.path,
         name: AppRoute.onboarding.name,
         builder: (BuildContext context, GoRouterState state) =>
             const OnboardingScreen(),
       ),
       GoRoute(
-        path: '/auth/phone',
+        path: AppRoute.phoneEntry.path,
         name: AppRoute.phoneEntry.name,
         builder: (BuildContext context, GoRouterState state) =>
             const PhoneEntryScreen(),
       ),
       GoRoute(
-        path: '/auth/otp',
+        path: AppRoute.otpVerify.path,
         name: AppRoute.otpVerify.name,
         builder: (BuildContext context, GoRouterState state) =>
             const OtpVerifyScreen(),
@@ -83,7 +88,7 @@ final Provider<GoRouter> routerProvider = Provider<GoRouter>((Ref ref) {
           StatefulShellBranch(
             routes: <RouteBase>[
               GoRoute(
-                path: '/home',
+                path: AppRoute.home.path,
                 name: AppRoute.home.name,
                 builder: (BuildContext context, GoRouterState state) =>
                     const HomePage(),
@@ -93,7 +98,7 @@ final Provider<GoRouter> routerProvider = Provider<GoRouter>((Ref ref) {
           StatefulShellBranch(
             routes: <RouteBase>[
               GoRoute(
-                path: '/requests',
+                path: AppRoute.requests.path,
                 name: AppRoute.requests.name,
                 builder: (BuildContext context, GoRouterState state) =>
                     const RequestsPage(),
@@ -103,7 +108,7 @@ final Provider<GoRouter> routerProvider = Provider<GoRouter>((Ref ref) {
           StatefulShellBranch(
             routes: <RouteBase>[
               GoRoute(
-                path: '/properties',
+                path: AppRoute.properties.path,
                 name: AppRoute.properties.name,
                 builder: (BuildContext context, GoRouterState state) =>
                     const PropertiesPage(),
@@ -113,7 +118,7 @@ final Provider<GoRouter> routerProvider = Provider<GoRouter>((Ref ref) {
           StatefulShellBranch(
             routes: <RouteBase>[
               GoRoute(
-                path: '/support',
+                path: AppRoute.support.path,
                 name: AppRoute.support.name,
                 builder: (BuildContext context, GoRouterState state) =>
                     const SupportPage(),
@@ -123,7 +128,7 @@ final Provider<GoRouter> routerProvider = Provider<GoRouter>((Ref ref) {
           StatefulShellBranch(
             routes: <RouteBase>[
               GoRoute(
-                path: '/profile',
+                path: AppRoute.profile.path,
                 name: AppRoute.profile.name,
                 builder: (BuildContext context, GoRouterState state) =>
                     const ProfilePage(),
@@ -137,7 +142,7 @@ final Provider<GoRouter> routerProvider = Provider<GoRouter>((Ref ref) {
       // by `RequestWizardController`, and every page reads the same state, so
       // entering the wizard at step 3 still shows steps 1 and 2 answered.
       GoRoute(
-        path: '/requests/new',
+        path: AppRoute.requestNew.path,
         name: AppRoute.requestNew.name,
         parentNavigatorKey: rootKey,
         builder: (BuildContext context, GoRouterState state) =>
@@ -174,14 +179,14 @@ final Provider<GoRouter> routerProvider = Provider<GoRouter>((Ref ref) {
         ],
       ),
       GoRoute(
-        path: '/requests/:requestId',
+        path: AppRoute.requestDetail.path,
         name: AppRoute.requestDetail.name,
         parentNavigatorKey: rootKey,
         builder: (BuildContext context, GoRouterState state) =>
             RequestDetailPage(requestId: state.pathParameters['requestId']!),
       ),
       GoRoute(
-        path: '/requests/:requestId/payment',
+        path: AppRoute.payment.path,
         name: AppRoute.payment.name,
         parentNavigatorKey: rootKey,
         builder: (BuildContext context, GoRouterState state) => PaymentPage(
@@ -190,7 +195,7 @@ final Provider<GoRouter> routerProvider = Provider<GoRouter>((Ref ref) {
         ),
       ),
       GoRoute(
-        path: '/support/new',
+        path: AppRoute.conversationNew.path,
         name: AppRoute.conversationNew.name,
         parentNavigatorKey: rootKey,
         builder: (BuildContext context, GoRouterState state) {
@@ -199,7 +204,7 @@ final Provider<GoRouter> routerProvider = Provider<GoRouter>((Ref ref) {
         },
       ),
       GoRoute(
-        path: '/support/complaint/new',
+        path: AppRoute.complaintNew.path,
         name: AppRoute.complaintNew.name,
         parentNavigatorKey: rootKey,
         builder: (BuildContext context, GoRouterState state) {
@@ -208,7 +213,7 @@ final Provider<GoRouter> routerProvider = Provider<GoRouter>((Ref ref) {
         },
       ),
       GoRoute(
-        path: '/support/conversation/:conversationId',
+        path: AppRoute.conversationMessages.path,
         name: AppRoute.conversationMessages.name,
         parentNavigatorKey: rootKey,
         builder: (BuildContext context, GoRouterState state) =>
@@ -218,63 +223,63 @@ final Provider<GoRouter> routerProvider = Provider<GoRouter>((Ref ref) {
             ),
       ),
       GoRoute(
-        path: '/reviews',
+        path: AppRoute.reviews.path,
         name: AppRoute.reviews.name,
         parentNavigatorKey: rootKey,
         builder: (BuildContext context, GoRouterState state) =>
             const ReviewsPage(),
       ),
       GoRoute(
-        path: '/notifications',
+        path: AppRoute.notifications.path,
         name: AppRoute.notifications.name,
         parentNavigatorKey: rootKey,
         builder: (BuildContext context, GoRouterState state) =>
             const NotificationsPage(),
       ),
       GoRoute(
-        path: '/profile/edit',
+        path: AppRoute.profileEdit.path,
         name: AppRoute.profileEdit.name,
         parentNavigatorKey: rootKey,
         builder: (BuildContext context, GoRouterState state) =>
             const EditProfilePage(),
       ),
       GoRoute(
-        path: '/requests/:requestId/rate',
+        path: AppRoute.rateService.path,
         name: AppRoute.rateService.name,
         parentNavigatorKey: rootKey,
         builder: (BuildContext context, GoRouterState state) =>
             RateServicePage(requestId: state.pathParameters['requestId']!),
       ),
       GoRoute(
-        path: '/orders',
+        path: AppRoute.orders.path,
         name: AppRoute.orders.name,
         parentNavigatorKey: rootKey,
         builder: (BuildContext context, GoRouterState state) =>
             const OrdersPage(),
       ),
       GoRoute(
-        path: '/orders/:requestId',
+        path: AppRoute.orderTracking.path,
         name: AppRoute.orderTracking.name,
         parentNavigatorKey: rootKey,
         builder: (BuildContext context, GoRouterState state) =>
             OrderTrackingPage(requestId: state.pathParameters['requestId']!),
       ),
       GoRoute(
-        path: '/properties/new',
+        path: AppRoute.propertyNew.path,
         name: AppRoute.propertyNew.name,
         parentNavigatorKey: rootKey,
         builder: (BuildContext context, GoRouterState state) =>
             const PropertyNewPage(),
       ),
       GoRoute(
-        path: '/properties/:propertyId',
+        path: AppRoute.propertyDetail.path,
         name: AppRoute.propertyDetail.name,
         parentNavigatorKey: rootKey,
         builder: (BuildContext context, GoRouterState state) =>
             PropertyDetailPage(propertyId: state.pathParameters['propertyId']!),
       ),
       GoRoute(
-        path: '/properties/:propertyId/history',
+        path: AppRoute.propertyHistory.path,
         name: AppRoute.propertyHistory.name,
         parentNavigatorKey: rootKey,
         builder: (BuildContext context, GoRouterState state) =>
@@ -283,7 +288,16 @@ final Provider<GoRouter> routerProvider = Provider<GoRouter>((Ref ref) {
             ),
       ),
     ],
-    errorBuilder: (BuildContext context, GoRouterState state) =>
-        Scaffold(body: Center(child: Text(state.uri.toString()))),
+    errorBuilder: (BuildContext context, GoRouterState state) => Scaffold(
+      body: Center(
+        child: Padding(
+          padding: const EdgeInsets.all(24),
+          child: Text(
+            context.l10n.commonSomethingWentWrong,
+            textAlign: TextAlign.center,
+          ),
+        ),
+      ),
+    ),
   );
 });

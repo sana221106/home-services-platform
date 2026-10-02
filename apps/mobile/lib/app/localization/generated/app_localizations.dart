@@ -230,12 +230,6 @@ abstract class AppLocalizations {
   /// **'اختياري'**
   String get commonOptional;
 
-  /// No description provided for @comingSoon.
-  ///
-  /// In ar, this message translates to:
-  /// **'هذه الشاشة قيد الإنشاء.'**
-  String get comingSoon;
-
   /// No description provided for @homeTabLabel.
   ///
   /// In ar, this message translates to:
