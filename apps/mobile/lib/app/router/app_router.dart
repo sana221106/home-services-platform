@@ -9,6 +9,8 @@ import '../../features/auth/presentation/pages/onboarding_screen.dart';
 import '../../features/auth/presentation/pages/otp_verify_screen.dart';
 import '../../features/auth/presentation/pages/phone_entry_screen.dart';
 import '../../features/home/presentation/pages/home_page.dart';
+import '../../features/orders/presentation/pages/order_tracking_page.dart';
+import '../../features/orders/presentation/pages/orders_page.dart';
 import '../../features/properties/presentation/pages/properties_page.dart';
 import '../../features/properties/presentation/pages/property_history_page.dart';
 import '../../features/requests/presentation/pages/location_page.dart';
@@ -169,6 +171,20 @@ final Provider<GoRouter> routerProvider = Provider<GoRouter>((Ref ref) {
         parentNavigatorKey: rootKey,
         builder: (BuildContext context, GoRouterState state) =>
             RequestDetailPage(requestId: state.pathParameters['requestId']!),
+      ),
+      GoRoute(
+        path: '/orders',
+        name: AppRoute.orders.name,
+        parentNavigatorKey: rootKey,
+        builder: (BuildContext context, GoRouterState state) =>
+            const OrdersPage(),
+      ),
+      GoRoute(
+        path: '/orders/:requestId',
+        name: AppRoute.orderTracking.name,
+        parentNavigatorKey: rootKey,
+        builder: (BuildContext context, GoRouterState state) =>
+            OrderTrackingPage(requestId: state.pathParameters['requestId']!),
       ),
       GoRoute(
         path: '/properties/new',

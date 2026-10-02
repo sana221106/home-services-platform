@@ -953,4 +953,38 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get requestComplainAction => 'Report a problem';
+
+  @override
+  String get ordersEmptyTitle => 'No orders yet';
+
+  @override
+  String get ordersEmptyBody => 'Once you book a service, it will appear here';
+
+  @override
+  String get orderComplaintOpenChip => 'Complaint';
+
+  @override
+  String get orderNoTotalYet => 'Pending pricing';
+
+  @override
+  String get orderArrivalNotScheduled => 'Arrival not scheduled yet';
+
+  @override
+  String get orderArrivalNotScheduledBody =>
+      'We will show the arrival window as soon as a technician is assigned';
+
+  @override
+  String get orderWorkStarted => 'Work started';
+
+  @override
+  String get orderWorkCompleted => 'Work finished';
+
+  @override
+  String get orderServiceCompleted => 'Service completed';
+
+  @override
+  String get orderViewFullRequest => 'View request details';
+
+  @override
+  String get ordersEmptyCta => 'Book a service';
 }

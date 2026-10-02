@@ -1873,6 +1873,72 @@ abstract class AppLocalizations {
   /// In ar, this message translates to:
   /// **'الإبلاغ عن مشكلة'**
   String get requestComplainAction;
+
+  /// ordersEmptyTitle copy
+  ///
+  /// In ar, this message translates to:
+  /// **'لا توجد طلبات بعد'**
+  String get ordersEmptyTitle;
+
+  /// ordersEmptyBody copy
+  ///
+  /// In ar, this message translates to:
+  /// **'عند حجز أي خدمة ستظهر هنا'**
+  String get ordersEmptyBody;
+
+  /// orderComplaintOpenChip copy
+  ///
+  /// In ar, this message translates to:
+  /// **'شكوى'**
+  String get orderComplaintOpenChip;
+
+  /// orderNoTotalYet copy
+  ///
+  /// In ar, this message translates to:
+  /// **'بانتظار التسعير'**
+  String get orderNoTotalYet;
+
+  /// orderArrivalNotScheduled copy
+  ///
+  /// In ar, this message translates to:
+  /// **'لم يتم تحديد موعد الوصول بعد'**
+  String get orderArrivalNotScheduled;
+
+  /// orderArrivalNotScheduledBody copy
+  ///
+  /// In ar, this message translates to:
+  /// **'سنعرض موعد الوصول فور تعيين الفني'**
+  String get orderArrivalNotScheduledBody;
+
+  /// orderWorkStarted copy
+  ///
+  /// In ar, this message translates to:
+  /// **'بدء العمل'**
+  String get orderWorkStarted;
+
+  /// orderWorkCompleted copy
+  ///
+  /// In ar, this message translates to:
+  /// **'انتهاء العمل'**
+  String get orderWorkCompleted;
+
+  /// orderServiceCompleted copy
+  ///
+  /// In ar, this message translates to:
+  /// **'تم إنجاز الخدمة'**
+  String get orderServiceCompleted;
+
+  /// orderViewFullRequest copy
+  ///
+  /// In ar, this message translates to:
+  /// **'عرض تفاصيل الطلب'**
+  String get orderViewFullRequest;
+
+  /// ordersEmptyCta copy
+  ///
+  /// In ar, this message translates to:
+  /// **'احجز خدمة'**
+  String get ordersEmptyCta;
 }
 
 class _AppLocalizationsDelegate

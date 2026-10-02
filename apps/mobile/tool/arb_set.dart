@@ -84,17 +84,18 @@ void writeKeys(String path, Map<String, String> updates) {
     }
 
     final String indent = _indentOf(lines, valueIndex ?? metaIndex);
+    final String gap = _gapOf(lines, valueIndex ?? metaIndex);
 
     if (valueIndex != null) {
-      lines[valueIndex] = '$indent"$key": $encoded,';
+      lines[valueIndex] = '$indent"$key":$gap$encoded,';
     } else if (metaIndex != null) {
-      lines.insert(metaIndex, '$indent"$key": $encoded,');
+      lines.insert(metaIndex, '$indent"$key":$gap$encoded,');
     } else {
       appended
-        ..add('$indent"@$key": {')
-        ..add('$indent  "description": "$key copy"')
+        ..add('$indent"@$key":${gap}{')
+        ..add('$indent  "description":${gap}"$key copy"')
         ..add('$indent},')
-        ..add('$indent"$key": $encoded,');
+        ..add('$indent"$key":$gap$encoded,');
     }
   });
 
@@ -133,4 +134,15 @@ String _indentOf(List<String> lines, int? index) {
   if (index == null || index >= lines.length) return '  ';
   final int firstNonSpace = lines[index].indexOf(RegExp(r'[^\s]'));
   return firstNonSpace <= 0 ? '  ' : lines[index].substring(0, firstNonSpace);
+}
+
+/// Whitespace used between the colon and the value on an existing line.
+///
+/// These ARB files are written with two spaces there; inserting a single space
+/// would leave the file valid but inconsistent, so the style is read from the
+/// file rather than hard-coded.
+String _gapOf(List<String> lines, int? index) {
+  if (index == null || index >= lines.length) return '  ';
+  final RegExpMatch? match = RegExp(r':(\s*)').firstMatch(lines[index]);
+  return match?.group(1) ?? '  ';
 }

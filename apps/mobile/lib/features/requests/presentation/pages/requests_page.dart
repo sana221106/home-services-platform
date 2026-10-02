@@ -230,14 +230,6 @@ class _Body extends ConsumerWidget {
       ),
     );
   }
-
-  /// Pull to refresh and the retry button both re-run the first page.
-  Future<void> ref0(BuildContext context) async {
-    await ProviderScope.containerOf(
-      context,
-      listen: false,
-    ).read(requestsProvider.notifier).refresh();
-  }
 }
 
 class RequestCard extends StatelessWidget {

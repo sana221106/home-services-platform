@@ -120,8 +120,10 @@ class MaintenanceHistoryCard extends StatelessWidget {
     final l10n = context.l10n;
 
     return AppCard(
-      onTap: () => context.goNamed(
-        AppRoute.orderDetail.name,
+      // Pushed rather than navigated, so the back arrow returns to the history
+      // list instead of leaving the property screen.
+      onTap: () => context.pushNamed(
+        AppRoute.requestDetail.name,
         pathParameters: <String, String>{'requestId': item.requestId},
       ),
       accent: statusColor(colors, item.status),

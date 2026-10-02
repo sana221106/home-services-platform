@@ -944,4 +944,38 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get requestComplainAction => 'الإبلاغ عن مشكلة';
+
+  @override
+  String get ordersEmptyTitle => 'لا توجد طلبات بعد';
+
+  @override
+  String get ordersEmptyBody => 'عند حجز أي خدمة ستظهر هنا';
+
+  @override
+  String get orderComplaintOpenChip => 'شكوى';
+
+  @override
+  String get orderNoTotalYet => 'بانتظار التسعير';
+
+  @override
+  String get orderArrivalNotScheduled => 'لم يتم تحديد موعد الوصول بعد';
+
+  @override
+  String get orderArrivalNotScheduledBody =>
+      'سنعرض موعد الوصول فور تعيين الفني';
+
+  @override
+  String get orderWorkStarted => 'بدء العمل';
+
+  @override
+  String get orderWorkCompleted => 'انتهاء العمل';
+
+  @override
+  String get orderServiceCompleted => 'تم إنجاز الخدمة';
+
+  @override
+  String get orderViewFullRequest => 'عرض تفاصيل الطلب';
+
+  @override
+  String get ordersEmptyCta => 'احجز خدمة';
 }

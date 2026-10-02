@@ -89,7 +89,6 @@ void main() {
         AppRoute.requestNew,
         AppRoute.requestDetail,
         AppRoute.orders,
-        AppRoute.orderDetail,
         AppRoute.orderTracking,
         AppRoute.properties,
         AppRoute.propertyNew,

@@ -157,6 +157,17 @@ String formatDate(DateTime? value) {
   return '${local.day.toString().padLeft(2, '0')}/${local.month.toString().padLeft(2, '0')}/${local.year}';
 }
 
+/// Clock only, for the second half of a range such as an arrival window
+/// (`10:00 – 14:00`), where repeating the date would be noise.
+String formatTimeOnly(DateTime? value, {required AppLocalizations l10n}) {
+  if (value == null) return '';
+  final DateTime local = value.toLocal();
+  final int hour = local.hour % 12 == 0 ? 12 : local.hour % 12;
+  final String minute = local.minute.toString().padLeft(2, '0');
+  final String meridiem = local.hour < 12 ? l10n.meridiemAm : l10n.meridiemPm;
+  return '$hour:$minute $meridiem';
+}
+
 /// A plain value object used when a screen needs to compare payloads.
 class StringSet extends Equatable {
   const StringSet(this.values);

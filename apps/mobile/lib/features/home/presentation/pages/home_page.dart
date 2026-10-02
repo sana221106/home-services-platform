@@ -154,6 +154,8 @@ class _CountsRow extends StatelessWidget {
             value: counts.activeRequests,
             label: l10n.requestsActive,
             icon: 'assets/icons/orders.svg',
+            // The active count is the door to the full order history.
+            onTap: () => context.pushNamed(AppRoute.orders.name),
           ),
         ),
         const SizedBox(width: AppSpacing.sm),
@@ -182,16 +184,22 @@ class _CountTile extends StatelessWidget {
     required this.value,
     required this.label,
     required this.icon,
+    this.onTap,
   });
 
   final int value;
   final String label;
   final String icon;
 
+  /// Makes the tile an entry point. Only the tiles with a screen behind them get
+  /// one, so a decorative tile is never announced as a button.
+  final VoidCallback? onTap;
+
   @override
   Widget build(BuildContext context) {
-    final colors = Theme.of(context).extension<AppColors>()!;
-    return Container(
+    final colors = AppColors.of(context);
+
+    final Widget tile = Container(
       padding: const EdgeInsets.symmetric(
         horizontal: AppSpacing.sm,
         vertical: AppSpacing.md,
@@ -217,6 +225,16 @@ class _CountTile extends StatelessWidget {
             style: context.text.caption.copyWith(color: colors.textSecondary),
           ),
         ],
+      ),
+    );
+
+    if (onTap == null) return tile;
+    return Material(
+      color: Colors.transparent,
+      child: InkWell(
+        onTap: onTap,
+        borderRadius: BorderRadius.circular(AppRadius.lg),
+        child: tile,
       ),
     );
   }

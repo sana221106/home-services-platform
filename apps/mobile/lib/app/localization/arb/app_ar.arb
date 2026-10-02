@@ -643,5 +643,49 @@
   "@requestComplainAction": {
     "description": "requestComplainAction copy"
   },
-  "requestComplainAction": "الإبلاغ عن مشكلة"
+  "requestComplainAction": "الإبلاغ عن مشكلة",
+  "@ordersEmptyTitle":  {
+    "description":  "ordersEmptyTitle copy"
+  },
+  "ordersEmptyTitle":  "لا توجد طلبات بعد",
+  "@ordersEmptyBody":  {
+    "description":  "ordersEmptyBody copy"
+  },
+  "ordersEmptyBody":  "عند حجز أي خدمة ستظهر هنا",
+  "@orderComplaintOpenChip":  {
+    "description":  "orderComplaintOpenChip copy"
+  },
+  "orderComplaintOpenChip":  "شكوى",
+  "@orderNoTotalYet":  {
+    "description":  "orderNoTotalYet copy"
+  },
+  "orderNoTotalYet":  "بانتظار التسعير",
+  "@orderArrivalNotScheduled":  {
+    "description":  "orderArrivalNotScheduled copy"
+  },
+  "orderArrivalNotScheduled":  "لم يتم تحديد موعد الوصول بعد",
+  "@orderArrivalNotScheduledBody":  {
+    "description":  "orderArrivalNotScheduledBody copy"
+  },
+  "orderArrivalNotScheduledBody":  "سنعرض موعد الوصول فور تعيين الفني",
+  "@orderWorkStarted":  {
+    "description":  "orderWorkStarted copy"
+  },
+  "orderWorkStarted":  "بدء العمل",
+  "@orderWorkCompleted":  {
+    "description":  "orderWorkCompleted copy"
+  },
+  "orderWorkCompleted":  "انتهاء العمل",
+  "@orderServiceCompleted":  {
+    "description":  "orderServiceCompleted copy"
+  },
+  "orderServiceCompleted":  "تم إنجاز الخدمة",
+  "@orderViewFullRequest":  {
+    "description":  "orderViewFullRequest copy"
+  },
+  "orderViewFullRequest":  "عرض تفاصيل الطلب",
+  "@ordersEmptyCta":  {
+    "description":  "ordersEmptyCta copy"
+  },
+  "ordersEmptyCta":  "احجز خدمة"
 }

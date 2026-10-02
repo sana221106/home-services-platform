@@ -645,5 +645,49 @@
   "@requestComplainAction": {
     "description": "requestComplainAction copy"
   },
-  "requestComplainAction": "Report a problem"
+  "requestComplainAction": "Report a problem",
+  "@ordersEmptyTitle":  {
+    "description":  "ordersEmptyTitle copy"
+  },
+  "ordersEmptyTitle":  "No orders yet",
+  "@ordersEmptyBody":  {
+    "description":  "ordersEmptyBody copy"
+  },
+  "ordersEmptyBody":  "Once you book a service, it will appear here",
+  "@orderComplaintOpenChip":  {
+    "description":  "orderComplaintOpenChip copy"
+  },
+  "orderComplaintOpenChip":  "Complaint",
+  "@orderNoTotalYet":  {
+    "description":  "orderNoTotalYet copy"
+  },
+  "orderNoTotalYet":  "Pending pricing",
+  "@orderArrivalNotScheduled":  {
+    "description":  "orderArrivalNotScheduled copy"
+  },
+  "orderArrivalNotScheduled":  "Arrival not scheduled yet",
+  "@orderArrivalNotScheduledBody":  {
+    "description":  "orderArrivalNotScheduledBody copy"
+  },
+  "orderArrivalNotScheduledBody":  "We will show the arrival window as soon as a technician is assigned",
+  "@orderWorkStarted":  {
+    "description":  "orderWorkStarted copy"
+  },
+  "orderWorkStarted":  "Work started",
+  "@orderWorkCompleted":  {
+    "description":  "orderWorkCompleted copy"
+  },
+  "orderWorkCompleted":  "Work finished",
+  "@orderServiceCompleted":  {
+    "description":  "orderServiceCompleted copy"
+  },
+  "orderServiceCompleted":  "Service completed",
+  "@orderViewFullRequest":  {
+    "description":  "orderViewFullRequest copy"
+  },
+  "orderViewFullRequest":  "View request details",
+  "@ordersEmptyCta":  {
+    "description":  "ordersEmptyCta copy"
+  },
+  "ordersEmptyCta":  "Book a service"
 }
