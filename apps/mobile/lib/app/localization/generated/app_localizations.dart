@@ -2449,6 +2449,30 @@ abstract class AppLocalizations {
   /// In ar, this message translates to:
   /// **'اختر التقييم أولًا'**
   String get reviewRatingRequired;
+
+  /// notificationsMarkAllRead copy
+  ///
+  /// In ar, this message translates to:
+  /// **'تحديد الكل كمقروء'**
+  String get notificationsMarkAllRead;
+
+  /// notificationsEmptyTitle copy
+  ///
+  /// In ar, this message translates to:
+  /// **'لا توجد إشعارات'**
+  String get notificationsEmptyTitle;
+
+  /// notificationsEmptyBody copy
+  ///
+  /// In ar, this message translates to:
+  /// **'ستظهر هنا تحديثات طلباتك ورسائل الدعم.'**
+  String get notificationsEmptyBody;
+
+  /// notificationsUnknownType copy
+  ///
+  /// In ar, this message translates to:
+  /// **'نوع جديد'**
+  String get notificationsUnknownType;
 }
 
 class _AppLocalizationsDelegate

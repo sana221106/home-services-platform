@@ -17,6 +17,7 @@ import '../../features/support/presentation/pages/conversation_page.dart';
 import '../../features/support/presentation/pages/support_page.dart';
 import '../../features/properties/presentation/pages/properties_page.dart';
 import '../../features/properties/presentation/pages/property_history_page.dart';
+import '../../features/notifications/presentation/pages/notifications_page.dart';
 import '../../features/reviews/presentation/pages/reviews_page.dart';
 import '../../features/requests/presentation/pages/location_page.dart';
 import '../../features/requests/presentation/pages/problem_details_page.dart';
@@ -220,6 +221,13 @@ final Provider<GoRouter> routerProvider = Provider<GoRouter>((Ref ref) {
         parentNavigatorKey: rootKey,
         builder: (BuildContext context, GoRouterState state) =>
             const ReviewsPage(),
+      ),
+      GoRoute(
+        path: '/notifications',
+        name: AppRoute.notifications.name,
+        parentNavigatorKey: rootKey,
+        builder: (BuildContext context, GoRouterState state) =>
+            const NotificationsPage(),
       ),
       GoRoute(
         path: '/requests/:requestId/rate',

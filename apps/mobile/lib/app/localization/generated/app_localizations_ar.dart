@@ -1237,4 +1237,16 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get reviewRatingRequired => 'اختر التقييم أولًا';
+
+  @override
+  String get notificationsMarkAllRead => 'تحديد الكل كمقروء';
+
+  @override
+  String get notificationsEmptyTitle => 'لا توجد إشعارات';
+
+  @override
+  String get notificationsEmptyBody => 'ستظهر هنا تحديثات طلباتك ورسائل الدعم.';
+
+  @override
+  String get notificationsUnknownType => 'نوع جديد';
 }

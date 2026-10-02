@@ -28,6 +28,7 @@ enum AppRoute {
   conversationMessages('conversation-messages'),
   complaintNew('complaint-new'),
   reviews('reviews'),
+  notifications('notifications'),
   profile('profile');
 
   const AppRoute(this.name);
@@ -57,6 +58,7 @@ enum AppRoute {
     AppRoute.conversationMessages,
     AppRoute.complaintNew,
     AppRoute.reviews,
+    AppRoute.notifications,
     AppRoute.profile,
   }.contains(this);
 

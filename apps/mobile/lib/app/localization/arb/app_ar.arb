@@ -1027,5 +1027,21 @@
   "@reviewRatingRequired":  {
     "description":  "reviewRatingRequired copy"
   },
-  "reviewRatingRequired":  "اختر التقييم أولًا"
+  "reviewRatingRequired":  "اختر التقييم أولًا",
+  "@notificationsMarkAllRead":  {
+    "description":  "notificationsMarkAllRead copy"
+  },
+  "notificationsMarkAllRead":  "تحديد الكل كمقروء",
+  "@notificationsEmptyTitle":  {
+    "description":  "notificationsEmptyTitle copy"
+  },
+  "notificationsEmptyTitle":  "لا توجد إشعارات",
+  "@notificationsEmptyBody":  {
+    "description":  "notificationsEmptyBody copy"
+  },
+  "notificationsEmptyBody":  "ستظهر هنا تحديثات طلباتك ورسائل الدعم.",
+  "@notificationsUnknownType":  {
+    "description":  "notificationsUnknownType copy"
+  },
+  "notificationsUnknownType":  "نوع جديد"
 }

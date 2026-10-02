@@ -61,6 +61,8 @@ class _HomePageState extends ConsumerState<HomePage> {
                       ),
                       _NotificationBell(
                         count: state.dashboard?.unreadTotal ?? 0,
+                        onTap: () =>
+                            context.pushNamed(AppRoute.notifications.name),
                       ),
                     ],
                   ),
@@ -401,37 +403,54 @@ class _EmptyActiveRequest extends StatelessWidget {
 }
 
 class _NotificationBell extends StatelessWidget {
-  const _NotificationBell({required this.count});
+  const _NotificationBell({required this.count, this.onTap});
 
   final int count;
+  final VoidCallback? onTap;
 
   @override
   Widget build(BuildContext context) {
     final colors = Theme.of(context).extension<AppColors>()!;
-    return Stack(
-      clipBehavior: Clip.none,
-      children: <Widget>[
-        AppIcon('assets/icons/bell.svg', size: 24, color: colors.textPrimary),
-        if (count > 0)
-          PositionedDirectional(
-            end: -6,
-            top: -4,
-            child: Container(
-              padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 1),
-              decoration: BoxDecoration(
-                color: colors.danger,
-                borderRadius: BorderRadius.circular(999),
-              ),
-              child: Text(
-                count > 9 ? '9+' : '$count',
-                style: context.text.label.copyWith(
-                  color: Colors.white,
-                  fontSize: 10,
+    return InkWell(
+      onTap: onTap,
+      customBorder: const CircleBorder(),
+      // The icon is only 24px, so the hit target is widened to the 48px the
+      // accessibility guidance asks for without moving the badge.
+      child: Padding(
+        padding: const EdgeInsets.all(AppSpacing.xs),
+        child: Stack(
+          clipBehavior: Clip.none,
+          children: <Widget>[
+            AppIcon(
+              'assets/icons/bell.svg',
+              size: 24,
+              color: colors.textPrimary,
+            ),
+            if (count > 0)
+              PositionedDirectional(
+                end: -6,
+                top: -4,
+                child: Container(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 5,
+                    vertical: 1,
+                  ),
+                  decoration: BoxDecoration(
+                    color: colors.danger,
+                    borderRadius: BorderRadius.circular(999),
+                  ),
+                  child: Text(
+                    count > 9 ? '9+' : '$count',
+                    style: context.text.label.copyWith(
+                      color: Colors.white,
+                      fontSize: 10,
+                    ),
+                  ),
                 ),
               ),
-            ),
-          ),
-      ],
+          ],
+        ),
+      ),
     );
   }
 }

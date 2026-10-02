@@ -1253,4 +1253,17 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get reviewRatingRequired => 'Choose a rating first';
+
+  @override
+  String get notificationsMarkAllRead => 'Mark all read';
+
+  @override
+  String get notificationsEmptyTitle => 'No notifications';
+
+  @override
+  String get notificationsEmptyBody =>
+      'Updates about your requests and support messages will appear here.';
+
+  @override
+  String get notificationsUnknownType => 'New type';
 }

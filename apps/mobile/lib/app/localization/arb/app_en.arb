@@ -1029,5 +1029,21 @@
   "@reviewRatingRequired":  {
     "description":  "reviewRatingRequired copy"
   },
-  "reviewRatingRequired":  "Choose a rating first"
+  "reviewRatingRequired":  "Choose a rating first",
+  "@notificationsMarkAllRead":  {
+    "description":  "notificationsMarkAllRead copy"
+  },
+  "notificationsMarkAllRead":  "Mark all read",
+  "@notificationsEmptyTitle":  {
+    "description":  "notificationsEmptyTitle copy"
+  },
+  "notificationsEmptyTitle":  "No notifications",
+  "@notificationsEmptyBody":  {
+    "description":  "notificationsEmptyBody copy"
+  },
+  "notificationsEmptyBody":  "Updates about your requests and support messages will appear here.",
+  "@notificationsUnknownType":  {
+    "description":  "notificationsUnknownType copy"
+  },
+  "notificationsUnknownType":  "New type"
 }
