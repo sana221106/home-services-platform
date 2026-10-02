@@ -981,5 +981,53 @@
   "@paymentRefundPending":  {
     "description":  "paymentRefundPending copy"
   },
-  "paymentRefundPending":  "Refund in progress"
+  "paymentRefundPending":  "Refund in progress",
+  "@reviewModerationPending":  {
+    "description":  "reviewModerationPending copy"
+  },
+  "reviewModerationPending":  "Awaiting moderation",
+  "@reviewModerationApproved":  {
+    "description":  "reviewModerationApproved copy"
+  },
+  "reviewModerationApproved":  "Published",
+  "@reviewModerationHidden":  {
+    "description":  "reviewModerationHidden copy"
+  },
+  "reviewModerationHidden":  "Hidden",
+  "@reviewModerationRejected":  {
+    "description":  "reviewModerationRejected copy"
+  },
+  "reviewModerationRejected":  "Rejected",
+  "@reviewNoneTitle":  {
+    "description":  "reviewNoneTitle copy"
+  },
+  "reviewNoneTitle":  "No reviews yet",
+  "@reviewNoneBody":  {
+    "description":  "reviewNoneBody copy"
+  },
+  "reviewNoneBody":  "Rate a completed service to help other customers",
+  "@reviewSubmitted":  {
+    "description":  "reviewSubmitted copy"
+  },
+  "reviewSubmitted":  "Thanks for your rating",
+  "@reviewAwaitingModerationNote":  {
+    "description":  "reviewAwaitingModerationNote copy"
+  },
+  "reviewAwaitingModerationNote":  "Your rating will appear publicly once it is reviewed",
+  "@reviewStarsLabel":  {
+    "description":  "reviewStarsLabel copy"
+  },
+  "reviewStarsLabel":  "{count} out of 5",
+  "@reviewCommentLabel":  {
+    "description":  "reviewCommentLabel copy"
+  },
+  "reviewCommentLabel":  "Comment",
+  "@reviewCommentOptional":  {
+    "description":  "reviewCommentOptional copy"
+  },
+  "reviewCommentOptional":  "Optional",
+  "@reviewRatingRequired":  {
+    "description":  "reviewRatingRequired copy"
+  },
+  "reviewRatingRequired":  "Choose a rating first"
 }

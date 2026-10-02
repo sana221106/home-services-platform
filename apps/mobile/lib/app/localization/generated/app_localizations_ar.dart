@@ -1199,4 +1199,42 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get paymentRefundPending => 'جارٍ الاسترداد';
+
+  @override
+  String get reviewModerationPending => 'بانتظار المراجعة';
+
+  @override
+  String get reviewModerationApproved => 'منشور';
+
+  @override
+  String get reviewModerationHidden => 'مخفي';
+
+  @override
+  String get reviewModerationRejected => 'مرفوض';
+
+  @override
+  String get reviewNoneTitle => 'لا توجد تقييمات بعد';
+
+  @override
+  String get reviewNoneBody => 'قيّم خدمة منجزة لمساعدة العملاء الآخرين';
+
+  @override
+  String get reviewSubmitted => 'شكرًا لتقييمك';
+
+  @override
+  String get reviewAwaitingModerationNote => 'سيظهر تقييمك للعامة بعد مراجعته';
+
+  @override
+  String reviewStarsLabel(Object count) {
+    return '$count من 5';
+  }
+
+  @override
+  String get reviewCommentLabel => 'التعليق';
+
+  @override
+  String get reviewCommentOptional => 'اختياري';
+
+  @override
+  String get reviewRatingRequired => 'اختر التقييم أولًا';
 }

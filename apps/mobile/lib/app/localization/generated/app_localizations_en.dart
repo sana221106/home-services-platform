@@ -1213,4 +1213,44 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get paymentRefundPending => 'Refund in progress';
+
+  @override
+  String get reviewModerationPending => 'Awaiting moderation';
+
+  @override
+  String get reviewModerationApproved => 'Published';
+
+  @override
+  String get reviewModerationHidden => 'Hidden';
+
+  @override
+  String get reviewModerationRejected => 'Rejected';
+
+  @override
+  String get reviewNoneTitle => 'No reviews yet';
+
+  @override
+  String get reviewNoneBody =>
+      'Rate a completed service to help other customers';
+
+  @override
+  String get reviewSubmitted => 'Thanks for your rating';
+
+  @override
+  String get reviewAwaitingModerationNote =>
+      'Your rating will appear publicly once it is reviewed';
+
+  @override
+  String reviewStarsLabel(Object count) {
+    return '$count out of 5';
+  }
+
+  @override
+  String get reviewCommentLabel => 'Comment';
+
+  @override
+  String get reviewCommentOptional => 'Optional';
+
+  @override
+  String get reviewRatingRequired => 'Choose a rating first';
 }

@@ -979,5 +979,53 @@
   "@paymentRefundPending":  {
     "description":  "paymentRefundPending copy"
   },
-  "paymentRefundPending":  "جارٍ الاسترداد"
+  "paymentRefundPending":  "جارٍ الاسترداد",
+  "@reviewModerationPending":  {
+    "description":  "reviewModerationPending copy"
+  },
+  "reviewModerationPending":  "بانتظار المراجعة",
+  "@reviewModerationApproved":  {
+    "description":  "reviewModerationApproved copy"
+  },
+  "reviewModerationApproved":  "منشور",
+  "@reviewModerationHidden":  {
+    "description":  "reviewModerationHidden copy"
+  },
+  "reviewModerationHidden":  "مخفي",
+  "@reviewModerationRejected":  {
+    "description":  "reviewModerationRejected copy"
+  },
+  "reviewModerationRejected":  "مرفوض",
+  "@reviewNoneTitle":  {
+    "description":  "reviewNoneTitle copy"
+  },
+  "reviewNoneTitle":  "لا توجد تقييمات بعد",
+  "@reviewNoneBody":  {
+    "description":  "reviewNoneBody copy"
+  },
+  "reviewNoneBody":  "قيّم خدمة منجزة لمساعدة العملاء الآخرين",
+  "@reviewSubmitted":  {
+    "description":  "reviewSubmitted copy"
+  },
+  "reviewSubmitted":  "شكرًا لتقييمك",
+  "@reviewAwaitingModerationNote":  {
+    "description":  "reviewAwaitingModerationNote copy"
+  },
+  "reviewAwaitingModerationNote":  "سيظهر تقييمك للعامة بعد مراجعته",
+  "@reviewStarsLabel":  {
+    "description":  "reviewStarsLabel copy"
+  },
+  "reviewStarsLabel":  "{count} من 5",
+  "@reviewCommentLabel":  {
+    "description":  "reviewCommentLabel copy"
+  },
+  "reviewCommentLabel":  "التعليق",
+  "@reviewCommentOptional":  {
+    "description":  "reviewCommentOptional copy"
+  },
+  "reviewCommentOptional":  "اختياري",
+  "@reviewRatingRequired":  {
+    "description":  "reviewRatingRequired copy"
+  },
+  "reviewRatingRequired":  "اختر التقييم أولًا"
 }

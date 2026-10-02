@@ -17,6 +17,7 @@ import '../../features/support/presentation/pages/conversation_page.dart';
 import '../../features/support/presentation/pages/support_page.dart';
 import '../../features/properties/presentation/pages/properties_page.dart';
 import '../../features/properties/presentation/pages/property_history_page.dart';
+import '../../features/reviews/presentation/pages/reviews_page.dart';
 import '../../features/requests/presentation/pages/location_page.dart';
 import '../../features/requests/presentation/pages/problem_details_page.dart';
 import '../../features/requests/presentation/pages/photo_annotation_page.dart';
@@ -212,6 +213,20 @@ final Provider<GoRouter> routerProvider = Provider<GoRouter>((Ref ref) {
               conversationId: state.pathParameters['conversationId']!,
               subject: state.uri.queryParameters['subject'],
             ),
+      ),
+      GoRoute(
+        path: '/reviews',
+        name: AppRoute.reviews.name,
+        parentNavigatorKey: rootKey,
+        builder: (BuildContext context, GoRouterState state) =>
+            const ReviewsPage(),
+      ),
+      GoRoute(
+        path: '/requests/:requestId/rate',
+        name: AppRoute.rateService.name,
+        parentNavigatorKey: rootKey,
+        builder: (BuildContext context, GoRouterState state) =>
+            RateServicePage(requestId: state.pathParameters['requestId']!),
       ),
       GoRoute(
         path: '/orders',

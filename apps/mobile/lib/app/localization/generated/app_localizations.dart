@@ -2377,6 +2377,78 @@ abstract class AppLocalizations {
   /// In ar, this message translates to:
   /// **'جارٍ الاسترداد'**
   String get paymentRefundPending;
+
+  /// reviewModerationPending copy
+  ///
+  /// In ar, this message translates to:
+  /// **'بانتظار المراجعة'**
+  String get reviewModerationPending;
+
+  /// reviewModerationApproved copy
+  ///
+  /// In ar, this message translates to:
+  /// **'منشور'**
+  String get reviewModerationApproved;
+
+  /// reviewModerationHidden copy
+  ///
+  /// In ar, this message translates to:
+  /// **'مخفي'**
+  String get reviewModerationHidden;
+
+  /// reviewModerationRejected copy
+  ///
+  /// In ar, this message translates to:
+  /// **'مرفوض'**
+  String get reviewModerationRejected;
+
+  /// reviewNoneTitle copy
+  ///
+  /// In ar, this message translates to:
+  /// **'لا توجد تقييمات بعد'**
+  String get reviewNoneTitle;
+
+  /// reviewNoneBody copy
+  ///
+  /// In ar, this message translates to:
+  /// **'قيّم خدمة منجزة لمساعدة العملاء الآخرين'**
+  String get reviewNoneBody;
+
+  /// reviewSubmitted copy
+  ///
+  /// In ar, this message translates to:
+  /// **'شكرًا لتقييمك'**
+  String get reviewSubmitted;
+
+  /// reviewAwaitingModerationNote copy
+  ///
+  /// In ar, this message translates to:
+  /// **'سيظهر تقييمك للعامة بعد مراجعته'**
+  String get reviewAwaitingModerationNote;
+
+  /// reviewStarsLabel copy
+  ///
+  /// In ar, this message translates to:
+  /// **'{count} من 5'**
+  String reviewStarsLabel(Object count);
+
+  /// reviewCommentLabel copy
+  ///
+  /// In ar, this message translates to:
+  /// **'التعليق'**
+  String get reviewCommentLabel;
+
+  /// reviewCommentOptional copy
+  ///
+  /// In ar, this message translates to:
+  /// **'اختياري'**
+  String get reviewCommentOptional;
+
+  /// reviewRatingRequired copy
+  ///
+  /// In ar, this message translates to:
+  /// **'اختر التقييم أولًا'**
+  String get reviewRatingRequired;
 }
 
 class _AppLocalizationsDelegate

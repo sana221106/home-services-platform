@@ -264,9 +264,10 @@ class _ActionBar extends StatelessWidget {
           Expanded(
             child: FilledButton(
               key: const Key('request-rate'),
-              // Rating is not built yet, so the button is withheld rather than
-              // left inert: a control that swallows a tap is worse than none.
-              onPressed: null,
+              onPressed: () => context.pushNamed(
+                AppRoute.rateService.name,
+                pathParameters: <String, String>{'requestId': state.requestId},
+              ),
               child: Text(l10n.requestRateAction),
             ),
           ),
