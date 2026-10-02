@@ -1,0 +1,2 @@
+# Keeps this directory in git. Flutter's pubspec lists assets/images/, but git
+# does not track empty directories, so fresh clones were missing it.
