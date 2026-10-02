@@ -4,7 +4,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../../app/bootstrap/app_bootstrap.dart';
 import '../../../../core/network/api_client.dart';
 import '../../../../core/errors/failure.dart';
-import '../../../../core/network/paginated.dart';
 import '../datasources/properties_remote_data_source.dart';
 import '../models/property_models.dart';
 
@@ -19,8 +18,7 @@ class PropertiesRepository {
   final PropertiesRemoteDataSource _remote;
   final ApiClient _client;
 
-  Future<Paginated<Property>> list({int page = 1, int perPage = 20}) =>
-      _guard(() => _remote.listProperties(page: page, perPage: perPage));
+  Future<List<Property>> list() => _guard(() => _remote.listProperties());
 
   Future<Property> get(String propertyId) =>
       _guard(() => _remote.getProperty(propertyId));
@@ -30,53 +28,83 @@ class PropertiesRepository {
 
   Future<Property> create({
     required String label,
-    required String addressLine,
-    String? district,
-    String? city,
-    String? governorate,
+    required String governorate,
+    required String city,
+    required double latitude,
+    required double longitude,
+    String? propertyType,
     String? zone,
-    double? latitude,
-    double? longitude,
+    String? district,
+    String? street,
+    String? building,
+    String? floor,
+    String? apartment,
+    String? landmark,
+    String? notes,
     bool isDefault = false,
-    List<PropertyContact> contacts = const <PropertyContact>[],
+    String? contactName,
+    String? contactPhone,
   }) => _guard(
     () => _remote.createProperty(
       label: label,
-      addressLine: addressLine,
-      district: district,
-      city: city,
       governorate: governorate,
-      zone: zone,
+      city: city,
       latitude: latitude,
       longitude: longitude,
+      propertyType: propertyType,
+      zone: zone,
+      district: district,
+      street: street,
+      building: building,
+      floor: floor,
+      apartment: apartment,
+      landmark: landmark,
+      notes: notes,
       isDefault: isDefault,
-      contacts: contacts,
+      contactName: contactName,
+      contactPhone: contactPhone,
     ),
   );
 
   Future<Property> update(
     String propertyId, {
     String? label,
-    String? addressLine,
-    String? district,
-    String? city,
     String? governorate,
-    String? zone,
+    String? city,
     double? latitude,
     double? longitude,
+    String? propertyType,
+    String? zone,
+    String? district,
+    String? street,
+    String? building,
+    String? floor,
+    String? apartment,
+    String? landmark,
+    String? notes,
     bool? isDefault,
+    String? contactName,
+    String? contactPhone,
   }) => _guard(
     () => _remote.updateProperty(
       propertyId,
       label: label,
-      addressLine: addressLine,
-      district: district,
-      city: city,
       governorate: governorate,
-      zone: zone,
+      city: city,
       latitude: latitude,
       longitude: longitude,
+      propertyType: propertyType,
+      zone: zone,
+      district: district,
+      street: street,
+      building: building,
+      floor: floor,
+      apartment: apartment,
+      landmark: landmark,
+      notes: notes,
       isDefault: isDefault,
+      contactName: contactName,
+      contactPhone: contactPhone,
     ),
   );
 

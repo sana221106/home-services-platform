@@ -11,18 +11,15 @@ class PropertiesRemoteDataSource {
 
   final ApiClient _client;
 
-  Future<Paginated<Property>> listProperties({
-    int page = 1,
-    int perPage = 20,
-  }) async {
-    final Response<Map<String, dynamic>> response = await _client.get(
+  /// `GET /properties` answers with a bare `list[PropertyResponse]`, not a
+  /// pagination envelope, so it is read through [ApiClient.getList].
+  Future<List<Property>> listProperties() async {
+    final Response<List<Map<String, dynamic>>> response = await _client.getList(
       ApiEndpoints.properties,
-      query: <String, dynamic>{'page': page, 'per_page': perPage},
     );
-    return Paginated<Property>.fromJson(
-      response.data ?? const <String, dynamic>{},
-      Property.fromJson,
-    );
+    return (response.data ?? const <Map<String, dynamic>>[])
+        .map(Property.fromJson)
+        .toList(growable: false);
   }
 
   Future<Property> getProperty(String propertyId) async {
@@ -47,43 +44,51 @@ class PropertiesRemoteDataSource {
     ).items;
   }
 
-  /// Creates a property. The backend copies the address onto every future
-  /// request as a snapshot, so the payload is flat, not nested.
+  /// Creates a property.
+  ///
+  /// The wire shape is the flat `CreatePropertyRequest`; `latitude`/`longitude`
+  /// are required by the backend because every request snapshots them for area
+  /// intelligence (§18). The primary contact is sent as the flat
+  /// `contact_name`/`contact_phone` pair the endpoint accepts.
   Future<Property> createProperty({
     required String label,
-    required String addressLine,
-    String? district,
-    String? city,
-    String? governorate,
+    required String governorate,
+    required String city,
+    required double latitude,
+    required double longitude,
+    String? propertyType,
     String? zone,
-    double? latitude,
-    double? longitude,
+    String? district,
+    String? street,
+    String? building,
+    String? floor,
+    String? apartment,
+    String? landmark,
+    String? notes,
     bool isDefault = false,
-    List<PropertyContact> contacts = const <PropertyContact>[],
+    String? contactName,
+    String? contactPhone,
   }) async {
     final Response<Map<String, dynamic>> response = await _client.post(
       ApiEndpoints.properties,
       data: <String, dynamic>{
         'label': label,
-        'address_line': addressLine,
-        'district': ?district,
-        'city': ?city,
-        'governorate': ?governorate,
+        'governorate': governorate,
+        'city': city,
+        'latitude': latitude,
+        'longitude': longitude,
+        'property_type': ?propertyType,
         'zone': ?zone,
-        'latitude': ?latitude,
-        'longitude': ?longitude,
+        'district': ?district,
+        'street': ?street,
+        'building': ?building,
+        'floor': ?floor,
+        'apartment': ?apartment,
+        'landmark': ?landmark,
+        'notes': ?notes,
         'is_default': isDefault,
-        if (contacts.isNotEmpty)
-          'contacts': contacts
-              .map(
-                (PropertyContact c) => <String, dynamic>{
-                  'contact_name': c.name,
-                  if (c.phone != null) 'phone': c.phone,
-                  if (c.relation != null) 'relation': c.relation,
-                  if (c.isPrimary) 'is_primary': true,
-                },
-              )
-              .toList(growable: false),
+        'contact_name': ?contactName,
+        'contact_phone': ?contactPhone,
       },
     );
     return Property.fromJson(response.data ?? const <String, dynamic>{});
@@ -92,27 +97,43 @@ class PropertiesRemoteDataSource {
   Future<Property> updateProperty(
     String propertyId, {
     String? label,
-    String? addressLine,
-    String? district,
-    String? city,
     String? governorate,
-    String? zone,
+    String? city,
     double? latitude,
     double? longitude,
+    String? propertyType,
+    String? zone,
+    String? district,
+    String? street,
+    String? building,
+    String? floor,
+    String? apartment,
+    String? landmark,
+    String? notes,
     bool? isDefault,
+    String? contactName,
+    String? contactPhone,
   }) async {
     final Response<Map<String, dynamic>> response = await _client.patch(
       ApiEndpoints.property(propertyId),
       data: <String, dynamic>{
         'label': ?label,
-        'address_line': ?addressLine,
-        'district': ?district,
-        'city': ?city,
         'governorate': ?governorate,
-        'zone': ?zone,
+        'city': ?city,
         'latitude': ?latitude,
         'longitude': ?longitude,
+        'property_type': ?propertyType,
+        'zone': ?zone,
+        'district': ?district,
+        'street': ?street,
+        'building': ?building,
+        'floor': ?floor,
+        'apartment': ?apartment,
+        'landmark': ?landmark,
+        'notes': ?notes,
         'is_default': ?isDefault,
+        'contact_name': ?contactName,
+        'contact_phone': ?contactPhone,
       },
     );
     return Property.fromJson(response.data ?? const <String, dynamic>{});

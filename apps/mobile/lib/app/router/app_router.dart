@@ -14,7 +14,9 @@ import '../../features/support/presentation/pages/complaint_pages.dart';
 import '../../features/support/presentation/pages/conversation_page.dart';
 import '../../features/support/presentation/pages/support_page.dart';
 import '../../features/properties/presentation/pages/properties_page.dart';
+import '../../features/properties/presentation/pages/property_detail_page.dart';
 import '../../features/properties/presentation/pages/property_history_page.dart';
+import '../../features/properties/presentation/pages/property_new_page.dart';
 import '../../features/notifications/presentation/pages/notifications_page.dart';
 import '../../features/profile/presentation/pages/edit_profile_page.dart';
 import '../../features/profile/presentation/pages/profile_page.dart';
@@ -262,14 +264,14 @@ final Provider<GoRouter> routerProvider = Provider<GoRouter>((Ref ref) {
         name: AppRoute.propertyNew.name,
         parentNavigatorKey: rootKey,
         builder: (BuildContext context, GoRouterState state) =>
-            const ComingSoonScreen(title: ''),
+            const PropertyNewPage(),
       ),
       GoRoute(
         path: '/properties/:propertyId',
         name: AppRoute.propertyDetail.name,
         parentNavigatorKey: rootKey,
         builder: (BuildContext context, GoRouterState state) =>
-            const ComingSoonScreen(title: ''),
+            PropertyDetailPage(propertyId: state.pathParameters['propertyId']!),
       ),
       GoRoute(
         path: '/properties/:propertyId/history',

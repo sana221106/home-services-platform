@@ -1336,4 +1336,104 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get profileLogoutConfirmBody =>
       'You will need to sign in again to use the app.';
+
+  @override
+  String get propertyNewTitle => 'Add a property';
+
+  @override
+  String get propertyDetailTitle => 'Property details';
+
+  @override
+  String get propertyTypeLabel => 'Property type';
+
+  @override
+  String get propertyTypeApartment => 'Apartment';
+
+  @override
+  String get propertyTypeHouse => 'House';
+
+  @override
+  String get propertyTypeVilla => 'Villa';
+
+  @override
+  String get propertyTypeOffice => 'Office';
+
+  @override
+  String get propertyTypeShop => 'Shop';
+
+  @override
+  String get propertyGovernorateLabel => 'Governorate';
+
+  @override
+  String get propertyCityLabel => 'City';
+
+  @override
+  String get propertyZoneLabel => 'Zone';
+
+  @override
+  String get propertyDistrictLabel => 'District';
+
+  @override
+  String get propertyStreetLabel => 'Street';
+
+  @override
+  String get propertyBuildingLabel => 'Building';
+
+  @override
+  String get propertyFloorLabel => 'Floor';
+
+  @override
+  String get propertyApartmentLabel => 'Unit number';
+
+  @override
+  String get propertyLandmarkLabel => 'Landmark';
+
+  @override
+  String get propertyNotesLabel => 'Notes';
+
+  @override
+  String get propertyContactNameLabel => 'Contact name';
+
+  @override
+  String get propertyContactPhoneLabel => 'Contact phone';
+
+  @override
+  String get propertyContactsTitle => 'Site contacts';
+
+  @override
+  String get propertyLocationTitle => 'Pin the location';
+
+  @override
+  String get propertyLocationHint => 'Tap the map to place the pin';
+
+  @override
+  String get propertyLocationRequired => 'Pick the location on the map';
+
+  @override
+  String get propertyCoordinatesLabel => 'Coordinates';
+
+  @override
+  String get propertyCreateAction => 'Save property';
+
+  @override
+  String get propertyCreatedMessage => 'Property added';
+
+  @override
+  String get propertyDelete => 'Delete property';
+
+  @override
+  String get propertyDeleteConfirmTitle => 'Delete this property?';
+
+  @override
+  String get propertyDeleteConfirmBody =>
+      'Its maintenance history stays stored for records.';
+
+  @override
+  String get propertyDeletedMessage => 'Property deleted';
+
+  @override
+  String get propertyDefaultSetMessage => 'Default property updated';
+
+  @override
+  String get propertyCreatedOnLabel => 'Added on';
 }

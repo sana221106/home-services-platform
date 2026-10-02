@@ -2611,6 +2611,204 @@ abstract class AppLocalizations {
   /// In ar, this message translates to:
   /// **'ستحتاج إلى تسجيل الدخول مرة أخرى لاستخدام التطبيق.'**
   String get profileLogoutConfirmBody;
+
+  /// propertyNewTitle copy
+  ///
+  /// In ar, this message translates to:
+  /// **'إضافة عقار'**
+  String get propertyNewTitle;
+
+  /// propertyDetailTitle copy
+  ///
+  /// In ar, this message translates to:
+  /// **'تفاصيل العقار'**
+  String get propertyDetailTitle;
+
+  /// propertyTypeLabel copy
+  ///
+  /// In ar, this message translates to:
+  /// **'نوع العقار'**
+  String get propertyTypeLabel;
+
+  /// propertyTypeApartment copy
+  ///
+  /// In ar, this message translates to:
+  /// **'شقة'**
+  String get propertyTypeApartment;
+
+  /// propertyTypeHouse copy
+  ///
+  /// In ar, this message translates to:
+  /// **'منزل'**
+  String get propertyTypeHouse;
+
+  /// propertyTypeVilla copy
+  ///
+  /// In ar, this message translates to:
+  /// **'فيلا'**
+  String get propertyTypeVilla;
+
+  /// propertyTypeOffice copy
+  ///
+  /// In ar, this message translates to:
+  /// **'مكتب'**
+  String get propertyTypeOffice;
+
+  /// propertyTypeShop copy
+  ///
+  /// In ar, this message translates to:
+  /// **'محل'**
+  String get propertyTypeShop;
+
+  /// propertyGovernorateLabel copy
+  ///
+  /// In ar, this message translates to:
+  /// **'المحافظة'**
+  String get propertyGovernorateLabel;
+
+  /// propertyCityLabel copy
+  ///
+  /// In ar, this message translates to:
+  /// **'المدينة'**
+  String get propertyCityLabel;
+
+  /// propertyZoneLabel copy
+  ///
+  /// In ar, this message translates to:
+  /// **'المنطقة'**
+  String get propertyZoneLabel;
+
+  /// propertyDistrictLabel copy
+  ///
+  /// In ar, this message translates to:
+  /// **'الحي'**
+  String get propertyDistrictLabel;
+
+  /// propertyStreetLabel copy
+  ///
+  /// In ar, this message translates to:
+  /// **'الشارع'**
+  String get propertyStreetLabel;
+
+  /// propertyBuildingLabel copy
+  ///
+  /// In ar, this message translates to:
+  /// **'رقم المبنى'**
+  String get propertyBuildingLabel;
+
+  /// propertyFloorLabel copy
+  ///
+  /// In ar, this message translates to:
+  /// **'الدور'**
+  String get propertyFloorLabel;
+
+  /// propertyApartmentLabel copy
+  ///
+  /// In ar, this message translates to:
+  /// **'رقم الوحدة'**
+  String get propertyApartmentLabel;
+
+  /// propertyLandmarkLabel copy
+  ///
+  /// In ar, this message translates to:
+  /// **'علامة مميزة'**
+  String get propertyLandmarkLabel;
+
+  /// propertyNotesLabel copy
+  ///
+  /// In ar, this message translates to:
+  /// **'ملاحظات'**
+  String get propertyNotesLabel;
+
+  /// propertyContactNameLabel copy
+  ///
+  /// In ar, this message translates to:
+  /// **'اسم جهة الاتصال'**
+  String get propertyContactNameLabel;
+
+  /// propertyContactPhoneLabel copy
+  ///
+  /// In ar, this message translates to:
+  /// **'هاتف جهة الاتصال'**
+  String get propertyContactPhoneLabel;
+
+  /// propertyContactsTitle copy
+  ///
+  /// In ar, this message translates to:
+  /// **'جهات الاتصال بالموقع'**
+  String get propertyContactsTitle;
+
+  /// propertyLocationTitle copy
+  ///
+  /// In ar, this message translates to:
+  /// **'تحديد الموقع'**
+  String get propertyLocationTitle;
+
+  /// propertyLocationHint copy
+  ///
+  /// In ar, this message translates to:
+  /// **'اضغط على الخريطة لتحديد الموقع'**
+  String get propertyLocationHint;
+
+  /// propertyLocationRequired copy
+  ///
+  /// In ar, this message translates to:
+  /// **'حدد الموقع على الخريطة'**
+  String get propertyLocationRequired;
+
+  /// propertyCoordinatesLabel copy
+  ///
+  /// In ar, this message translates to:
+  /// **'الإحداثيات'**
+  String get propertyCoordinatesLabel;
+
+  /// propertyCreateAction copy
+  ///
+  /// In ar, this message translates to:
+  /// **'حفظ العقار'**
+  String get propertyCreateAction;
+
+  /// propertyCreatedMessage copy
+  ///
+  /// In ar, this message translates to:
+  /// **'تمت إضافة العقار'**
+  String get propertyCreatedMessage;
+
+  /// propertyDelete copy
+  ///
+  /// In ar, this message translates to:
+  /// **'حذف العقار'**
+  String get propertyDelete;
+
+  /// propertyDeleteConfirmTitle copy
+  ///
+  /// In ar, this message translates to:
+  /// **'حذف هذا العقار؟'**
+  String get propertyDeleteConfirmTitle;
+
+  /// propertyDeleteConfirmBody copy
+  ///
+  /// In ar, this message translates to:
+  /// **'يبقى سجل الصيانة محفوظًا للسجلات.'**
+  String get propertyDeleteConfirmBody;
+
+  /// propertyDeletedMessage copy
+  ///
+  /// In ar, this message translates to:
+  /// **'تم حذف العقار'**
+  String get propertyDeletedMessage;
+
+  /// propertyDefaultSetMessage copy
+  ///
+  /// In ar, this message translates to:
+  /// **'تم تحديث العقار الافتراضي'**
+  String get propertyDefaultSetMessage;
+
+  /// propertyCreatedOnLabel copy
+  ///
+  /// In ar, this message translates to:
+  /// **'تاريخ الإضافة'**
+  String get propertyCreatedOnLabel;
 }
 
 class _AppLocalizationsDelegate

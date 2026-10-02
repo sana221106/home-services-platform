@@ -1319,4 +1319,103 @@ class AppLocalizationsAr extends AppLocalizations {
   @override
   String get profileLogoutConfirmBody =>
       'ستحتاج إلى تسجيل الدخول مرة أخرى لاستخدام التطبيق.';
+
+  @override
+  String get propertyNewTitle => 'إضافة عقار';
+
+  @override
+  String get propertyDetailTitle => 'تفاصيل العقار';
+
+  @override
+  String get propertyTypeLabel => 'نوع العقار';
+
+  @override
+  String get propertyTypeApartment => 'شقة';
+
+  @override
+  String get propertyTypeHouse => 'منزل';
+
+  @override
+  String get propertyTypeVilla => 'فيلا';
+
+  @override
+  String get propertyTypeOffice => 'مكتب';
+
+  @override
+  String get propertyTypeShop => 'محل';
+
+  @override
+  String get propertyGovernorateLabel => 'المحافظة';
+
+  @override
+  String get propertyCityLabel => 'المدينة';
+
+  @override
+  String get propertyZoneLabel => 'المنطقة';
+
+  @override
+  String get propertyDistrictLabel => 'الحي';
+
+  @override
+  String get propertyStreetLabel => 'الشارع';
+
+  @override
+  String get propertyBuildingLabel => 'رقم المبنى';
+
+  @override
+  String get propertyFloorLabel => 'الدور';
+
+  @override
+  String get propertyApartmentLabel => 'رقم الوحدة';
+
+  @override
+  String get propertyLandmarkLabel => 'علامة مميزة';
+
+  @override
+  String get propertyNotesLabel => 'ملاحظات';
+
+  @override
+  String get propertyContactNameLabel => 'اسم جهة الاتصال';
+
+  @override
+  String get propertyContactPhoneLabel => 'هاتف جهة الاتصال';
+
+  @override
+  String get propertyContactsTitle => 'جهات الاتصال بالموقع';
+
+  @override
+  String get propertyLocationTitle => 'تحديد الموقع';
+
+  @override
+  String get propertyLocationHint => 'اضغط على الخريطة لتحديد الموقع';
+
+  @override
+  String get propertyLocationRequired => 'حدد الموقع على الخريطة';
+
+  @override
+  String get propertyCoordinatesLabel => 'الإحداثيات';
+
+  @override
+  String get propertyCreateAction => 'حفظ العقار';
+
+  @override
+  String get propertyCreatedMessage => 'تمت إضافة العقار';
+
+  @override
+  String get propertyDelete => 'حذف العقار';
+
+  @override
+  String get propertyDeleteConfirmTitle => 'حذف هذا العقار؟';
+
+  @override
+  String get propertyDeleteConfirmBody => 'يبقى سجل الصيانة محفوظًا للسجلات.';
+
+  @override
+  String get propertyDeletedMessage => 'تم حذف العقار';
+
+  @override
+  String get propertyDefaultSetMessage => 'تم تحديث العقار الافتراضي';
+
+  @override
+  String get propertyCreatedOnLabel => 'تاريخ الإضافة';
 }

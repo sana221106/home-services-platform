@@ -170,9 +170,7 @@ final FutureProvider<List<ServiceCategory>> catalogueProvider =
 /// Property list for the wizard's location step, reused from the properties
 /// feature so both screens agree on ordering and the default property.
 final FutureProvider<List<Property>> wizardPropertiesProvider =
-    FutureProvider<List<Property>>((Ref ref) async {
-      final Paginated<Property> page = await ref
-          .watch(propertiesRepositoryProvider)
-          .list(perPage: 100);
-      return page.items;
-    }, name: 'wizardProperties');
+    FutureProvider<List<Property>>(
+      (Ref ref) => ref.watch(propertiesRepositoryProvider).list(),
+      name: 'wizardProperties',
+    );

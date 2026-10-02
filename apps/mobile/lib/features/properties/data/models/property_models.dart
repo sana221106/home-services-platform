@@ -8,14 +8,22 @@ class Property extends Equatable {
   const Property({
     required this.id,
     this.label,
+    this.propertyType,
     this.addressLine,
     this.city,
     this.governorate,
     this.district,
     this.zone,
+    this.street,
+    this.building,
+    this.floor,
+    this.apartment,
+    this.landmark,
+    this.notes,
     this.latitude,
     this.longitude,
     this.isDefault = false,
+    this.createdAt,
     this.contacts = const <PropertyContact>[],
   });
 
@@ -24,14 +32,22 @@ class Property extends Equatable {
     return Property(
       id: json.strOr('id', ''),
       label: json.str('label'),
+      propertyType: json.str('property_type'),
       addressLine: json.str('address_line') ?? address.str('line'),
       city: json.str('city') ?? address.str('city'),
       governorate: json.str('governorate') ?? address.str('governorate'),
       district: json.str('district') ?? address.str('district'),
       zone: json.str('zone') ?? address.str('zone'),
+      street: json.str('street'),
+      building: json.str('building'),
+      floor: json.str('floor'),
+      apartment: json.str('apartment'),
+      landmark: json.str('landmark'),
+      notes: json.str('notes'),
       latitude: json.decimal('latitude'),
       longitude: json.decimal('longitude'),
       isDefault: json.flag('is_default'),
+      createdAt: json.time('created_at'),
       contacts: json
           .mapList('contacts')
           .map(PropertyContact.fromJson)
@@ -41,22 +57,48 @@ class Property extends Equatable {
 
   final String id;
   final String? label;
+  final String? propertyType;
   final String? addressLine;
   final String? city;
   final String? governorate;
   final String? district;
   final String? zone;
+  final String? street;
+  final String? building;
+  final String? floor;
+  final String? apartment;
+  final String? landmark;
+  final String? notes;
   final double? latitude;
   final double? longitude;
   final bool isDefault;
+  final DateTime? createdAt;
   final List<PropertyContact> contacts;
+
+  /// True once the property carries a usable map point. `0,0` is a valid
+  /// backend coordinate but means "never picked", so it is treated as unset.
+  bool get hasCoordinates =>
+      latitude != null &&
+      longitude != null &&
+      (latitude != 0 || longitude != 0);
+
+  /// Single-line street portion, e.g. "12 شارع النيل، الدور 3".
+  String? get streetLine {
+    final List<String> parts = <String>[
+      if (building != null && building!.isNotEmpty) building!,
+      if (street != null && street!.isNotEmpty) street!,
+      if (addressLine != null && addressLine!.isNotEmpty) addressLine!,
+    ];
+    return parts.isEmpty ? null : parts.join('، ');
+  }
 
   /// Single-line address for cards.
   String get displayAddress {
     final List<String> parts = <String>[
-      if (addressLine != null && addressLine!.isNotEmpty) addressLine!,
+      ?streetLine,
       if (district != null && district!.isNotEmpty) district!,
       if (city != null && city!.isNotEmpty) city!,
+      if (governorate != null && governorate!.isNotEmpty) governorate!,
     ];
     return parts.isEmpty ? '—' : parts.join('، ');
   }

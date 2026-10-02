@@ -66,10 +66,12 @@ class PropertiesController extends Notifier<PropertiesState> {
   Future<void> load() async {
     state = state.copyWith(status: PropertiesStatus.loading, clearError: true);
     try {
-      final page = await ref.read(propertiesRepositoryProvider).list();
+      final List<Property> properties = await ref
+          .read(propertiesRepositoryProvider)
+          .list();
       state = state.copyWith(
         status: PropertiesStatus.ready,
-        properties: page.items,
+        properties: properties,
       );
     } on ApiFailure catch (failure) {
       state = state.copyWith(
@@ -81,13 +83,22 @@ class PropertiesController extends Notifier<PropertiesState> {
 
   Future<Property?> create({
     required String label,
-    required String addressLine,
-    String? district,
-    String? city,
-    String? governorate,
+    required String governorate,
+    required String city,
+    required double latitude,
+    required double longitude,
+    String? propertyType,
     String? zone,
-    double? latitude,
-    double? longitude,
+    String? district,
+    String? street,
+    String? building,
+    String? floor,
+    String? apartment,
+    String? landmark,
+    String? notes,
+    bool isDefault = false,
+    String? contactName,
+    String? contactPhone,
   }) async {
     state = state.copyWith(isMutating: true, clearError: true);
     try {
@@ -95,13 +106,22 @@ class PropertiesController extends Notifier<PropertiesState> {
           .read(propertiesRepositoryProvider)
           .create(
             label: label,
-            addressLine: addressLine,
-            district: district,
-            city: city,
             governorate: governorate,
-            zone: zone,
+            city: city,
             latitude: latitude,
             longitude: longitude,
+            propertyType: propertyType,
+            zone: zone,
+            district: district,
+            street: street,
+            building: building,
+            floor: floor,
+            apartment: apartment,
+            landmark: landmark,
+            notes: notes,
+            isDefault: isDefault,
+            contactName: contactName,
+            contactPhone: contactPhone,
           );
       state = state.copyWith(
         isMutating: false,

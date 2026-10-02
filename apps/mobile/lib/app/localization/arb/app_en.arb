@@ -1137,5 +1137,137 @@
   "@profileLogoutConfirmBody":  {
     "description":  "profileLogoutConfirmBody copy"
   },
-  "profileLogoutConfirmBody":  "You will need to sign in again to use the app."
+  "profileLogoutConfirmBody":  "You will need to sign in again to use the app.",
+  "@propertyNewTitle":  {
+    "description":  "propertyNewTitle copy"
+  },
+  "propertyNewTitle":  "Add a property",
+  "@propertyDetailTitle":  {
+    "description":  "propertyDetailTitle copy"
+  },
+  "propertyDetailTitle":  "Property details",
+  "@propertyTypeLabel":  {
+    "description":  "propertyTypeLabel copy"
+  },
+  "propertyTypeLabel":  "Property type",
+  "@propertyTypeApartment":  {
+    "description":  "propertyTypeApartment copy"
+  },
+  "propertyTypeApartment":  "Apartment",
+  "@propertyTypeHouse":  {
+    "description":  "propertyTypeHouse copy"
+  },
+  "propertyTypeHouse":  "House",
+  "@propertyTypeVilla":  {
+    "description":  "propertyTypeVilla copy"
+  },
+  "propertyTypeVilla":  "Villa",
+  "@propertyTypeOffice":  {
+    "description":  "propertyTypeOffice copy"
+  },
+  "propertyTypeOffice":  "Office",
+  "@propertyTypeShop":  {
+    "description":  "propertyTypeShop copy"
+  },
+  "propertyTypeShop":  "Shop",
+  "@propertyGovernorateLabel":  {
+    "description":  "propertyGovernorateLabel copy"
+  },
+  "propertyGovernorateLabel":  "Governorate",
+  "@propertyCityLabel":  {
+    "description":  "propertyCityLabel copy"
+  },
+  "propertyCityLabel":  "City",
+  "@propertyZoneLabel":  {
+    "description":  "propertyZoneLabel copy"
+  },
+  "propertyZoneLabel":  "Zone",
+  "@propertyDistrictLabel":  {
+    "description":  "propertyDistrictLabel copy"
+  },
+  "propertyDistrictLabel":  "District",
+  "@propertyStreetLabel":  {
+    "description":  "propertyStreetLabel copy"
+  },
+  "propertyStreetLabel":  "Street",
+  "@propertyBuildingLabel":  {
+    "description":  "propertyBuildingLabel copy"
+  },
+  "propertyBuildingLabel":  "Building",
+  "@propertyFloorLabel":  {
+    "description":  "propertyFloorLabel copy"
+  },
+  "propertyFloorLabel":  "Floor",
+  "@propertyApartmentLabel":  {
+    "description":  "propertyApartmentLabel copy"
+  },
+  "propertyApartmentLabel":  "Unit number",
+  "@propertyLandmarkLabel":  {
+    "description":  "propertyLandmarkLabel copy"
+  },
+  "propertyLandmarkLabel":  "Landmark",
+  "@propertyNotesLabel":  {
+    "description":  "propertyNotesLabel copy"
+  },
+  "propertyNotesLabel":  "Notes",
+  "@propertyContactNameLabel":  {
+    "description":  "propertyContactNameLabel copy"
+  },
+  "propertyContactNameLabel":  "Contact name",
+  "@propertyContactPhoneLabel":  {
+    "description":  "propertyContactPhoneLabel copy"
+  },
+  "propertyContactPhoneLabel":  "Contact phone",
+  "@propertyContactsTitle":  {
+    "description":  "propertyContactsTitle copy"
+  },
+  "propertyContactsTitle":  "Site contacts",
+  "@propertyLocationTitle":  {
+    "description":  "propertyLocationTitle copy"
+  },
+  "propertyLocationTitle":  "Pin the location",
+  "@propertyLocationHint":  {
+    "description":  "propertyLocationHint copy"
+  },
+  "propertyLocationHint":  "Tap the map to place the pin",
+  "@propertyLocationRequired":  {
+    "description":  "propertyLocationRequired copy"
+  },
+  "propertyLocationRequired":  "Pick the location on the map",
+  "@propertyCoordinatesLabel":  {
+    "description":  "propertyCoordinatesLabel copy"
+  },
+  "propertyCoordinatesLabel":  "Coordinates",
+  "@propertyCreateAction":  {
+    "description":  "propertyCreateAction copy"
+  },
+  "propertyCreateAction":  "Save property",
+  "@propertyCreatedMessage":  {
+    "description":  "propertyCreatedMessage copy"
+  },
+  "propertyCreatedMessage":  "Property added",
+  "@propertyDelete":  {
+    "description":  "propertyDelete copy"
+  },
+  "propertyDelete":  "Delete property",
+  "@propertyDeleteConfirmTitle":  {
+    "description":  "propertyDeleteConfirmTitle copy"
+  },
+  "propertyDeleteConfirmTitle":  "Delete this property?",
+  "@propertyDeleteConfirmBody":  {
+    "description":  "propertyDeleteConfirmBody copy"
+  },
+  "propertyDeleteConfirmBody":  "Its maintenance history stays stored for records.",
+  "@propertyDeletedMessage":  {
+    "description":  "propertyDeletedMessage copy"
+  },
+  "propertyDeletedMessage":  "Property deleted",
+  "@propertyDefaultSetMessage":  {
+    "description":  "propertyDefaultSetMessage copy"
+  },
+  "propertyDefaultSetMessage":  "Default property updated",
+  "@propertyCreatedOnLabel":  {
+    "description":  "propertyCreatedOnLabel copy"
+  },
+  "propertyCreatedOnLabel":  "Added on"
 }

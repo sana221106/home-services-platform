@@ -42,6 +42,12 @@ dependencies:
   cached_network_image: ^3.4.1
   image_picker: ^1.2.3
 
+  # Map-based location selection for properties (§ flow: "Select Current
+  # GPS / Map Location"). OpenStreetMap tiles need no API key, unlike Google
+  # Maps, so the picker works from a plain build with no credentials.
+  flutter_map: ^8.2.2
+  latlong2: ^0.9.1
+
   # Value equality for state objects.
   equatable: ^3.0.0
 

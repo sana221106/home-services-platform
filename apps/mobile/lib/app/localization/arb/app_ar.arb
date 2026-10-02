@@ -1135,5 +1135,137 @@
   "@profileLogoutConfirmBody":  {
     "description":  "profileLogoutConfirmBody copy"
   },
-  "profileLogoutConfirmBody":  "ستحتاج إلى تسجيل الدخول مرة أخرى لاستخدام التطبيق."
+  "profileLogoutConfirmBody":  "ستحتاج إلى تسجيل الدخول مرة أخرى لاستخدام التطبيق.",
+  "@propertyNewTitle":  {
+    "description":  "propertyNewTitle copy"
+  },
+  "propertyNewTitle":  "إضافة عقار",
+  "@propertyDetailTitle":  {
+    "description":  "propertyDetailTitle copy"
+  },
+  "propertyDetailTitle":  "تفاصيل العقار",
+  "@propertyTypeLabel":  {
+    "description":  "propertyTypeLabel copy"
+  },
+  "propertyTypeLabel":  "نوع العقار",
+  "@propertyTypeApartment":  {
+    "description":  "propertyTypeApartment copy"
+  },
+  "propertyTypeApartment":  "شقة",
+  "@propertyTypeHouse":  {
+    "description":  "propertyTypeHouse copy"
+  },
+  "propertyTypeHouse":  "منزل",
+  "@propertyTypeVilla":  {
+    "description":  "propertyTypeVilla copy"
+  },
+  "propertyTypeVilla":  "فيلا",
+  "@propertyTypeOffice":  {
+    "description":  "propertyTypeOffice copy"
+  },
+  "propertyTypeOffice":  "مكتب",
+  "@propertyTypeShop":  {
+    "description":  "propertyTypeShop copy"
+  },
+  "propertyTypeShop":  "محل",
+  "@propertyGovernorateLabel":  {
+    "description":  "propertyGovernorateLabel copy"
+  },
+  "propertyGovernorateLabel":  "المحافظة",
+  "@propertyCityLabel":  {
+    "description":  "propertyCityLabel copy"
+  },
+  "propertyCityLabel":  "المدينة",
+  "@propertyZoneLabel":  {
+    "description":  "propertyZoneLabel copy"
+  },
+  "propertyZoneLabel":  "المنطقة",
+  "@propertyDistrictLabel":  {
+    "description":  "propertyDistrictLabel copy"
+  },
+  "propertyDistrictLabel":  "الحي",
+  "@propertyStreetLabel":  {
+    "description":  "propertyStreetLabel copy"
+  },
+  "propertyStreetLabel":  "الشارع",
+  "@propertyBuildingLabel":  {
+    "description":  "propertyBuildingLabel copy"
+  },
+  "propertyBuildingLabel":  "رقم المبنى",
+  "@propertyFloorLabel":  {
+    "description":  "propertyFloorLabel copy"
+  },
+  "propertyFloorLabel":  "الدور",
+  "@propertyApartmentLabel":  {
+    "description":  "propertyApartmentLabel copy"
+  },
+  "propertyApartmentLabel":  "رقم الوحدة",
+  "@propertyLandmarkLabel":  {
+    "description":  "propertyLandmarkLabel copy"
+  },
+  "propertyLandmarkLabel":  "علامة مميزة",
+  "@propertyNotesLabel":  {
+    "description":  "propertyNotesLabel copy"
+  },
+  "propertyNotesLabel":  "ملاحظات",
+  "@propertyContactNameLabel":  {
+    "description":  "propertyContactNameLabel copy"
+  },
+  "propertyContactNameLabel":  "اسم جهة الاتصال",
+  "@propertyContactPhoneLabel":  {
+    "description":  "propertyContactPhoneLabel copy"
+  },
+  "propertyContactPhoneLabel":  "هاتف جهة الاتصال",
+  "@propertyContactsTitle":  {
+    "description":  "propertyContactsTitle copy"
+  },
+  "propertyContactsTitle":  "جهات الاتصال بالموقع",
+  "@propertyLocationTitle":  {
+    "description":  "propertyLocationTitle copy"
+  },
+  "propertyLocationTitle":  "تحديد الموقع",
+  "@propertyLocationHint":  {
+    "description":  "propertyLocationHint copy"
+  },
+  "propertyLocationHint":  "اضغط على الخريطة لتحديد الموقع",
+  "@propertyLocationRequired":  {
+    "description":  "propertyLocationRequired copy"
+  },
+  "propertyLocationRequired":  "حدد الموقع على الخريطة",
+  "@propertyCoordinatesLabel":  {
+    "description":  "propertyCoordinatesLabel copy"
+  },
+  "propertyCoordinatesLabel":  "الإحداثيات",
+  "@propertyCreateAction":  {
+    "description":  "propertyCreateAction copy"
+  },
+  "propertyCreateAction":  "حفظ العقار",
+  "@propertyCreatedMessage":  {
+    "description":  "propertyCreatedMessage copy"
+  },
+  "propertyCreatedMessage":  "تمت إضافة العقار",
+  "@propertyDelete":  {
+    "description":  "propertyDelete copy"
+  },
+  "propertyDelete":  "حذف العقار",
+  "@propertyDeleteConfirmTitle":  {
+    "description":  "propertyDeleteConfirmTitle copy"
+  },
+  "propertyDeleteConfirmTitle":  "حذف هذا العقار؟",
+  "@propertyDeleteConfirmBody":  {
+    "description":  "propertyDeleteConfirmBody copy"
+  },
+  "propertyDeleteConfirmBody":  "يبقى سجل الصيانة محفوظًا للسجلات.",
+  "@propertyDeletedMessage":  {
+    "description":  "propertyDeletedMessage copy"
+  },
+  "propertyDeletedMessage":  "تم حذف العقار",
+  "@propertyDefaultSetMessage":  {
+    "description":  "propertyDefaultSetMessage copy"
+  },
+  "propertyDefaultSetMessage":  "تم تحديث العقار الافتراضي",
+  "@propertyCreatedOnLabel":  {
+    "description":  "propertyCreatedOnLabel copy"
+  },
+  "propertyCreatedOnLabel":  "تاريخ الإضافة"
 }
