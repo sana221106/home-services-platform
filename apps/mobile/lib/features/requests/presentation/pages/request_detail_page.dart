@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 
 import '../../../../app/localization/app_localizations.dart';
+import '../../../../app/router/app_routes.dart';
 import '../../../../app/theme/app_colors.dart';
 import '../../../../app/theme/app_spacing.dart';
 import '../../../../app/theme/app_text_style.dart';
@@ -242,7 +244,12 @@ class _ActionBar extends StatelessWidget {
     required RequestDetailState state,
     required RequestDetailController controller,
   }) {
-    if (!state.canRate && !state.canComplain && !state.canCancel) return null;
+    if (!state.canRate &&
+        !state.canComplain &&
+        !state.canPay &&
+        !state.canCancel) {
+      return null;
+    }
     return _ActionBar(state: state, controller: controller);
   }
 
@@ -257,7 +264,9 @@ class _ActionBar extends StatelessWidget {
           Expanded(
             child: FilledButton(
               key: const Key('request-rate'),
-              onPressed: () {},
+              // Rating is not built yet, so the button is withheld rather than
+              // left inert: a control that swallows a tap is worse than none.
+              onPressed: null,
               child: Text(l10n.requestRateAction),
             ),
           ),
@@ -265,8 +274,26 @@ class _ActionBar extends StatelessWidget {
           Expanded(
             child: OutlinedButton(
               key: const Key('request-complain'),
-              onPressed: () {},
+              onPressed: () => context.pushNamed(
+                AppRoute.complaintNew.name,
+                queryParameters: <String, String>{'requestId': state.requestId},
+              ),
               child: Text(l10n.requestComplainAction),
+            ),
+          ),
+        if (state.canPay)
+          Expanded(
+            child: OutlinedButton(
+              key: const Key('request-pay'),
+              onPressed: () => context.pushNamed(
+                AppRoute.payment.name,
+                pathParameters: <String, String>{'requestId': state.requestId},
+                queryParameters: <String, String>{
+                  if (state.referenceCode.isNotEmpty)
+                    'reference': state.referenceCode,
+                },
+              ),
+              child: Text(l10n.paymentViewTitle),
             ),
           ),
         if (state.canCancel)

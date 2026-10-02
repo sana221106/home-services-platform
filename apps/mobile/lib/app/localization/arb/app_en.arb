@@ -813,5 +813,173 @@
   "@complaintReasonOther":  {
     "description":  "complaintReasonOther copy"
   },
-  "complaintReasonOther":  "Other reason"
+  "complaintReasonOther":  "Other reason",
+  "@paymentViewTitle":  {
+    "description":  "paymentViewTitle copy"
+  },
+  "paymentViewTitle":  "Payment",
+  "@paymentAmountDue":  {
+    "description":  "paymentAmountDue copy"
+  },
+  "paymentAmountDue":  "Amount due",
+  "@paymentFullyPaid":  {
+    "description":  "paymentFullyPaid copy"
+  },
+  "paymentFullyPaid":  "Nothing left to pay",
+  "@paymentQuoteTotal":  {
+    "description":  "paymentQuoteTotal copy"
+  },
+  "paymentQuoteTotal":  "Accepted total",
+  "@paymentSubmitEvidence":  {
+    "description":  "paymentSubmitEvidence copy"
+  },
+  "paymentSubmitEvidence":  "Submit payment evidence",
+  "@paymentChooseMethod":  {
+    "description":  "paymentChooseMethod copy"
+  },
+  "paymentChooseMethod":  "How did you pay?",
+  "@paymentAmount":  {
+    "description":  "paymentAmount copy"
+  },
+  "paymentAmount":  "Amount",
+  "@paymentReferenceNumber":  {
+    "description":  "paymentReferenceNumber copy"
+  },
+  "paymentReferenceNumber":  "Transfer reference number",
+  "@paymentReferenceHint":  {
+    "description":  "paymentReferenceHint copy"
+  },
+  "paymentReferenceHint":  "Enter the number from the transfer receipt",
+  "@paymentReferenceRequired":  {
+    "description":  "paymentReferenceRequired copy"
+  },
+  "paymentReferenceRequired":  "Wallet transfers need a reference number",
+  "@paymentEvidenceSubmitted":  {
+    "description":  "paymentEvidenceSubmitted copy"
+  },
+  "paymentEvidenceSubmitted":  "Payment evidence sent for verification",
+  "@paymentHistory":  {
+    "description":  "paymentHistory copy"
+  },
+  "paymentHistory":  "Payment history",
+  "@paymentRefunds":  {
+    "description":  "paymentRefunds copy"
+  },
+  "paymentRefunds":  "Refunds",
+  "@paymentRefundReason":  {
+    "description":  "paymentRefundReason copy"
+  },
+  "paymentRefundReason":  "Reason",
+  "@paymentNoHistory":  {
+    "description":  "paymentNoHistory copy"
+  },
+  "paymentNoHistory":  "No payments submitted yet",
+  "@paymentDepositPaid":  {
+    "description":  "paymentDepositPaid copy"
+  },
+  "paymentDepositPaid":  "Deposit paid",
+  "@paymentDepositOutstanding":  {
+    "description":  "paymentDepositOutstanding copy"
+  },
+  "paymentDepositOutstanding":  "Deposit outstanding",
+  "@paymentDepositNotRequired":  {
+    "description":  "paymentDepositNotRequired copy"
+  },
+  "paymentDepositNotRequired":  "No deposit required",
+  "@paymentAttachReceipt":  {
+    "description":  "paymentAttachReceipt copy"
+  },
+  "paymentAttachReceipt":  "Attach receipt",
+  "@paymentReceiptAttached":  {
+    "description":  "paymentReceiptAttached copy"
+  },
+  "paymentReceiptAttached":  "Receipt attached",
+  "@paymentReceiptFailed":  {
+    "description":  "paymentReceiptFailed copy"
+  },
+  "paymentReceiptFailed":  "Could not attach the receipt",
+  "@paymentVerifiedOn":  {
+    "description":  "paymentVerifiedOn copy"
+  },
+  "paymentVerifiedOn":  "Verified on",
+  "@paymentRejectedReason":  {
+    "description":  "paymentRejectedReason copy"
+  },
+  "paymentRejectedReason":  "Why it was rejected",
+  "@paymentIsDeposit":  {
+    "description":  "paymentIsDeposit copy"
+  },
+  "paymentIsDeposit":  "This is the deposit payment",
+  "@paymentStatusPending":  {
+    "description":  "paymentStatusPending copy"
+  },
+  "paymentStatusPending":  "Pending",
+  "@paymentStatusVerificationPending":  {
+    "description":  "paymentStatusVerificationPending copy"
+  },
+  "paymentStatusVerificationPending":  "Verification pending",
+  "@paymentStatusVerified":  {
+    "description":  "paymentStatusVerified copy"
+  },
+  "paymentStatusVerified":  "Verified",
+  "@paymentStatusRejected":  {
+    "description":  "paymentStatusRejected copy"
+  },
+  "paymentStatusRejected":  "Rejected",
+  "@paymentStatusRefunded":  {
+    "description":  "paymentStatusRefunded copy"
+  },
+  "paymentStatusRefunded":  "Refunded",
+  "@paymentStatusPartiallyRefunded":  {
+    "description":  "paymentStatusPartiallyRefunded copy"
+  },
+  "paymentStatusPartiallyRefunded":  "Partially refunded",
+  "@paymentMethodCash":  {
+    "description":  "paymentMethodCash copy"
+  },
+  "paymentMethodCash":  "Cash on completion",
+  "@paymentMethodVodafoneCash":  {
+    "description":  "paymentMethodVodafoneCash copy"
+  },
+  "paymentMethodVodafoneCash":  "Vodafone Cash",
+  "@paymentMethodInstaPay":  {
+    "description":  "paymentMethodInstaPay copy"
+  },
+  "paymentMethodInstaPay":  "InstaPay",
+  "@paymentSupportPhone":  {
+    "description":  "paymentSupportPhone copy"
+  },
+  "paymentSupportPhone":  "Finance support",
+  "@paymentInstructionsTitle":  {
+    "description":  "paymentInstructionsTitle copy"
+  },
+  "paymentInstructionsTitle":  "How to pay",
+  "@paymentRefundProcessed":  {
+    "description":  "paymentRefundProcessed copy"
+  },
+  "paymentRefundProcessed":  "Processed",
+  "@paymentRefundApproved":  {
+    "description":  "paymentRefundApproved copy"
+  },
+  "paymentRefundApproved":  "Approved",
+  "@paymentRefundRejected":  {
+    "description":  "paymentRefundRejected copy"
+  },
+  "paymentRefundRejected":  "Rejected",
+  "@paymentAmountPaid":  {
+    "description":  "paymentAmountPaid copy"
+  },
+  "paymentAmountPaid":  "Paid",
+  "@paymentRefundedAmount":  {
+    "description":  "paymentRefundedAmount copy"
+  },
+  "paymentRefundedAmount":  "Refunded",
+  "@paymentDueDate":  {
+    "description":  "paymentDueDate copy"
+  },
+  "paymentDueDate":  "Due",
+  "@paymentRefundPending":  {
+    "description":  "paymentRefundPending copy"
+  },
+  "paymentRefundPending":  "Refund in progress"
 }

@@ -9,6 +9,7 @@ from fastapi import APIRouter, File, UploadFile
 from sqlalchemy import select
 
 from app.api.dependencies import CurrentCustomer, DbSession
+from app.core.enums import PaymentMethod
 from app.core.exceptions import NotFoundError, ValidationError
 from app.db.models.finance import Deposit, Payment, Refund
 from app.schemas.common import MessageResponse
@@ -25,12 +26,10 @@ router = APIRouter(tags=["payments"])
 
 SUPPORT_PHONE = "+201000000000"
 
-METHOD_LABELS = {
-    "CASH": "نقدًا",
-    "VODAFONE_CASH": "فودافون كاش",
-    "INSTAPAY": "إنستا باي",
-    "BANK_TRANSFER": "تحويل بنكي",
-}
+# Derived from the enum rather than listed by hand: `SubmitPaymentRequest.method`
+# is a `PaymentMethod`, so advertising a code the enum does not have would offer
+# the customer a method the submit call rejects.
+METHOD_CODES = [method.value for method in PaymentMethod]
 
 
 def _owned(db: DbSession, request_id: uuid.UUID, customer):  # noqa: ANN001, ANN202
@@ -71,7 +70,7 @@ def payment_view(
             PaymentSummaryResponse.model_validate(payment) for payment in payments
         ],
         amount_due=payment_service.outstanding_amount(db, request_id=request.id),
-        methods=list(METHOD_LABELS.keys()),
+        methods=METHOD_CODES,
         support_phone=SUPPORT_PHONE,
         instructions_ar=(
             "أرسل المبلغ ثم أدخل الرقم المرجعي من رسالة التحويل. "

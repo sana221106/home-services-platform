@@ -1073,4 +1073,130 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get complaintReasonOther => 'سبب آخر';
+
+  @override
+  String get paymentViewTitle => 'الدفع';
+
+  @override
+  String get paymentAmountDue => 'المبلغ المستحق';
+
+  @override
+  String get paymentFullyPaid => 'لا يوجد مستحق';
+
+  @override
+  String get paymentQuoteTotal => 'الإجمالي المتفق عليه';
+
+  @override
+  String get paymentSubmitEvidence => 'إرسال إثبات الدفع';
+
+  @override
+  String get paymentChooseMethod => 'كيف دفعت؟';
+
+  @override
+  String get paymentAmount => 'المبلغ';
+
+  @override
+  String get paymentReferenceNumber => 'رقم عملية التحويل';
+
+  @override
+  String get paymentReferenceHint => 'أدخل الرقم من إيصال التحويل';
+
+  @override
+  String get paymentReferenceRequired => 'تحويلات المحافظ تحتاج رقم عملية';
+
+  @override
+  String get paymentEvidenceSubmitted => 'تم إرسال إثبات الدفع للمراجعة';
+
+  @override
+  String get paymentHistory => 'سجل الدفعات';
+
+  @override
+  String get paymentRefunds => 'المبالغ المستردة';
+
+  @override
+  String get paymentRefundReason => 'السبب';
+
+  @override
+  String get paymentNoHistory => 'لم ترسل أي دفعات بعد';
+
+  @override
+  String get paymentDepositPaid => 'تم دفع العربون';
+
+  @override
+  String get paymentDepositOutstanding => 'متبقٍ من العربون';
+
+  @override
+  String get paymentDepositNotRequired => 'لا يوجد عربون مطلوب';
+
+  @override
+  String get paymentAttachReceipt => 'إرفاق الإيصال';
+
+  @override
+  String get paymentReceiptAttached => 'تم إرفاق الإيصال';
+
+  @override
+  String get paymentReceiptFailed => 'تعذر إرفاق الإيصال';
+
+  @override
+  String get paymentVerifiedOn => 'تم التحقق في';
+
+  @override
+  String get paymentRejectedReason => 'سبب الرفض';
+
+  @override
+  String get paymentIsDeposit => 'هذا المبلغ هو دفع العربون';
+
+  @override
+  String get paymentStatusPending => 'معلق';
+
+  @override
+  String get paymentStatusVerificationPending => 'بانتظار التحقق';
+
+  @override
+  String get paymentStatusVerified => 'تم التحقق';
+
+  @override
+  String get paymentStatusRejected => 'مرفوض';
+
+  @override
+  String get paymentStatusRefunded => 'تم الاسترداد';
+
+  @override
+  String get paymentStatusPartiallyRefunded => 'تم استرداد جزئي';
+
+  @override
+  String get paymentMethodCash => 'نقدًا عند الإنجاز';
+
+  @override
+  String get paymentMethodVodafoneCash => 'فودافون كاش';
+
+  @override
+  String get paymentMethodInstaPay => 'إنستا باي';
+
+  @override
+  String get paymentSupportPhone => 'دعم العملاء المالي';
+
+  @override
+  String get paymentInstructionsTitle => 'طريقة الدفع';
+
+  @override
+  String get paymentRefundProcessed => 'تمت المعالجة';
+
+  @override
+  String get paymentRefundApproved => 'معتمد';
+
+  @override
+  String get paymentRefundRejected => 'مرفوض';
+
+  @override
+  String get paymentAmountPaid => 'المدفوع';
+
+  @override
+  String get paymentRefundedAmount => 'المسترد';
+
+  @override
+  String get paymentDueDate => 'الاستحقاق';
+
+  @override
+  String get paymentRefundPending => 'جارٍ الاسترداد';
 }

@@ -2125,6 +2125,258 @@ abstract class AppLocalizations {
   /// In ar, this message translates to:
   /// **'سبب آخر'**
   String get complaintReasonOther;
+
+  /// paymentViewTitle copy
+  ///
+  /// In ar, this message translates to:
+  /// **'الدفع'**
+  String get paymentViewTitle;
+
+  /// paymentAmountDue copy
+  ///
+  /// In ar, this message translates to:
+  /// **'المبلغ المستحق'**
+  String get paymentAmountDue;
+
+  /// paymentFullyPaid copy
+  ///
+  /// In ar, this message translates to:
+  /// **'لا يوجد مستحق'**
+  String get paymentFullyPaid;
+
+  /// paymentQuoteTotal copy
+  ///
+  /// In ar, this message translates to:
+  /// **'الإجمالي المتفق عليه'**
+  String get paymentQuoteTotal;
+
+  /// paymentSubmitEvidence copy
+  ///
+  /// In ar, this message translates to:
+  /// **'إرسال إثبات الدفع'**
+  String get paymentSubmitEvidence;
+
+  /// paymentChooseMethod copy
+  ///
+  /// In ar, this message translates to:
+  /// **'كيف دفعت؟'**
+  String get paymentChooseMethod;
+
+  /// paymentAmount copy
+  ///
+  /// In ar, this message translates to:
+  /// **'المبلغ'**
+  String get paymentAmount;
+
+  /// paymentReferenceNumber copy
+  ///
+  /// In ar, this message translates to:
+  /// **'رقم عملية التحويل'**
+  String get paymentReferenceNumber;
+
+  /// paymentReferenceHint copy
+  ///
+  /// In ar, this message translates to:
+  /// **'أدخل الرقم من إيصال التحويل'**
+  String get paymentReferenceHint;
+
+  /// paymentReferenceRequired copy
+  ///
+  /// In ar, this message translates to:
+  /// **'تحويلات المحافظ تحتاج رقم عملية'**
+  String get paymentReferenceRequired;
+
+  /// paymentEvidenceSubmitted copy
+  ///
+  /// In ar, this message translates to:
+  /// **'تم إرسال إثبات الدفع للمراجعة'**
+  String get paymentEvidenceSubmitted;
+
+  /// paymentHistory copy
+  ///
+  /// In ar, this message translates to:
+  /// **'سجل الدفعات'**
+  String get paymentHistory;
+
+  /// paymentRefunds copy
+  ///
+  /// In ar, this message translates to:
+  /// **'المبالغ المستردة'**
+  String get paymentRefunds;
+
+  /// paymentRefundReason copy
+  ///
+  /// In ar, this message translates to:
+  /// **'السبب'**
+  String get paymentRefundReason;
+
+  /// paymentNoHistory copy
+  ///
+  /// In ar, this message translates to:
+  /// **'لم ترسل أي دفعات بعد'**
+  String get paymentNoHistory;
+
+  /// paymentDepositPaid copy
+  ///
+  /// In ar, this message translates to:
+  /// **'تم دفع العربون'**
+  String get paymentDepositPaid;
+
+  /// paymentDepositOutstanding copy
+  ///
+  /// In ar, this message translates to:
+  /// **'متبقٍ من العربون'**
+  String get paymentDepositOutstanding;
+
+  /// paymentDepositNotRequired copy
+  ///
+  /// In ar, this message translates to:
+  /// **'لا يوجد عربون مطلوب'**
+  String get paymentDepositNotRequired;
+
+  /// paymentAttachReceipt copy
+  ///
+  /// In ar, this message translates to:
+  /// **'إرفاق الإيصال'**
+  String get paymentAttachReceipt;
+
+  /// paymentReceiptAttached copy
+  ///
+  /// In ar, this message translates to:
+  /// **'تم إرفاق الإيصال'**
+  String get paymentReceiptAttached;
+
+  /// paymentReceiptFailed copy
+  ///
+  /// In ar, this message translates to:
+  /// **'تعذر إرفاق الإيصال'**
+  String get paymentReceiptFailed;
+
+  /// paymentVerifiedOn copy
+  ///
+  /// In ar, this message translates to:
+  /// **'تم التحقق في'**
+  String get paymentVerifiedOn;
+
+  /// paymentRejectedReason copy
+  ///
+  /// In ar, this message translates to:
+  /// **'سبب الرفض'**
+  String get paymentRejectedReason;
+
+  /// paymentIsDeposit copy
+  ///
+  /// In ar, this message translates to:
+  /// **'هذا المبلغ هو دفع العربون'**
+  String get paymentIsDeposit;
+
+  /// paymentStatusPending copy
+  ///
+  /// In ar, this message translates to:
+  /// **'معلق'**
+  String get paymentStatusPending;
+
+  /// paymentStatusVerificationPending copy
+  ///
+  /// In ar, this message translates to:
+  /// **'بانتظار التحقق'**
+  String get paymentStatusVerificationPending;
+
+  /// paymentStatusVerified copy
+  ///
+  /// In ar, this message translates to:
+  /// **'تم التحقق'**
+  String get paymentStatusVerified;
+
+  /// paymentStatusRejected copy
+  ///
+  /// In ar, this message translates to:
+  /// **'مرفوض'**
+  String get paymentStatusRejected;
+
+  /// paymentStatusRefunded copy
+  ///
+  /// In ar, this message translates to:
+  /// **'تم الاسترداد'**
+  String get paymentStatusRefunded;
+
+  /// paymentStatusPartiallyRefunded copy
+  ///
+  /// In ar, this message translates to:
+  /// **'تم استرداد جزئي'**
+  String get paymentStatusPartiallyRefunded;
+
+  /// paymentMethodCash copy
+  ///
+  /// In ar, this message translates to:
+  /// **'نقدًا عند الإنجاز'**
+  String get paymentMethodCash;
+
+  /// paymentMethodVodafoneCash copy
+  ///
+  /// In ar, this message translates to:
+  /// **'فودافون كاش'**
+  String get paymentMethodVodafoneCash;
+
+  /// paymentMethodInstaPay copy
+  ///
+  /// In ar, this message translates to:
+  /// **'إنستا باي'**
+  String get paymentMethodInstaPay;
+
+  /// paymentSupportPhone copy
+  ///
+  /// In ar, this message translates to:
+  /// **'دعم العملاء المالي'**
+  String get paymentSupportPhone;
+
+  /// paymentInstructionsTitle copy
+  ///
+  /// In ar, this message translates to:
+  /// **'طريقة الدفع'**
+  String get paymentInstructionsTitle;
+
+  /// paymentRefundProcessed copy
+  ///
+  /// In ar, this message translates to:
+  /// **'تمت المعالجة'**
+  String get paymentRefundProcessed;
+
+  /// paymentRefundApproved copy
+  ///
+  /// In ar, this message translates to:
+  /// **'معتمد'**
+  String get paymentRefundApproved;
+
+  /// paymentRefundRejected copy
+  ///
+  /// In ar, this message translates to:
+  /// **'مرفوض'**
+  String get paymentRefundRejected;
+
+  /// paymentAmountPaid copy
+  ///
+  /// In ar, this message translates to:
+  /// **'المدفوع'**
+  String get paymentAmountPaid;
+
+  /// paymentRefundedAmount copy
+  ///
+  /// In ar, this message translates to:
+  /// **'المسترد'**
+  String get paymentRefundedAmount;
+
+  /// paymentDueDate copy
+  ///
+  /// In ar, this message translates to:
+  /// **'الاستحقاق'**
+  String get paymentDueDate;
+
+  /// paymentRefundPending copy
+  ///
+  /// In ar, this message translates to:
+  /// **'جارٍ الاسترداد'**
+  String get paymentRefundPending;
 }
 
 class _AppLocalizationsDelegate

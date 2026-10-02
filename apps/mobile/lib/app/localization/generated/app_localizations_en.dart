@@ -1084,4 +1084,133 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get complaintReasonOther => 'Other reason';
+
+  @override
+  String get paymentViewTitle => 'Payment';
+
+  @override
+  String get paymentAmountDue => 'Amount due';
+
+  @override
+  String get paymentFullyPaid => 'Nothing left to pay';
+
+  @override
+  String get paymentQuoteTotal => 'Accepted total';
+
+  @override
+  String get paymentSubmitEvidence => 'Submit payment evidence';
+
+  @override
+  String get paymentChooseMethod => 'How did you pay?';
+
+  @override
+  String get paymentAmount => 'Amount';
+
+  @override
+  String get paymentReferenceNumber => 'Transfer reference number';
+
+  @override
+  String get paymentReferenceHint =>
+      'Enter the number from the transfer receipt';
+
+  @override
+  String get paymentReferenceRequired =>
+      'Wallet transfers need a reference number';
+
+  @override
+  String get paymentEvidenceSubmitted =>
+      'Payment evidence sent for verification';
+
+  @override
+  String get paymentHistory => 'Payment history';
+
+  @override
+  String get paymentRefunds => 'Refunds';
+
+  @override
+  String get paymentRefundReason => 'Reason';
+
+  @override
+  String get paymentNoHistory => 'No payments submitted yet';
+
+  @override
+  String get paymentDepositPaid => 'Deposit paid';
+
+  @override
+  String get paymentDepositOutstanding => 'Deposit outstanding';
+
+  @override
+  String get paymentDepositNotRequired => 'No deposit required';
+
+  @override
+  String get paymentAttachReceipt => 'Attach receipt';
+
+  @override
+  String get paymentReceiptAttached => 'Receipt attached';
+
+  @override
+  String get paymentReceiptFailed => 'Could not attach the receipt';
+
+  @override
+  String get paymentVerifiedOn => 'Verified on';
+
+  @override
+  String get paymentRejectedReason => 'Why it was rejected';
+
+  @override
+  String get paymentIsDeposit => 'This is the deposit payment';
+
+  @override
+  String get paymentStatusPending => 'Pending';
+
+  @override
+  String get paymentStatusVerificationPending => 'Verification pending';
+
+  @override
+  String get paymentStatusVerified => 'Verified';
+
+  @override
+  String get paymentStatusRejected => 'Rejected';
+
+  @override
+  String get paymentStatusRefunded => 'Refunded';
+
+  @override
+  String get paymentStatusPartiallyRefunded => 'Partially refunded';
+
+  @override
+  String get paymentMethodCash => 'Cash on completion';
+
+  @override
+  String get paymentMethodVodafoneCash => 'Vodafone Cash';
+
+  @override
+  String get paymentMethodInstaPay => 'InstaPay';
+
+  @override
+  String get paymentSupportPhone => 'Finance support';
+
+  @override
+  String get paymentInstructionsTitle => 'How to pay';
+
+  @override
+  String get paymentRefundProcessed => 'Processed';
+
+  @override
+  String get paymentRefundApproved => 'Approved';
+
+  @override
+  String get paymentRefundRejected => 'Rejected';
+
+  @override
+  String get paymentAmountPaid => 'Paid';
+
+  @override
+  String get paymentRefundedAmount => 'Refunded';
+
+  @override
+  String get paymentDueDate => 'Due';
+
+  @override
+  String get paymentRefundPending => 'Refund in progress';
 }

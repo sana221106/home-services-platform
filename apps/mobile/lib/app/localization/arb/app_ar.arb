@@ -811,5 +811,173 @@
   "@complaintReasonOther":  {
     "description":  "complaintReasonOther copy"
   },
-  "complaintReasonOther":  "سبب آخر"
+  "complaintReasonOther":  "سبب آخر",
+  "@paymentViewTitle":  {
+    "description":  "paymentViewTitle copy"
+  },
+  "paymentViewTitle":  "الدفع",
+  "@paymentAmountDue":  {
+    "description":  "paymentAmountDue copy"
+  },
+  "paymentAmountDue":  "المبلغ المستحق",
+  "@paymentFullyPaid":  {
+    "description":  "paymentFullyPaid copy"
+  },
+  "paymentFullyPaid":  "لا يوجد مستحق",
+  "@paymentQuoteTotal":  {
+    "description":  "paymentQuoteTotal copy"
+  },
+  "paymentQuoteTotal":  "الإجمالي المتفق عليه",
+  "@paymentSubmitEvidence":  {
+    "description":  "paymentSubmitEvidence copy"
+  },
+  "paymentSubmitEvidence":  "إرسال إثبات الدفع",
+  "@paymentChooseMethod":  {
+    "description":  "paymentChooseMethod copy"
+  },
+  "paymentChooseMethod":  "كيف دفعت؟",
+  "@paymentAmount":  {
+    "description":  "paymentAmount copy"
+  },
+  "paymentAmount":  "المبلغ",
+  "@paymentReferenceNumber":  {
+    "description":  "paymentReferenceNumber copy"
+  },
+  "paymentReferenceNumber":  "رقم عملية التحويل",
+  "@paymentReferenceHint":  {
+    "description":  "paymentReferenceHint copy"
+  },
+  "paymentReferenceHint":  "أدخل الرقم من إيصال التحويل",
+  "@paymentReferenceRequired":  {
+    "description":  "paymentReferenceRequired copy"
+  },
+  "paymentReferenceRequired":  "تحويلات المحافظ تحتاج رقم عملية",
+  "@paymentEvidenceSubmitted":  {
+    "description":  "paymentEvidenceSubmitted copy"
+  },
+  "paymentEvidenceSubmitted":  "تم إرسال إثبات الدفع للمراجعة",
+  "@paymentHistory":  {
+    "description":  "paymentHistory copy"
+  },
+  "paymentHistory":  "سجل الدفعات",
+  "@paymentRefunds":  {
+    "description":  "paymentRefunds copy"
+  },
+  "paymentRefunds":  "المبالغ المستردة",
+  "@paymentRefundReason":  {
+    "description":  "paymentRefundReason copy"
+  },
+  "paymentRefundReason":  "السبب",
+  "@paymentNoHistory":  {
+    "description":  "paymentNoHistory copy"
+  },
+  "paymentNoHistory":  "لم ترسل أي دفعات بعد",
+  "@paymentDepositPaid":  {
+    "description":  "paymentDepositPaid copy"
+  },
+  "paymentDepositPaid":  "تم دفع العربون",
+  "@paymentDepositOutstanding":  {
+    "description":  "paymentDepositOutstanding copy"
+  },
+  "paymentDepositOutstanding":  "متبقٍ من العربون",
+  "@paymentDepositNotRequired":  {
+    "description":  "paymentDepositNotRequired copy"
+  },
+  "paymentDepositNotRequired":  "لا يوجد عربون مطلوب",
+  "@paymentAttachReceipt":  {
+    "description":  "paymentAttachReceipt copy"
+  },
+  "paymentAttachReceipt":  "إرفاق الإيصال",
+  "@paymentReceiptAttached":  {
+    "description":  "paymentReceiptAttached copy"
+  },
+  "paymentReceiptAttached":  "تم إرفاق الإيصال",
+  "@paymentReceiptFailed":  {
+    "description":  "paymentReceiptFailed copy"
+  },
+  "paymentReceiptFailed":  "تعذر إرفاق الإيصال",
+  "@paymentVerifiedOn":  {
+    "description":  "paymentVerifiedOn copy"
+  },
+  "paymentVerifiedOn":  "تم التحقق في",
+  "@paymentRejectedReason":  {
+    "description":  "paymentRejectedReason copy"
+  },
+  "paymentRejectedReason":  "سبب الرفض",
+  "@paymentIsDeposit":  {
+    "description":  "paymentIsDeposit copy"
+  },
+  "paymentIsDeposit":  "هذا المبلغ هو دفع العربون",
+  "@paymentStatusPending":  {
+    "description":  "paymentStatusPending copy"
+  },
+  "paymentStatusPending":  "معلق",
+  "@paymentStatusVerificationPending":  {
+    "description":  "paymentStatusVerificationPending copy"
+  },
+  "paymentStatusVerificationPending":  "بانتظار التحقق",
+  "@paymentStatusVerified":  {
+    "description":  "paymentStatusVerified copy"
+  },
+  "paymentStatusVerified":  "تم التحقق",
+  "@paymentStatusRejected":  {
+    "description":  "paymentStatusRejected copy"
+  },
+  "paymentStatusRejected":  "مرفوض",
+  "@paymentStatusRefunded":  {
+    "description":  "paymentStatusRefunded copy"
+  },
+  "paymentStatusRefunded":  "تم الاسترداد",
+  "@paymentStatusPartiallyRefunded":  {
+    "description":  "paymentStatusPartiallyRefunded copy"
+  },
+  "paymentStatusPartiallyRefunded":  "تم استرداد جزئي",
+  "@paymentMethodCash":  {
+    "description":  "paymentMethodCash copy"
+  },
+  "paymentMethodCash":  "نقدًا عند الإنجاز",
+  "@paymentMethodVodafoneCash":  {
+    "description":  "paymentMethodVodafoneCash copy"
+  },
+  "paymentMethodVodafoneCash":  "فودافون كاش",
+  "@paymentMethodInstaPay":  {
+    "description":  "paymentMethodInstaPay copy"
+  },
+  "paymentMethodInstaPay":  "إنستا باي",
+  "@paymentSupportPhone":  {
+    "description":  "paymentSupportPhone copy"
+  },
+  "paymentSupportPhone":  "دعم العملاء المالي",
+  "@paymentInstructionsTitle":  {
+    "description":  "paymentInstructionsTitle copy"
+  },
+  "paymentInstructionsTitle":  "طريقة الدفع",
+  "@paymentRefundProcessed":  {
+    "description":  "paymentRefundProcessed copy"
+  },
+  "paymentRefundProcessed":  "تمت المعالجة",
+  "@paymentRefundApproved":  {
+    "description":  "paymentRefundApproved copy"
+  },
+  "paymentRefundApproved":  "معتمد",
+  "@paymentRefundRejected":  {
+    "description":  "paymentRefundRejected copy"
+  },
+  "paymentRefundRejected":  "مرفوض",
+  "@paymentAmountPaid":  {
+    "description":  "paymentAmountPaid copy"
+  },
+  "paymentAmountPaid":  "المدفوع",
+  "@paymentRefundedAmount":  {
+    "description":  "paymentRefundedAmount copy"
+  },
+  "paymentRefundedAmount":  "المسترد",
+  "@paymentDueDate":  {
+    "description":  "paymentDueDate copy"
+  },
+  "paymentDueDate":  "الاستحقاق",
+  "@paymentRefundPending":  {
+    "description":  "paymentRefundPending copy"
+  },
+  "paymentRefundPending":  "جارٍ الاسترداد"
 }

@@ -616,6 +616,10 @@ class Quote extends Equatable {
 
   bool get isOpen => status == 'SENT' || status == 'AWAITING_CUSTOMER_APPROVAL';
 
+  /// A quote the customer accepted, which is what makes the total payable.
+  /// `REJECTED` and `EXPIRED` are not, so nothing is owed against them.
+  bool get isAccepted => status == 'ACCEPTED';
+
   @override
   List<Object?> get props => <Object?>[id, revisionNumber, status, total];
 }

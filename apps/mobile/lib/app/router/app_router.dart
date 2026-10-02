@@ -11,6 +11,7 @@ import '../../features/auth/presentation/pages/phone_entry_screen.dart';
 import '../../features/home/presentation/pages/home_page.dart';
 import '../../features/orders/presentation/pages/order_tracking_page.dart';
 import '../../features/orders/presentation/pages/orders_page.dart';
+import '../../features/payments/presentation/pages/payment_page.dart';
 import '../../features/support/presentation/pages/complaint_pages.dart';
 import '../../features/support/presentation/pages/conversation_page.dart';
 import '../../features/support/presentation/pages/support_page.dart';
@@ -174,6 +175,15 @@ final Provider<GoRouter> routerProvider = Provider<GoRouter>((Ref ref) {
         parentNavigatorKey: rootKey,
         builder: (BuildContext context, GoRouterState state) =>
             RequestDetailPage(requestId: state.pathParameters['requestId']!),
+      ),
+      GoRoute(
+        path: '/requests/:requestId/payment',
+        name: AppRoute.payment.name,
+        parentNavigatorKey: rootKey,
+        builder: (BuildContext context, GoRouterState state) => PaymentPage(
+          requestId: state.pathParameters['requestId']!,
+          referenceCode: state.uri.queryParameters['reference'],
+        ),
       ),
       GoRoute(
         path: '/support/new',

@@ -50,6 +50,22 @@ class RequestDetailState extends Equatable {
   bool get canComplain =>
       (requestStatus?.canComplainOptimistically ?? false) && !isActing;
 
+  /// The request identifier, exposed so the action bar can hand it to the
+  /// payment and complaint routes instead of each page re-reading it.
+  String get requestId => request?.id ?? '';
+
+  String get referenceCode => request?.referenceCode ?? '';
+
+  /// Payment is offered whenever an accepted quote exists: the money is owed
+  /// from acceptance, long before the job reaches a status that allows rating.
+  ///
+  /// Whether anything is actually outstanding is the Payment screen's call, not
+  /// this page's, so the button appears and the screen explains the rest.
+  bool get canPay =>
+      quote?.isAccepted == true &&
+      (requestStatus?.canCancelOptimistically ?? true) &&
+      !isActing;
+
   RequestDetailState copyWith({
     RequestDetailStatus? status,
     ServiceRequest? request,
