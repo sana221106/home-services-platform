@@ -22,7 +22,13 @@ limiter = Limiter(
     key_func=get_remote_address,
     default_limits=[settings.rate_limit_default] if settings.rate_limit_enabled else [],
     enabled=settings.rate_limit_enabled,
-    headers_enabled=True,
+    # Off on purpose: slowapi injects X-RateLimit-* headers only when the
+    # endpoint returns a Response or takes a `response: Response` argument. Our
+    # endpoints return Pydantic models, so headers_enabled=True makes every
+    # limited route raise "parameter `response` must be an instance of
+    # starlette.responses.Response" (a 500). The 429 still carries Retry-After,
+    # set by rate_limit_exceeded_handler below.
+    headers_enabled=False,
 )
 
 # Named budgets, referenced from route decorators by ``@limiter.limit(...)``.

@@ -177,6 +177,16 @@ class AuthController extends Notifier<AuthState> {
         stage: AuthStage.unauthenticated,
         error: failure.message,
       );
+    } catch (error) {
+      // A keystore or parsing error that is not an [ApiFailure] must not leave
+      // the app spinning on the splash screen forever; fall back to sign-in and
+      // record the cause.
+      AppLogger.error(
+        'session restore failed unexpectedly',
+        context: <String, Object?>{'error': error.runtimeType.toString()},
+      );
+      if (!ref.mounted) return;
+      state = state.copyWith(stage: AuthStage.unauthenticated);
     }
   }
 
