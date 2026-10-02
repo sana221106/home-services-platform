@@ -1266,4 +1266,74 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get notificationsUnknownType => 'New type';
+
+  @override
+  String get profileStatProperties => 'Properties';
+
+  @override
+  String get profileStatRequests => 'Requests';
+
+  @override
+  String get profileStatCompleted => 'Completed';
+
+  @override
+  String get profileMemberSinceLabel => 'Member since';
+
+  @override
+  String get profilePhoneLabel => 'Phone';
+
+  @override
+  String get profileSectionAccount => 'Account';
+
+  @override
+  String get profileSectionPreferences => 'Preferences';
+
+  @override
+  String get profileEditTitle => 'Edit profile';
+
+  @override
+  String get profileNameLabel => 'Full name';
+
+  @override
+  String get profileEmailLabel => 'Email';
+
+  @override
+  String get profileEmailHint => 'you@example.com';
+
+  @override
+  String get profileSave => 'Save changes';
+
+  @override
+  String get profileSavedMessage => 'Your profile has been updated.';
+
+  @override
+  String get profileLanguageTitle => 'Language';
+
+  @override
+  String get profileLanguageSystem => 'System default';
+
+  @override
+  String get profileLanguageArabic => 'Arabic';
+
+  @override
+  String get profileLanguageEnglish => 'English';
+
+  @override
+  String get profileThemeTitle => 'Appearance';
+
+  @override
+  String get profileThemeSystem => 'System';
+
+  @override
+  String get profileThemeLight => 'Light';
+
+  @override
+  String get profileThemeDark => 'Dark';
+
+  @override
+  String get profileLogoutConfirmTitle => 'Log out?';
+
+  @override
+  String get profileLogoutConfirmBody =>
+      'You will need to sign in again to use the app.';
 }

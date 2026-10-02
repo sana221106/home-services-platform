@@ -3,6 +3,7 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'localization/app_localizations.dart';
+import 'localization/locale_provider.dart';
 import 'router/app_router.dart';
 import 'theme/app_theme.dart';
 import 'theme/theme_mode_provider.dart';
@@ -17,6 +18,7 @@ class HomeServicesApp extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final ThemeModeState themeState = ref.watch(themeModeProvider);
+    final AppLocaleState localeState = ref.watch(localeProvider);
 
     return MaterialApp.router(
       title: 'Home Services',
@@ -25,8 +27,10 @@ class HomeServicesApp extends ConsumerWidget {
       darkTheme: AppTheme.dark(),
       themeMode: themeState.materialThemeMode,
       themeAnimationDuration: const Duration(milliseconds: 220),
-      // Arabic is the source locale, so Material's own strings come from the
-      // Arabic delegates rather than English.
+      // A null locale means the customer has not chosen one, so the device
+      // decides. Arabic is the source locale, so Material's own strings come
+      // from the Arabic delegates rather than English.
+      locale: localeState.locale,
       localeResolutionCallback: (Locale? device, Iterable<Locale> supported) =>
           resolveAppLocale(device, supported),
       localizationsDelegates: const <LocalizationsDelegate<Object>>[

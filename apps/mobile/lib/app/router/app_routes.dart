@@ -29,7 +29,8 @@ enum AppRoute {
   complaintNew('complaint-new'),
   reviews('reviews'),
   notifications('notifications'),
-  profile('profile');
+  profile('profile'),
+  profileEdit('profile-edit');
 
   const AppRoute(this.name);
 
@@ -60,6 +61,7 @@ enum AppRoute {
     AppRoute.reviews,
     AppRoute.notifications,
     AppRoute.profile,
+    AppRoute.profileEdit,
   }.contains(this);
 
   /// Routes reachable only without a session.

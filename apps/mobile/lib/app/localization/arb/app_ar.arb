@@ -1043,5 +1043,97 @@
   "@notificationsUnknownType":  {
     "description":  "notificationsUnknownType copy"
   },
-  "notificationsUnknownType":  "نوع جديد"
+  "notificationsUnknownType":  "نوع جديد",
+  "@profileStatProperties":  {
+    "description":  "profileStatProperties copy"
+  },
+  "profileStatProperties":  "العقارات",
+  "@profileStatRequests":  {
+    "description":  "profileStatRequests copy"
+  },
+  "profileStatRequests":  "الطلبات",
+  "@profileStatCompleted":  {
+    "description":  "profileStatCompleted copy"
+  },
+  "profileStatCompleted":  "مكتملة",
+  "@profileMemberSinceLabel":  {
+    "description":  "profileMemberSinceLabel copy"
+  },
+  "profileMemberSinceLabel":  "عضو منذ",
+  "@profilePhoneLabel":  {
+    "description":  "profilePhoneLabel copy"
+  },
+  "profilePhoneLabel":  "الهاتف",
+  "@profileSectionAccount":  {
+    "description":  "profileSectionAccount copy"
+  },
+  "profileSectionAccount":  "الحساب",
+  "@profileSectionPreferences":  {
+    "description":  "profileSectionPreferences copy"
+  },
+  "profileSectionPreferences":  "التفضيلات",
+  "@profileEditTitle":  {
+    "description":  "profileEditTitle copy"
+  },
+  "profileEditTitle":  "تعديل الملف الشخصي",
+  "@profileNameLabel":  {
+    "description":  "profileNameLabel copy"
+  },
+  "profileNameLabel":  "الاسم بالكامل",
+  "@profileEmailLabel":  {
+    "description":  "profileEmailLabel copy"
+  },
+  "profileEmailLabel":  "البريد الإلكتروني",
+  "@profileEmailHint":  {
+    "description":  "profileEmailHint copy"
+  },
+  "profileEmailHint":  "you@example.com",
+  "@profileSave":  {
+    "description":  "profileSave copy"
+  },
+  "profileSave":  "حفظ التغييرات",
+  "@profileSavedMessage":  {
+    "description":  "profileSavedMessage copy"
+  },
+  "profileSavedMessage":  "تم تحديث ملفك الشخصي.",
+  "@profileLanguageTitle":  {
+    "description":  "profileLanguageTitle copy"
+  },
+  "profileLanguageTitle":  "اللغة",
+  "@profileLanguageSystem":  {
+    "description":  "profileLanguageSystem copy"
+  },
+  "profileLanguageSystem":  "لغة الجهاز",
+  "@profileLanguageArabic":  {
+    "description":  "profileLanguageArabic copy"
+  },
+  "profileLanguageArabic":  "العربية",
+  "@profileLanguageEnglish":  {
+    "description":  "profileLanguageEnglish copy"
+  },
+  "profileLanguageEnglish":  "الإنجليزية",
+  "@profileThemeTitle":  {
+    "description":  "profileThemeTitle copy"
+  },
+  "profileThemeTitle":  "المظهر",
+  "@profileThemeSystem":  {
+    "description":  "profileThemeSystem copy"
+  },
+  "profileThemeSystem":  "النظام",
+  "@profileThemeLight":  {
+    "description":  "profileThemeLight copy"
+  },
+  "profileThemeLight":  "فاتح",
+  "@profileThemeDark":  {
+    "description":  "profileThemeDark copy"
+  },
+  "profileThemeDark":  "داكن",
+  "@profileLogoutConfirmTitle":  {
+    "description":  "profileLogoutConfirmTitle copy"
+  },
+  "profileLogoutConfirmTitle":  "تسجيل الخروج؟",
+  "@profileLogoutConfirmBody":  {
+    "description":  "profileLogoutConfirmBody copy"
+  },
+  "profileLogoutConfirmBody":  "ستحتاج إلى تسجيل الدخول مرة أخرى لاستخدام التطبيق."
 }

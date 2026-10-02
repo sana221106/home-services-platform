@@ -46,7 +46,11 @@ void main() {
     test('no Arabic string leaks Latin words', () {
       // Values that are deliberately non-Arabic: a phone placeholder, and the
       // image format names the backend actually accepts (JPEG/PNG/WebP).
-      const allowlisted = <String>{'authPhoneHint', 'requestsPhotosHintSize'};
+      const allowlisted = <String>{
+        'authPhoneHint',
+        'profileEmailHint',
+        'requestsPhotosHintSize',
+      };
       final ar = _arb('app_ar.arb');
       final offenders = <String>[];
 
@@ -143,7 +147,11 @@ void main() {
         if (key.startsWith('@') || value is! String) return;
         if (value.trim().isEmpty) return;
         // These are deliberately non-Arabic values.
-        const allowlisted = <String>{'authPhoneHint', 'requestsPhotosHintSize'};
+        const allowlisted = <String>{
+          'authPhoneHint',
+          'profileEmailHint',
+          'requestsPhotosHintSize',
+        };
         if (allowlisted.contains(key)) return;
 
         final bool hasArabicLetter = RegExp(r'[\u0620-\u064A]').hasMatch(value);

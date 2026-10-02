@@ -1045,5 +1045,97 @@
   "@notificationsUnknownType":  {
     "description":  "notificationsUnknownType copy"
   },
-  "notificationsUnknownType":  "New type"
+  "notificationsUnknownType":  "New type",
+  "@profileStatProperties":  {
+    "description":  "profileStatProperties copy"
+  },
+  "profileStatProperties":  "Properties",
+  "@profileStatRequests":  {
+    "description":  "profileStatRequests copy"
+  },
+  "profileStatRequests":  "Requests",
+  "@profileStatCompleted":  {
+    "description":  "profileStatCompleted copy"
+  },
+  "profileStatCompleted":  "Completed",
+  "@profileMemberSinceLabel":  {
+    "description":  "profileMemberSinceLabel copy"
+  },
+  "profileMemberSinceLabel":  "Member since",
+  "@profilePhoneLabel":  {
+    "description":  "profilePhoneLabel copy"
+  },
+  "profilePhoneLabel":  "Phone",
+  "@profileSectionAccount":  {
+    "description":  "profileSectionAccount copy"
+  },
+  "profileSectionAccount":  "Account",
+  "@profileSectionPreferences":  {
+    "description":  "profileSectionPreferences copy"
+  },
+  "profileSectionPreferences":  "Preferences",
+  "@profileEditTitle":  {
+    "description":  "profileEditTitle copy"
+  },
+  "profileEditTitle":  "Edit profile",
+  "@profileNameLabel":  {
+    "description":  "profileNameLabel copy"
+  },
+  "profileNameLabel":  "Full name",
+  "@profileEmailLabel":  {
+    "description":  "profileEmailLabel copy"
+  },
+  "profileEmailLabel":  "Email",
+  "@profileEmailHint":  {
+    "description":  "profileEmailHint copy"
+  },
+  "profileEmailHint":  "you@example.com",
+  "@profileSave":  {
+    "description":  "profileSave copy"
+  },
+  "profileSave":  "Save changes",
+  "@profileSavedMessage":  {
+    "description":  "profileSavedMessage copy"
+  },
+  "profileSavedMessage":  "Your profile has been updated.",
+  "@profileLanguageTitle":  {
+    "description":  "profileLanguageTitle copy"
+  },
+  "profileLanguageTitle":  "Language",
+  "@profileLanguageSystem":  {
+    "description":  "profileLanguageSystem copy"
+  },
+  "profileLanguageSystem":  "System default",
+  "@profileLanguageArabic":  {
+    "description":  "profileLanguageArabic copy"
+  },
+  "profileLanguageArabic":  "Arabic",
+  "@profileLanguageEnglish":  {
+    "description":  "profileLanguageEnglish copy"
+  },
+  "profileLanguageEnglish":  "English",
+  "@profileThemeTitle":  {
+    "description":  "profileThemeTitle copy"
+  },
+  "profileThemeTitle":  "Appearance",
+  "@profileThemeSystem":  {
+    "description":  "profileThemeSystem copy"
+  },
+  "profileThemeSystem":  "System",
+  "@profileThemeLight":  {
+    "description":  "profileThemeLight copy"
+  },
+  "profileThemeLight":  "Light",
+  "@profileThemeDark":  {
+    "description":  "profileThemeDark copy"
+  },
+  "profileThemeDark":  "Dark",
+  "@profileLogoutConfirmTitle":  {
+    "description":  "profileLogoutConfirmTitle copy"
+  },
+  "profileLogoutConfirmTitle":  "Log out?",
+  "@profileLogoutConfirmBody":  {
+    "description":  "profileLogoutConfirmBody copy"
+  },
+  "profileLogoutConfirmBody":  "You will need to sign in again to use the app."
 }

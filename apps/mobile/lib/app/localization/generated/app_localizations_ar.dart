@@ -1249,4 +1249,74 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get notificationsUnknownType => 'نوع جديد';
+
+  @override
+  String get profileStatProperties => 'العقارات';
+
+  @override
+  String get profileStatRequests => 'الطلبات';
+
+  @override
+  String get profileStatCompleted => 'مكتملة';
+
+  @override
+  String get profileMemberSinceLabel => 'عضو منذ';
+
+  @override
+  String get profilePhoneLabel => 'الهاتف';
+
+  @override
+  String get profileSectionAccount => 'الحساب';
+
+  @override
+  String get profileSectionPreferences => 'التفضيلات';
+
+  @override
+  String get profileEditTitle => 'تعديل الملف الشخصي';
+
+  @override
+  String get profileNameLabel => 'الاسم بالكامل';
+
+  @override
+  String get profileEmailLabel => 'البريد الإلكتروني';
+
+  @override
+  String get profileEmailHint => 'you@example.com';
+
+  @override
+  String get profileSave => 'حفظ التغييرات';
+
+  @override
+  String get profileSavedMessage => 'تم تحديث ملفك الشخصي.';
+
+  @override
+  String get profileLanguageTitle => 'اللغة';
+
+  @override
+  String get profileLanguageSystem => 'لغة الجهاز';
+
+  @override
+  String get profileLanguageArabic => 'العربية';
+
+  @override
+  String get profileLanguageEnglish => 'الإنجليزية';
+
+  @override
+  String get profileThemeTitle => 'المظهر';
+
+  @override
+  String get profileThemeSystem => 'النظام';
+
+  @override
+  String get profileThemeLight => 'فاتح';
+
+  @override
+  String get profileThemeDark => 'داكن';
+
+  @override
+  String get profileLogoutConfirmTitle => 'تسجيل الخروج؟';
+
+  @override
+  String get profileLogoutConfirmBody =>
+      'ستحتاج إلى تسجيل الدخول مرة أخرى لاستخدام التطبيق.';
 }

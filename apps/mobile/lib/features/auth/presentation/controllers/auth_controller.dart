@@ -244,6 +244,12 @@ class AuthController extends Notifier<AuthState> {
   void clearError() {
     if (state.error != null) state = state.copyWith(clearError: true);
   }
+
+  /// Mirrors a profile edit back into the session so screens that read the
+  /// greeting (Home) show the new name without a full session restore.
+  void applyCustomer(CustomerProfile customer) {
+    state = state.copyWith(customer: customer);
+  }
 }
 
 final NotifierProvider<AuthController, AuthState> authProvider =

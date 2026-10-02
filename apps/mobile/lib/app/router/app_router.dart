@@ -2,8 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
-import '../localization/app_localizations.dart';
-
 import '../../features/auth/presentation/controllers/auth_controller.dart';
 import '../../features/auth/presentation/pages/onboarding_screen.dart';
 import '../../features/auth/presentation/pages/otp_verify_screen.dart';
@@ -18,6 +16,8 @@ import '../../features/support/presentation/pages/support_page.dart';
 import '../../features/properties/presentation/pages/properties_page.dart';
 import '../../features/properties/presentation/pages/property_history_page.dart';
 import '../../features/notifications/presentation/pages/notifications_page.dart';
+import '../../features/profile/presentation/pages/edit_profile_page.dart';
+import '../../features/profile/presentation/pages/profile_page.dart';
 import '../../features/reviews/presentation/pages/reviews_page.dart';
 import '../../features/requests/presentation/pages/location_page.dart';
 import '../../features/requests/presentation/pages/problem_details_page.dart';
@@ -124,7 +124,7 @@ final Provider<GoRouter> routerProvider = Provider<GoRouter>((Ref ref) {
                 path: '/profile',
                 name: AppRoute.profile.name,
                 builder: (BuildContext context, GoRouterState state) =>
-                    ComingSoonScreen(title: context.l10n.profileTitle),
+                    const ProfilePage(),
               ),
             ],
           ),
@@ -228,6 +228,13 @@ final Provider<GoRouter> routerProvider = Provider<GoRouter>((Ref ref) {
         parentNavigatorKey: rootKey,
         builder: (BuildContext context, GoRouterState state) =>
             const NotificationsPage(),
+      ),
+      GoRoute(
+        path: '/profile/edit',
+        name: AppRoute.profileEdit.name,
+        parentNavigatorKey: rootKey,
+        builder: (BuildContext context, GoRouterState state) =>
+            const EditProfilePage(),
       ),
       GoRoute(
         path: '/requests/:requestId/rate',

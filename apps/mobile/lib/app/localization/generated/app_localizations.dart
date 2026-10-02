@@ -2473,6 +2473,144 @@ abstract class AppLocalizations {
   /// In ar, this message translates to:
   /// **'نوع جديد'**
   String get notificationsUnknownType;
+
+  /// profileStatProperties copy
+  ///
+  /// In ar, this message translates to:
+  /// **'العقارات'**
+  String get profileStatProperties;
+
+  /// profileStatRequests copy
+  ///
+  /// In ar, this message translates to:
+  /// **'الطلبات'**
+  String get profileStatRequests;
+
+  /// profileStatCompleted copy
+  ///
+  /// In ar, this message translates to:
+  /// **'مكتملة'**
+  String get profileStatCompleted;
+
+  /// profileMemberSinceLabel copy
+  ///
+  /// In ar, this message translates to:
+  /// **'عضو منذ'**
+  String get profileMemberSinceLabel;
+
+  /// profilePhoneLabel copy
+  ///
+  /// In ar, this message translates to:
+  /// **'الهاتف'**
+  String get profilePhoneLabel;
+
+  /// profileSectionAccount copy
+  ///
+  /// In ar, this message translates to:
+  /// **'الحساب'**
+  String get profileSectionAccount;
+
+  /// profileSectionPreferences copy
+  ///
+  /// In ar, this message translates to:
+  /// **'التفضيلات'**
+  String get profileSectionPreferences;
+
+  /// profileEditTitle copy
+  ///
+  /// In ar, this message translates to:
+  /// **'تعديل الملف الشخصي'**
+  String get profileEditTitle;
+
+  /// profileNameLabel copy
+  ///
+  /// In ar, this message translates to:
+  /// **'الاسم بالكامل'**
+  String get profileNameLabel;
+
+  /// profileEmailLabel copy
+  ///
+  /// In ar, this message translates to:
+  /// **'البريد الإلكتروني'**
+  String get profileEmailLabel;
+
+  /// profileEmailHint copy
+  ///
+  /// In ar, this message translates to:
+  /// **'you@example.com'**
+  String get profileEmailHint;
+
+  /// profileSave copy
+  ///
+  /// In ar, this message translates to:
+  /// **'حفظ التغييرات'**
+  String get profileSave;
+
+  /// profileSavedMessage copy
+  ///
+  /// In ar, this message translates to:
+  /// **'تم تحديث ملفك الشخصي.'**
+  String get profileSavedMessage;
+
+  /// profileLanguageTitle copy
+  ///
+  /// In ar, this message translates to:
+  /// **'اللغة'**
+  String get profileLanguageTitle;
+
+  /// profileLanguageSystem copy
+  ///
+  /// In ar, this message translates to:
+  /// **'لغة الجهاز'**
+  String get profileLanguageSystem;
+
+  /// profileLanguageArabic copy
+  ///
+  /// In ar, this message translates to:
+  /// **'العربية'**
+  String get profileLanguageArabic;
+
+  /// profileLanguageEnglish copy
+  ///
+  /// In ar, this message translates to:
+  /// **'الإنجليزية'**
+  String get profileLanguageEnglish;
+
+  /// profileThemeTitle copy
+  ///
+  /// In ar, this message translates to:
+  /// **'المظهر'**
+  String get profileThemeTitle;
+
+  /// profileThemeSystem copy
+  ///
+  /// In ar, this message translates to:
+  /// **'النظام'**
+  String get profileThemeSystem;
+
+  /// profileThemeLight copy
+  ///
+  /// In ar, this message translates to:
+  /// **'فاتح'**
+  String get profileThemeLight;
+
+  /// profileThemeDark copy
+  ///
+  /// In ar, this message translates to:
+  /// **'داكن'**
+  String get profileThemeDark;
+
+  /// profileLogoutConfirmTitle copy
+  ///
+  /// In ar, this message translates to:
+  /// **'تسجيل الخروج؟'**
+  String get profileLogoutConfirmTitle;
+
+  /// profileLogoutConfirmBody copy
+  ///
+  /// In ar, this message translates to:
+  /// **'ستحتاج إلى تسجيل الدخول مرة أخرى لاستخدام التطبيق.'**
+  String get profileLogoutConfirmBody;
 }
 
 class _AppLocalizationsDelegate
