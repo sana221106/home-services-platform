@@ -3,6 +3,7 @@ import 'dart:typed_data';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:home_services_app/features/properties/data/models/property_models.dart';
+import 'package:home_services_app/features/requests/data/models/photo_annotation.dart';
 import 'package:home_services_app/features/requests/data/models/request_models.dart';
 import 'package:home_services_app/features/requests/presentation/controllers/request_wizard_controller.dart';
 
@@ -244,6 +245,89 @@ void main() {
       // returns when media_count is zero.
       wizard(c).removePhoto('p1');
       expect(c.read(requestWizardProvider).canSubmit, isFalse);
+    });
+  });
+
+  group('photo annotations', () {
+    test('freehand marks normalize to 0..1 payload geometry', () {
+      final PhotoAnnotation mark = PhotoAnnotation.freehand(const <Offset>[
+        Offset(0.1, 0.2),
+        Offset(0.4, 0.5),
+      ]);
+
+      expect(mark.type, 'freehand');
+      final Map<String, dynamic> payload = mark.toPayload();
+      expect(payload['annotation_type'], 'freehand');
+      final List<dynamic> points =
+          (payload['geometry'] as Map<String, dynamic>)['points']
+              as List<dynamic>;
+      expect(points, hasLength(2));
+      expect((points.first as Map<String, dynamic>)['x'], 0.1);
+    });
+
+    test('a note is only sent when it has content', () {
+      final PhotoAnnotation without = PhotoAnnotation.circle(
+        const Offset(0.5, 0.5),
+        0.2,
+      );
+      expect(without.toPayload().containsKey('note'), isFalse);
+
+      final PhotoAnnotation withNote = PhotoAnnotation.circle(
+        const Offset(0.5, 0.5),
+        0.2,
+        note: '  the leak  ',
+      );
+      expect(withNote.toPayload()['note'], 'the leak');
+    });
+
+    test('setPhotoAnnotations replaces marks on just one photo', () {
+      final ProviderContainer c = container();
+      wizard(c).addPhotos(<PendingPhoto>[
+        PendingPhoto(
+          localId: 'p1',
+          filename: 'a.jpg',
+          bytes: _bytes,
+          contentType: 'image/jpeg',
+        ),
+        PendingPhoto(
+          localId: 'p2',
+          filename: 'b.jpg',
+          bytes: _bytes,
+          contentType: 'image/jpeg',
+        ),
+      ]);
+
+      wizard(c).setPhotoAnnotations('p1', <PhotoAnnotation>[
+        PhotoAnnotation.freehand(const <Offset>[Offset(0.1, 0.1)]),
+      ]);
+
+      final List<PendingPhoto> photos = c.read(requestWizardProvider).photos;
+      expect(
+        photos.firstWhere((PendingPhoto p) => p.localId == 'p1').annotations,
+        hasLength(1),
+      );
+      expect(
+        photos.firstWhere((PendingPhoto p) => p.localId == 'p2').annotations,
+        isEmpty,
+      );
+    });
+
+    test('removing a photo drops its marks with it', () {
+      final ProviderContainer c = container();
+      wizard(c).addPhotos(<PendingPhoto>[
+        PendingPhoto(
+          localId: 'p1',
+          filename: 'a.jpg',
+          bytes: _bytes,
+          contentType: 'image/jpeg',
+        ),
+      ]);
+      wizard(c).setPhotoAnnotations('p1', <PhotoAnnotation>[
+        PhotoAnnotation.circle(const Offset(0.5, 0.5), 0.2),
+      ]);
+
+      wizard(c).removePhoto('p1');
+      expect(c.read(requestWizardProvider).photos, isEmpty);
     });
   });
 

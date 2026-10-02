@@ -160,6 +160,18 @@ class RequestsRemoteDataSource {
   Future<void> deleteMedia(String requestId, String mediaId) =>
       _client.delete(ApiEndpoints.requestMediaItem(requestId, mediaId));
 
+  /// Attaches one normalized mark to an already-uploaded photo (§80).
+  Future<void> addAnnotation({
+    required String requestId,
+    required String mediaId,
+    required Map<String, dynamic> payload,
+  }) async {
+    await _client.post(
+      ApiEndpoints.requestMediaAnnotations(requestId, mediaId),
+      data: payload,
+    );
+  }
+
   /// Submits the draft. Rejects with 400 when no photo is attached.
   Future<ServiceRequest> submit(
     String requestId, {

@@ -8,8 +8,10 @@ import '../../../../app/theme/app_colors.dart';
 import '../../../../app/theme/app_spacing.dart';
 import '../../../../app/theme/app_text_style.dart';
 import '../../../../core/widgets/app_widgets.dart';
+import '../../data/models/photo_annotation.dart';
 import '../../data/models/request_models.dart';
 import '../controllers/request_wizard_controller.dart';
+import '../widgets/photo_annotation_editor.dart';
 import '../widgets/request_wizard_scaffold.dart';
 import '../widgets/wizard_navigation.dart';
 
@@ -99,6 +101,7 @@ class _PhotoAnnotationPageState extends ConsumerState<PhotoAnnotationPage> {
             _PhotoGrid(
               photos: wizard.photos,
               onRemove: (String id) => controller.removePhoto(id),
+              onAnnotate: _openEditor,
             ),
         ],
       ),
@@ -144,6 +147,23 @@ class _PhotoAnnotationPageState extends ConsumerState<PhotoAnnotationPage> {
     } finally {
       if (mounted) setState(() => _picking = false);
     }
+  }
+
+  /// Opens the mark-up editor and stores the result on the pending photo.
+  Future<void> _openEditor(PendingPhoto photo) async {
+    final List<PhotoAnnotation>? result =
+        await showDialog<List<PhotoAnnotation>>(
+          context: context,
+          barrierColor: Colors.black,
+          builder: (BuildContext dialogContext) => PhotoAnnotationEditor(
+            bytes: photo.bytes,
+            initial: photo.annotations,
+          ),
+        );
+    if (result == null || !mounted) return;
+    ref
+        .read(requestWizardProvider.notifier)
+        .setPhotoAnnotations(photo.localId, result);
   }
 
   /// The backend matches the filename extension against the sniffed format, so
@@ -219,10 +239,15 @@ class _AddPhotoButton extends StatelessWidget {
 }
 
 class _PhotoGrid extends StatelessWidget {
-  const _PhotoGrid({required this.photos, required this.onRemove});
+  const _PhotoGrid({
+    required this.photos,
+    required this.onRemove,
+    required this.onAnnotate,
+  });
 
   final List<PendingPhoto> photos;
   final ValueChanged<String> onRemove;
+  final ValueChanged<PendingPhoto> onAnnotate;
 
   @override
   Widget build(BuildContext context) {
@@ -241,6 +266,7 @@ class _PhotoGrid extends StatelessWidget {
           key: Key('request-photo-${photo.localId}'),
           photo: photo,
           onRemove: () => onRemove(photo.localId),
+          onAnnotate: () => onAnnotate(photo),
         );
       },
     );
@@ -248,10 +274,16 @@ class _PhotoGrid extends StatelessWidget {
 }
 
 class _PhotoTile extends StatelessWidget {
-  const _PhotoTile({required this.photo, required this.onRemove, super.key});
+  const _PhotoTile({
+    required this.photo,
+    required this.onRemove,
+    required this.onAnnotate,
+    super.key,
+  });
 
   final PendingPhoto photo;
   final VoidCallback onRemove;
+  final VoidCallback onAnnotate;
 
   @override
   Widget build(BuildContext context) {
@@ -261,7 +293,10 @@ class _PhotoTile extends StatelessWidget {
       child: Stack(
         fit: StackFit.expand,
         children: <Widget>[
-          Image.memory(photo.bytes, fit: BoxFit.cover),
+          GestureDetector(
+            onTap: onAnnotate,
+            child: Image.memory(photo.bytes, fit: BoxFit.cover),
+          ),
           PositionedDirectional(
             top: 2,
             end: 2,
@@ -277,6 +312,46 @@ class _PhotoTile extends StatelessWidget {
               ),
             ),
           ),
+          PositionedDirectional(
+            top: 2,
+            start: 2,
+            child: GestureDetector(
+              onTap: onAnnotate,
+              child: Container(
+                padding: const EdgeInsets.all(3),
+                decoration: BoxDecoration(
+                  color: Colors.black.withValues(alpha: 0.55),
+                  shape: BoxShape.circle,
+                ),
+                child: Icon(
+                  Icons.brush_outlined,
+                  size: 14,
+                  color: photo.annotations.isEmpty
+                      ? Colors.white
+                      : colors.primary,
+                ),
+              ),
+            ),
+          ),
+          if (photo.annotations.isNotEmpty)
+            PositionedDirectional(
+              bottom: 2,
+              end: 4,
+              child: Container(
+                padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 1),
+                decoration: BoxDecoration(
+                  color: colors.primary,
+                  borderRadius: BorderRadius.circular(8),
+                ),
+                child: Text(
+                  '${photo.annotations.length}',
+                  style: context.text.caption.copyWith(
+                    color: Colors.white,
+                    fontSize: 10,
+                  ),
+                ),
+              ),
+            ),
           PositionedDirectional(
             bottom: 2,
             start: 4,

@@ -7,6 +7,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../../core/errors/failure.dart';
 import '../../../properties/data/models/property_models.dart';
+import '../../data/models/photo_annotation.dart';
 import '../../data/models/request_models.dart';
 import '../../data/repositories/requests_repository.dart';
 
@@ -23,6 +24,7 @@ class PendingPhoto extends Equatable {
     required this.filename,
     required this.bytes,
     required this.contentType,
+    this.annotations = const <PhotoAnnotation>[],
     this.uploaded,
   });
 
@@ -31,6 +33,9 @@ class PendingPhoto extends Equatable {
   final String filename;
   final Uint8List bytes;
   final String contentType;
+
+  /// Marks drawn over the photo, uploaded once the media has an id.
+  final List<PhotoAnnotation> annotations;
 
   /// Set once the upload succeeds, so a retry can skip this file.
   final RequestMedia? uploaded;
@@ -44,8 +49,27 @@ class PendingPhoto extends Equatable {
     return '${(sizeBytes / 1024).toStringAsFixed(0)} KB';
   }
 
+  PendingPhoto copyWith({
+    List<PhotoAnnotation>? annotations,
+    RequestMedia? uploaded,
+  }) {
+    return PendingPhoto(
+      localId: localId,
+      filename: filename,
+      bytes: bytes,
+      contentType: contentType,
+      annotations: annotations ?? this.annotations,
+      uploaded: uploaded ?? this.uploaded,
+    );
+  }
+
   @override
-  List<Object?> get props => <Object?>[localId, filename, uploaded?.id];
+  List<Object?> get props => <Object?>[
+    localId,
+    filename,
+    uploaded?.id,
+    annotations,
+  ];
 }
 
 enum WizardSubmitPhase { idle, creatingDraft, uploading, submitting, done }
@@ -274,6 +298,20 @@ class RequestWizardController extends Notifier<RequestWizardState> {
     );
   }
 
+  /// Replaces the marks on one pending photo. Annotations are held locally and
+  /// uploaded after the media itself, because the endpoint needs a media id.
+  void setPhotoAnnotations(String localId, List<PhotoAnnotation> annotations) {
+    state = state.copyWith(
+      photos: <PendingPhoto>[
+        for (final PendingPhoto photo in state.photos)
+          if (photo.localId == localId)
+            photo.copyWith(annotations: annotations)
+          else
+            photo,
+      ],
+    );
+  }
+
   /// Records the step the customer is on.
   ///
   /// Navigation itself is the router's job, so this deliberately does not push
@@ -371,12 +409,22 @@ class RequestWizardController extends Notifier<RequestWizardState> {
           bytes: photo.bytes,
           contentType: photo.contentType,
         );
+        // Marks can only be attached once the media has an id.
+        for (final PhotoAnnotation annotation in photo.annotations) {
+          await repository.addAnnotation(
+            requestId: requestId,
+            mediaId: media.id,
+            annotation: annotation,
+          );
+        }
+
         uploaded.add(
           PendingPhoto(
             localId: photo.localId,
             filename: photo.filename,
             bytes: photo.bytes,
             contentType: photo.contentType,
+            annotations: photo.annotations,
             uploaded: media,
           ),
         );

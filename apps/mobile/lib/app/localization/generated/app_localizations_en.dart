@@ -1436,4 +1436,25 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get propertyCreatedOnLabel => 'Added on';
+
+  @override
+  String get requestsAnnotateTitle => 'Mark the problem';
+
+  @override
+  String get requestsAnnotateFreehand => 'Draw';
+
+  @override
+  String get requestsAnnotateCircle => 'Circle';
+
+  @override
+  String get requestsAnnotateUndo => 'Undo';
+
+  @override
+  String get requestsAnnotateClear => 'Clear';
+
+  @override
+  String get requestsAnnotateDone => 'Done';
+
+  @override
+  String get requestsAnnotateHint => 'Draw over the photo to mark the problem';
 }

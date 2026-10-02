@@ -1269,5 +1269,33 @@
   "@propertyCreatedOnLabel":  {
     "description":  "propertyCreatedOnLabel copy"
   },
-  "propertyCreatedOnLabel":  "Added on"
+  "propertyCreatedOnLabel":  "Added on",
+  "@requestsAnnotateTitle":  {
+    "description":  "requestsAnnotateTitle copy"
+  },
+  "requestsAnnotateTitle":  "Mark the problem",
+  "@requestsAnnotateFreehand":  {
+    "description":  "requestsAnnotateFreehand copy"
+  },
+  "requestsAnnotateFreehand":  "Draw",
+  "@requestsAnnotateCircle":  {
+    "description":  "requestsAnnotateCircle copy"
+  },
+  "requestsAnnotateCircle":  "Circle",
+  "@requestsAnnotateUndo":  {
+    "description":  "requestsAnnotateUndo copy"
+  },
+  "requestsAnnotateUndo":  "Undo",
+  "@requestsAnnotateClear":  {
+    "description":  "requestsAnnotateClear copy"
+  },
+  "requestsAnnotateClear":  "Clear",
+  "@requestsAnnotateDone":  {
+    "description":  "requestsAnnotateDone copy"
+  },
+  "requestsAnnotateDone":  "Done",
+  "@requestsAnnotateHint":  {
+    "description":  "requestsAnnotateHint copy"
+  },
+  "requestsAnnotateHint":  "Draw over the photo to mark the problem"
 }

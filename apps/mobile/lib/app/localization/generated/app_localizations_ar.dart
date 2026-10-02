@@ -1418,4 +1418,25 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get propertyCreatedOnLabel => 'تاريخ الإضافة';
+
+  @override
+  String get requestsAnnotateTitle => 'حدّد مكان المشكلة';
+
+  @override
+  String get requestsAnnotateFreehand => 'رسم';
+
+  @override
+  String get requestsAnnotateCircle => 'دائرة';
+
+  @override
+  String get requestsAnnotateUndo => 'تراجع';
+
+  @override
+  String get requestsAnnotateClear => 'مسح';
+
+  @override
+  String get requestsAnnotateDone => 'تم';
+
+  @override
+  String get requestsAnnotateHint => 'ارسم على الصورة لتحديد مكان المشكلة';
 }

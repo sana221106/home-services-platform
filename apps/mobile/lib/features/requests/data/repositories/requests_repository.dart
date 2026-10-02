@@ -10,6 +10,7 @@ import '../../../../core/network/paginated.dart';
 import '../../../properties/data/models/property_models.dart';
 import '../../../properties/data/repositories/properties_repository.dart';
 import '../datasources/requests_remote_data_source.dart';
+import '../models/photo_annotation.dart';
 import '../models/request_models.dart';
 
 /// Repository for the catalogue and for the request lifecycle.
@@ -100,6 +101,20 @@ class RequestsRepository {
 
   Future<void> deleteMedia(String requestId, String mediaId) =>
       _guard(() => _requests.deleteMedia(requestId, mediaId));
+
+  /// Attaches one drawn mark to an uploaded photo. The payload shape is the
+  /// backend `CreateAnnotationRequest` built by [PhotoAnnotation.toPayload].
+  Future<void> addAnnotation({
+    required String requestId,
+    required String mediaId,
+    required PhotoAnnotation annotation,
+  }) => _guard(
+    () => _requests.addAnnotation(
+      requestId: requestId,
+      mediaId: mediaId,
+      payload: annotation.toPayload(),
+    ),
+  );
 
   Future<ServiceRequest> submit(String requestId, {String? idempotencyKey}) =>
       _guard(() => _requests.submit(requestId, idempotencyKey: idempotencyKey));

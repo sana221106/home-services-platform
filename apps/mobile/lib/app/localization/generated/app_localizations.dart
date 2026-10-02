@@ -2809,6 +2809,48 @@ abstract class AppLocalizations {
   /// In ar, this message translates to:
   /// **'تاريخ الإضافة'**
   String get propertyCreatedOnLabel;
+
+  /// requestsAnnotateTitle copy
+  ///
+  /// In ar, this message translates to:
+  /// **'حدّد مكان المشكلة'**
+  String get requestsAnnotateTitle;
+
+  /// requestsAnnotateFreehand copy
+  ///
+  /// In ar, this message translates to:
+  /// **'رسم'**
+  String get requestsAnnotateFreehand;
+
+  /// requestsAnnotateCircle copy
+  ///
+  /// In ar, this message translates to:
+  /// **'دائرة'**
+  String get requestsAnnotateCircle;
+
+  /// requestsAnnotateUndo copy
+  ///
+  /// In ar, this message translates to:
+  /// **'تراجع'**
+  String get requestsAnnotateUndo;
+
+  /// requestsAnnotateClear copy
+  ///
+  /// In ar, this message translates to:
+  /// **'مسح'**
+  String get requestsAnnotateClear;
+
+  /// requestsAnnotateDone copy
+  ///
+  /// In ar, this message translates to:
+  /// **'تم'**
+  String get requestsAnnotateDone;
+
+  /// requestsAnnotateHint copy
+  ///
+  /// In ar, this message translates to:
+  /// **'ارسم على الصورة لتحديد مكان المشكلة'**
+  String get requestsAnnotateHint;
 }
 
 class _AppLocalizationsDelegate

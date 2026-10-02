@@ -1267,5 +1267,33 @@
   "@propertyCreatedOnLabel":  {
     "description":  "propertyCreatedOnLabel copy"
   },
-  "propertyCreatedOnLabel":  "تاريخ الإضافة"
+  "propertyCreatedOnLabel":  "تاريخ الإضافة",
+  "@requestsAnnotateTitle":  {
+    "description":  "requestsAnnotateTitle copy"
+  },
+  "requestsAnnotateTitle":  "حدّد مكان المشكلة",
+  "@requestsAnnotateFreehand":  {
+    "description":  "requestsAnnotateFreehand copy"
+  },
+  "requestsAnnotateFreehand":  "رسم",
+  "@requestsAnnotateCircle":  {
+    "description":  "requestsAnnotateCircle copy"
+  },
+  "requestsAnnotateCircle":  "دائرة",
+  "@requestsAnnotateUndo":  {
+    "description":  "requestsAnnotateUndo copy"
+  },
+  "requestsAnnotateUndo":  "تراجع",
+  "@requestsAnnotateClear":  {
+    "description":  "requestsAnnotateClear copy"
+  },
+  "requestsAnnotateClear":  "مسح",
+  "@requestsAnnotateDone":  {
+    "description":  "requestsAnnotateDone copy"
+  },
+  "requestsAnnotateDone":  "تم",
+  "@requestsAnnotateHint":  {
+    "description":  "requestsAnnotateHint copy"
+  },
+  "requestsAnnotateHint":  "ارسم على الصورة لتحديد مكان المشكلة"
 }
