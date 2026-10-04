@@ -772,7 +772,37 @@ class AppLocalizationsAr extends AppLocalizations {
   String get requestsAddressContactPhone => 'رقم جهة الاتصال';
 
   @override
-  String get requestsAddressCoordsMissing => 'حدد الموقع على الخريطة';
+  String get requestsAddressCoordsMissing => 'ابحث عن العنوان لتحديد الموقع';
+
+  @override
+  String get requestsAddressAreaLabel => 'المنطقة التي نخدمها';
+
+  @override
+  String get requestsAddressAreaRequired => 'اختر المنطقة أولًا';
+
+  @override
+  String get requestsAddressSearchLabel => 'ابحث عن العنوان';
+
+  @override
+  String get requestsAddressSearchHint => 'مثال: شارع الجمهورية، دمياط';
+
+  @override
+  String get requestsAddressSearchEmpty =>
+      'لم نجد نتائج، جرّب كتابة العنوان بشكل مختلف';
+
+  @override
+  String get requestsAddressSearchError =>
+      'تعذر البحث عن العنوان، حاول مرة أخرى';
+
+  @override
+  String get requestsAddressSearchOutsideCoverage =>
+      'هذه المنطقة خارج نطاق تخدمنا';
+
+  @override
+  String get requestsAddressSearchClear => 'مسح البحث';
+
+  @override
+  String get requestsAddressZoneSelected => 'المنطقة المحددة';
 
   @override
   String get requestsReviewTitle => 'راجع طلبك';

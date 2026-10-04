@@ -13,6 +13,7 @@ from decimal import Decimal
 
 import pytest
 from fastapi.testclient import TestClient
+from sqlalchemy import select
 from sqlalchemy.orm import Session
 
 from tests.conftest import attach_media, auth_header, customer_token, staff_token
@@ -116,8 +117,16 @@ def test_cannot_use_another_customers_property(
 def test_address_outside_coverage_is_rejected(
     client: TestClient, db: Session, customer, property_row, category
 ) -> None:
+    # Coordinates decide coverage, so unserved means a point far from every zone
+    # centre, not a differently spelled city name (§30).
     payload = create_request_payload(str(property_row.id), str(category.id))
-    payload["address"] = {**address_payload(), "governorate": "Aswan", "city": "Aswan"}
+    payload["address"] = {
+        **address_payload(),
+        "governorate": "Aswan",
+        "city": "Aswan",
+        "latitude": "24.0889",
+        "longitude": "32.8998",
+    }
 
     response = client.post(
         "/api/v1/requests",
@@ -126,6 +135,149 @@ def test_address_outside_coverage_is_rejected(
     )
     assert response.status_code == 422
     assert response.json()["code"] == "OUT_OF_COVERAGE"
+
+
+def test_arabic_address_inside_coverage_is_accepted(
+    client: TestClient, db: Session, customer, property_row, category, zone
+) -> None:
+    # The customer writes Arabic; the point is what decides the area. This is the
+    # case the old exact-string match rejected for spelling alone.
+    payload = create_request_payload(str(property_row.id), str(category.id))
+    payload["address"] = {
+        **address_payload(),
+        "governorate": "القاهرة",
+        "city": "مدينة نصر",
+        "zone_code": "CAI",
+    }
+
+    response = client.post(
+        "/api/v1/requests",
+        json=payload,
+        headers=auth_header(customer_token(db, customer)),
+    )
+    assert response.status_code == 201, response.text
+
+
+def test_unknown_zone_code_falls_back_to_the_coordinates(
+    client: TestClient, db: Session, customer, property_row, category, zone
+) -> None:
+    # An unrecognised code must not be trusted into an unserved area; the
+    # coordinates still resolve the request normally.
+    payload = create_request_payload(str(property_row.id), str(category.id))
+    payload["address"] = {**address_payload(), "zone_code": "not-a-real-zone"}
+
+    response = client.post(
+        "/api/v1/requests",
+        json=payload,
+        headers=auth_header(customer_token(db, customer)),
+    )
+    assert response.status_code == 201, response.text
+
+
+def test_snapshot_stores_the_canonical_zone_code(
+    client: TestClient, db: Session, customer, property_row, category, zone
+) -> None:
+    from app.db.models import OrderAddressSnapshot
+
+    payload = create_request_payload(str(property_row.id), str(category.id))
+    payload["address"] = {
+        **address_payload(),
+        "governorate": "دمياط",
+        "city": "دمياط الجديدة",
+        "zone_code": "CAI",
+    }
+
+    response = client.post(
+        "/api/v1/requests",
+        json=payload,
+        headers=auth_header(customer_token(db, customer)),
+    )
+    assert response.status_code == 201, response.text
+
+    snapshot = db.execute(
+        select(OrderAddressSnapshot).where(
+            OrderAddressSnapshot.request_id == uuid.UUID(response.json()["id"])
+        )
+    ).scalar_one()
+    # Arabic is preserved as written, and the canonical code sits beside it.
+    assert snapshot.governorate == "دمياط"
+    assert snapshot.zone_code == "CAI"
+
+
+def test_the_point_decides_the_area_when_it_disagrees_with_the_picked_one(
+    client: TestClient, db: Session, customer, property_row, category, zone
+) -> None:
+    """The point decides the area, not the area picked next to it.
+
+    Dispatch sends the technician to the snapshot's coordinates, so serving this
+    address from Aswan would send an Aswan technician to a Cairo address. The
+    point is therefore authoritative, and the picked area is only the fallback for
+    a point no area claims (§30).
+    """
+    from app.db.models import CoverageZone, OrderAddressSnapshot
+
+    db.add(
+        CoverageZone(
+            code="ASWAN",
+            name_ar="أسوان",
+            governorate="Aswan",
+            city="Aswan",
+            is_active=True,
+            center_latitude=Decimal("24.0889"),
+            center_longitude=Decimal("32.8998"),
+            radius_km=Decimal("25"),
+        )
+    )
+    db.flush()
+
+    payload = create_request_payload(str(property_row.id), str(category.id))
+    # Claims Aswan, but the point is inside Cairo's radius.
+    payload["address"] = {
+        **address_payload(),
+        "governorate": "Aswan",
+        "city": "Aswan",
+        "zone_code": "ASWAN",
+    }
+
+    response = client.post(
+        "/api/v1/requests",
+        json=payload,
+        headers=auth_header(customer_token(db, customer)),
+    )
+    assert response.status_code == 201, response.text
+
+    snapshot = db.execute(
+        select(OrderAddressSnapshot).where(
+            OrderAddressSnapshot.request_id == uuid.UUID(response.json()["id"])
+        )
+    ).scalar_one()
+    assert snapshot.zone_code == zone.code
+
+
+def test_a_point_no_area_claims_falls_back_to_the_picked_area(
+    client: TestClient, db: Session, customer, property_row, category, zone
+) -> None:
+    """The picked area still rescues a point no radius contains.
+
+    A geocoder regularly places the pin a street or two outside the radius, and
+    rejecting a serviceable address over that would send the customer back to
+    type the address differently (§30).
+    """
+    payload = create_request_payload(str(property_row.id), str(category.id))
+    payload["address"] = {
+        **address_payload(),
+        # Roughly 50 km outside Cairo's 40 km radius, but a served area was picked.
+        "latitude": "30.35",
+        "longitude": "31.65",
+        "zone_code": zone.code,
+    }
+
+    response = client.post(
+        "/api/v1/requests",
+        json=payload,
+        headers=auth_header(customer_token(db, customer)),
+    )
+    assert response.status_code == 201, response.text
 
 
 def test_inspection_only_cannot_be_urgent(

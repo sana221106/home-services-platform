@@ -54,6 +54,7 @@ void main() {
         city: 'Nasr City',
         latitude: 30.0444,
         longitude: 31.2357,
+        zoneCode: 'cairo',
       );
 
       expect(address.isSubmittable, isTrue);
@@ -66,9 +67,37 @@ void main() {
         city: 'Nasr City',
         latitude: 0,
         longitude: 0,
+        zoneCode: 'cairo',
       );
 
       expect(address.isSubmittable, isFalse);
+    });
+
+    test('does not submit without a picked served area', () {
+      // Coordinates alone used to be enough, and the request was then rejected
+      // by the backend as out of coverage. The area must be chosen from the
+      // server's list instead of typed (§30).
+      const AddressSnapshot address = AddressSnapshot(
+        governorate: 'دمياط',
+        city: 'دمياط الجديدة',
+        latitude: 31.15,
+        longitude: 31.4167,
+      );
+
+      expect(address.isSubmittable, isFalse);
+    });
+
+    test('sends the picked area code in the payload', () {
+      const AddressSnapshot address = AddressSnapshot(
+        governorate: 'Damietta',
+        city: 'New Damietta',
+        latitude: 31.15,
+        longitude: 31.4167,
+        zoneCode: 'damietta_new',
+        zone: 'دمياط الجديدة',
+      );
+
+      expect(address.toPayload()['zone_code'], 'damietta_new');
     });
 
     test('a contact name without a phone is rejected', () {
@@ -77,6 +106,7 @@ void main() {
         city: 'Nasr City',
         latitude: 30.0444,
         longitude: 31.2357,
+        zoneCode: 'cairo',
         contactName: 'Mona',
       );
 

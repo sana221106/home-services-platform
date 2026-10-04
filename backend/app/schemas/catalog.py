@@ -50,6 +50,51 @@ class PaymentMethodOption(BaseModel):
     requires_proof: bool = True
 
 
+class CoverageZoneResponse(BaseModel):
+    """An area the platform currently serves.
+
+    The app picks from this list instead of asking the customer to type a
+    governorate and city that have to match the database literally: the address
+    form stays free Arabic text while the geography that decides coverage comes
+    from the server (§29).
+    """
+
+    model_config = ConfigDict(from_attributes=True)
+
+    id: uuid.UUID
+    code: str
+    name_ar: str
+    governorate: str
+    city: str
+    district: str | None = None
+
+    # Nullable because the columns allow it. A served area without a centre
+    # cannot be matched to a point, so it is reported honestly as null rather
+    # than as 0,0, which would point at the Gulf of Guinea (§30).
+    center_latitude: Decimal | None = None
+    center_longitude: Decimal | None = None
+    radius_km: Decimal | None = None
+
+
+class GeocodeResult(BaseModel):
+    """One address search hit, already matched to a coverage zone.
+
+    `zone_code` is null when the coordinates fall outside every served area, so
+    the app can say so before the customer fills in the rest of the form
+    instead of failing at submit time.
+    """
+
+    display_name: str
+    latitude: float
+    longitude: float
+    street: str | None = None
+    district: str | None = None
+    city: str | None = None
+    governorate: str | None = None
+    zone_code: str | None = None
+    zone_name_ar: str | None = None
+
+
 # ------------------------------------------------------------------ properties
 
 

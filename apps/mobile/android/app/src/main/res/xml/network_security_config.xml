@@ -1,11 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- Production traffic is HTTPS. Cleartext HTTP is permitted only for the
-     local development hosts so the app can talk to a backend running on the
-     developer machine (10.0.2.2 is the Android emulator's host loopback). -->
+<!-- Production traffic is HTTPS and must stay that way: cleartext is a
+     "trust the network" decision, and this APK is handed to people who install
+     it outside our control (§12).
+
+     Cleartext is nevertheless permitted here because there is no public host yet.
+     `network-security-config` cannot express a private address range, only whole
+     domains, so a laptop's LAN address (192.168.0.0/16 and friends) would have to
+     be listed one at a time and would stop matching the moment the address
+     changed. Emulators reach the host at 10.0.2.2, handsets need the LAN IP, and
+     both are plain HTTP, so the honest choice for a demo build is to allow it.
+
+     When a real HTTPS domain exists, delete <base-config> and list only that
+     host. Do not ship this file as-is to a store. -->
 <network-security-config>
-    <domain-config cleartextTrafficPermitted="true">
-        <domain includeSubdomains="false">10.0.2.2</domain>
-        <domain includeSubdomains="false">localhost</domain>
-        <domain includeSubdomains="false">127.0.0.1</domain>
-    </domain-config>
+    <base-config cleartextTrafficPermitted="true">
+        <trust-anchors>
+            <certificates src="system" />
+        </trust-anchors>
+    </base-config>
 </network-security-config>

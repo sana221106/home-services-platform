@@ -84,35 +84,71 @@ class ApiClient implements AuthTokenDelegate {
   /// endpoints (`GET /services`, `GET /catalogue`, `GET /services/{id}/problems`)
   /// must be read as a list. They are declared `response_model=list[...]` on the
   /// backend and are not wrapped in a pagination envelope.
+  ///
+  /// The body is fetched as `dynamic` and narrowed here. Dio casts the decoded
+  /// payload to the requested generic (`data as T?`) and `jsonDecode` always
+  /// yields `List<dynamic>`, so asking for `List<Map<String, dynamic>>` throws a
+  /// cast error before the caller ever sees the data.
   Future<Response<List<Map<String, dynamic>>>> getList(
     String path, {
     Map<String, dynamic>? query,
   }) async {
-    return _send<List<Map<String, dynamic>>>(
-      () => _dio.get<List<Map<String, dynamic>>>(
+    final Response<dynamic> raw = await _send<dynamic>(
+      () => _dio.get<dynamic>(
         path,
         queryParameters: query,
         options: _rejectNonSuccess(null),
       ),
     );
+    return _withData<List<Map<String, dynamic>>>(raw, _mapListOf(raw.data));
   }
 
   /// For endpoints that answer with a bare array of scalars.
   ///
-  /// `GET /complaints/reasons` is declared `response_model=list[str]`, so Dio
-  /// must decode into `List<String>`; reading it as `List<Map<String, dynamic>>`
-  /// would throw on every call.
+  /// `GET /complaints/reasons` is declared `response_model=list[str]`, so it is
+  /// narrowed to `List<String>` rather than read as a list of objects.
   Future<Response<List<String>>> getStringList(
     String path, {
     Map<String, dynamic>? query,
   }) async {
-    return _send<List<String>>(
-      () => _dio.get<List<String>>(
+    final Response<dynamic> raw = await _send<dynamic>(
+      () => _dio.get<dynamic>(
         path,
         queryParameters: query,
         options: _rejectNonSuccess(null),
       ),
     );
+    return _withData<List<String>>(raw, _stringListOf(raw.data));
+  }
+
+  /// Rebuilds a typed [Response] around an already narrowed payload.
+  static Response<T> _withData<T>(Response<dynamic> raw, T data) {
+    return Response<T>(
+      data: data,
+      requestOptions: raw.requestOptions,
+      statusCode: raw.statusCode,
+      statusMessage: raw.statusMessage,
+      isRedirect: raw.isRedirect,
+      redirects: raw.redirects,
+      extra: raw.extra,
+      headers: raw.headers,
+    );
+  }
+
+  static List<Map<String, dynamic>> _mapListOf(Object? data) {
+    if (data is! List) return const <Map<String, dynamic>>[];
+    return data
+        .whereType<Map>()
+        .map((Map item) => item.cast<String, dynamic>())
+        .toList(growable: false);
+  }
+
+  static List<String> _stringListOf(Object? data) {
+    if (data is! List) return const <String>[];
+    return data
+        .map((Object? item) => item?.toString() ?? '')
+        .where((String item) => item.isNotEmpty)
+        .toList(growable: false);
   }
 
   Future<Response<Map<String, dynamic>>> post(

@@ -401,9 +401,45 @@
                                              "description":  "Cross-field validation message"
                                          },
     "@requestsAddressCoordsMissing":  {
-                                          "description":  "latitude/longitude required"
+                                           "description":  "latitude/longitude required"
+                                       },
+    "requestsAddressCoordsMissing":  "ابحث عن العنوان لتحديد الموقع",
+    "@requestsAddressAreaLabel":  {
+                                       "description":  "Label for the served-area picker"
+                                   },
+    "requestsAddressAreaLabel":  "المنطقة التي نخدمها",
+    "@requestsAddressAreaRequired":  {
+                                         "description":  "Served area not chosen yet"
+                                     },
+    "requestsAddressAreaRequired":  "اختر المنطقة أولًا",
+    "@requestsAddressSearchLabel":  {
+                                        "description":  "Label for the address search field"
+                                    },
+    "requestsAddressSearchLabel":  "ابحث عن العنوان",
+    "@requestsAddressSearchHint":  {
+                                      "description":  "Placeholder inside the address search field"
+                                  },
+    "requestsAddressSearchHint":  "مثال: شارع الجمهورية، دمياط",
+    "@requestsAddressSearchEmpty":  {
+                                       "description":  "No search hits"
+                                   },
+    "requestsAddressSearchEmpty":  "لم نجد نتائج، جرّب كتابة العنوان بشكل مختلف",
+    "@requestsAddressSearchError":  {
+                                       "description":  "Address search failed"
+                                   },
+    "requestsAddressSearchError":  "تعذر البحث عن العنوان، حاول مرة أخرى",
+    "@requestsAddressSearchOutsideCoverage":  {
+                                                  "description":  "A hit that is not in a served area"
+                                              },
+    "requestsAddressSearchOutsideCoverage":  "هذه المنطقة خارج نطاق تخدمنا",
+    "@requestsAddressSearchClear":  {
+                                        "description":  "Clear the address search field"
+                                    },
+    "requestsAddressSearchClear":  "مسح البحث",
+    "@requestsAddressZoneSelected":  {
+                                          "description":  "Shows which served area was matched"
                                       },
-    "requestsAddressCoordsMissing":  "حدد الموقع على الخريطة",
+    "requestsAddressZoneSelected":  "المنطقة المحددة",
     "@requestsReviewTitle":  {
                                  "description":  "Review step heading"
                              },

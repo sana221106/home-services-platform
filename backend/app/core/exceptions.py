@@ -71,7 +71,9 @@ class PermissionDeniedError(DomainError):
 
 class ValidationError(DomainError):
     code = "VALIDATION_ERROR"
-    http_status = status.HTTP_422_UNPROCESSABLE_ENTITY
+    # `_CONTENT` is the current Starlette name; the old `_ENTITY` spelling still
+    # works but warns on every import, which buries warnings that matter.
+    http_status = status.HTTP_422_UNPROCESSABLE_CONTENT
     message = "The submitted data is invalid."
 
 
@@ -113,7 +115,7 @@ class RateLimitedError(DomainError):
 
 class CoverageError(DomainError):
     code = "OUT_OF_COVERAGE"
-    http_status = status.HTTP_422_UNPROCESSABLE_ENTITY
+    http_status = status.HTTP_422_UNPROCESSABLE_CONTENT
     message = "This address is outside our service coverage."
 
 
@@ -121,3 +123,16 @@ class IntegrationUnavailableError(DomainError):
     code = "INTEGRATION_UNAVAILABLE"
     http_status = status.HTTP_503_SERVICE_UNAVAILABLE
     message = "This service is temporarily unavailable."
+
+
+class GeocoderUnavailableError(DomainError):
+    """The address geocoder could not be reached or gave an unusable answer.
+
+    Separate from [IntegrationUnavailableError] because the customer can act on
+    it: the address they typed is fine, so the app offers a retry rather than
+    asking them to change what they wrote.
+    """
+
+    code = "GEOCODER_UNAVAILABLE"
+    http_status = status.HTTP_503_SERVICE_UNAVAILABLE
+    message = "Address search is not available right now."

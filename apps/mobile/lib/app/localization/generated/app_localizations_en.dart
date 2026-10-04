@@ -780,7 +780,39 @@ class AppLocalizationsEn extends AppLocalizations {
   String get requestsAddressContactPhone => 'Contact phone';
 
   @override
-  String get requestsAddressCoordsMissing => 'Pick the location on the map';
+  String get requestsAddressCoordsMissing =>
+      'Search for the address to set the location';
+
+  @override
+  String get requestsAddressAreaLabel => 'Area we serve';
+
+  @override
+  String get requestsAddressAreaRequired => 'Choose the area first';
+
+  @override
+  String get requestsAddressSearchLabel => 'Search for the address';
+
+  @override
+  String get requestsAddressSearchHint =>
+      'e.g. Gamal Abdel Nasser St, Damietta';
+
+  @override
+  String get requestsAddressSearchEmpty =>
+      'No matches, try writing the address differently';
+
+  @override
+  String get requestsAddressSearchError =>
+      'Could not search the address, try again';
+
+  @override
+  String get requestsAddressSearchOutsideCoverage =>
+      'This address is outside our service area';
+
+  @override
+  String get requestsAddressSearchClear => 'Clear search';
+
+  @override
+  String get requestsAddressZoneSelected => 'Selected area';
 
   @override
   String get requestsReviewTitle => 'Review your request';

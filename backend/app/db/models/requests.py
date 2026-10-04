@@ -126,6 +126,9 @@ class OrderAddressSnapshot(UUIDPrimaryKeyMixin, TimestampMixin, Base):
     governorate: Mapped[str] = mapped_column(String(80), nullable=False)
     city: Mapped[str] = mapped_column(String(80), nullable=False, index=True)
     zone: Mapped[str | None] = mapped_column(String(120), index=True)
+    # Canonical served area, resolved from the request's coordinates at submit
+    # time. Nullable so an out-of-coverage request can still be stored (§30).
+    zone_code: Mapped[str | None] = mapped_column(String(60), index=True)
     district: Mapped[str | None] = mapped_column(String(120), index=True)
     street: Mapped[str | None] = mapped_column(String(255))
     building: Mapped[str | None] = mapped_column(String(80))

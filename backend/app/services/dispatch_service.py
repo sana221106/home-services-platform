@@ -18,8 +18,8 @@ from sqlalchemy.orm import Session, selectinload
 from app.core.enums import AssignmentStatus, RequestStatus, TechnicianStatus
 from app.core.exceptions import ConflictError, ValidationError
 from app.core.logging import get_logger
-from app.db.models.catalog import CoverageZone
-from app.db.models.requests import OrderAddressSnapshot, ServiceRequest
+from app.db.models.catalog import ServiceAreaSnapshot
+from app.db.models.requests import ServiceRequest
 from app.db.models.workforce import (
     Assignment,
     Technician,
@@ -94,20 +94,15 @@ def score_candidates(
     limit: int = 20,
 ) -> list[dict[str, Any]]:
     """Rank technicians for one request. Returns operator-facing data only."""
-    snapshot = session.execute(
-        select(OrderAddressSnapshot).where(OrderAddressSnapshot.request_id == request.id)
+    # The area was resolved once at creation and stored on the area snapshot.
+    # Matching the typed governorate and city here would fail for the same reason
+    # the request was nearly rejected: those are free Arabic text (§30).
+    area = session.execute(
+        select(ServiceAreaSnapshot).where(
+            ServiceAreaSnapshot.request_id == request.id
+        )
     ).scalar_one_or_none()
-
-    zone_id = None
-    if snapshot is not None:
-        zone = session.execute(
-            select(CoverageZone).where(
-                CoverageZone.is_active.is_(True),
-                CoverageZone.governorate == snapshot.governorate,
-                CoverageZone.city == snapshot.city,
-            )
-        ).scalars().first()
-        zone_id = zone.id if zone else None
+    zone_id = area.zone_id if area is not None else None
 
     stmt: Select[tuple[Technician]] = (
         select(Technician)

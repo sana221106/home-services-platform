@@ -25,6 +25,10 @@ class AddressSnapshotPayload(BaseModel):
     governorate: str = Field(min_length=1, max_length=80)
     city: str = Field(min_length=1, max_length=80)
     zone: str | None = Field(default=None, max_length=120)
+    # The area the customer picked from `GET /coverage-zones`. Sent so coverage
+    # can be resolved without re-deriving it from free Arabic address text, and
+    # so an unserved area is reported before submit rather than at submit.
+    zone_code: str | None = Field(default=None, max_length=60)
     district: str | None = Field(default=None, max_length=120)
     street: str | None = Field(default=None, max_length=255)
     building: str | None = Field(default=None, max_length=80)

@@ -403,7 +403,43 @@
     "@requestsAddressCoordsMissing":  {
                                           "description":  "latitude/longitude required"
                                       },
-    "requestsAddressCoordsMissing":  "Pick the location on the map",
+    "requestsAddressCoordsMissing":  "Search for the address to set the location",
+    "@requestsAddressAreaLabel":  {
+                                      "description":  "Label for the served-area picker"
+                                  },
+    "requestsAddressAreaLabel":  "Area we serve",
+    "@requestsAddressAreaRequired":  {
+                                        "description":  "Served area not chosen yet"
+                                    },
+    "requestsAddressAreaRequired":  "Choose the area first",
+    "@requestsAddressSearchLabel":  {
+                                         "description":  "Label for the address search field"
+                                     },
+    "requestsAddressSearchLabel":  "Search for the address",
+    "@requestsAddressSearchHint":  {
+                                       "description":  "Placeholder inside the address search field"
+                                   },
+    "requestsAddressSearchHint":  "e.g. Gamal Abdel Nasser St, Damietta",
+    "@requestsAddressSearchEmpty":  {
+                                        "description":  "No search hits"
+                                    },
+    "requestsAddressSearchEmpty":  "No matches, try writing the address differently",
+    "@requestsAddressSearchError":  {
+                                        "description":  "Address search failed"
+                                    },
+    "requestsAddressSearchError":  "Could not search the address, try again",
+    "@requestsAddressSearchOutsideCoverage":  {
+                                                   "description":  "A hit that is not in a served area"
+                                               },
+    "requestsAddressSearchOutsideCoverage":  "This address is outside our service area",
+    "@requestsAddressSearchClear":  {
+                                         "description":  "Clear the address search field"
+                                     },
+    "requestsAddressSearchClear":  "Clear search",
+    "@requestsAddressZoneSelected":  {
+                                          "description":  "Shows which served area was matched"
+                                      },
+    "requestsAddressZoneSelected":  "Selected area",
     "@requestsReviewTitle":  {
                                  "description":  "Review step heading"
                              },

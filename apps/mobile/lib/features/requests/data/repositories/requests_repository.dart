@@ -6,10 +6,12 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../../app/bootstrap/app_bootstrap.dart';
 import '../../../../core/errors/failure.dart';
 import '../../../../core/network/api_client.dart';
+import '../../../../core/network/api_endpoints.dart';
 import '../../../../core/network/paginated.dart';
 import '../../../properties/data/models/property_models.dart';
 import '../../../properties/data/repositories/properties_repository.dart';
 import '../datasources/requests_remote_data_source.dart';
+import '../models/coverage_models.dart';
 import '../models/photo_annotation.dart';
 import '../models/request_models.dart';
 
@@ -32,6 +34,38 @@ class RequestsRepository {
 
   Future<List<ProblemType>> problems(String categoryId) =>
       _guard(() => _catalogue.problems(categoryId));
+
+  // ------------------------------------------------- coverage and addresses
+
+  /// Areas the platform serves. Cached for the session because they change
+  /// rarely and the address form cannot be drawn without them.
+  Future<List<CoverageZone>> coverageZones() => _guard(() async {
+    final Response<List<Map<String, dynamic>>> response = await _client.getList(
+      ApiEndpoints.coverageZones,
+    );
+    return (response.data ?? const <Map<String, dynamic>>[])
+        .map(CoverageZone.fromJson)
+        .where((CoverageZone zone) => zone.code.isNotEmpty)
+        .toList(growable: false);
+  });
+
+  /// Address search, so a typed Arabic address becomes a point plus the area it
+  /// falls in. An empty list means "no such street", which is not an error.
+  Future<List<AddressSuggestion>> searchAddress(String query) =>
+      _guard(() async {
+        final Response<List<Map<String, dynamic>>> response = await _client
+            .getList(
+              ApiEndpoints.addressSearch,
+              query: <String, dynamic>{'q': query},
+            );
+        return (response.data ?? const <Map<String, dynamic>>[])
+            .map(AddressSuggestion.fromJson)
+            .where(
+              (AddressSuggestion s) =>
+                  s.displayName.isNotEmpty && s.latitude != 0,
+            )
+            .toList(growable: false);
+      });
 
   // --------------------------------------------------------------- reading
 
@@ -188,4 +222,13 @@ final FutureProvider<List<Property>> wizardPropertiesProvider =
     FutureProvider<List<Property>>(
       (Ref ref) => ref.watch(propertiesRepositoryProvider).list(),
       name: 'wizardProperties',
+    );
+
+/// Areas the platform serves, shared by the wizard's location step and the
+/// property form. Kept alive because the list is admin-managed and rarely
+/// changes, and because the address picker cannot render without it.
+final FutureProvider<List<CoverageZone>> coverageZonesProvider =
+    FutureProvider<List<CoverageZone>>(
+      (Ref ref) => ref.watch(requestsRepositoryProvider).coverageZones(),
+      name: 'coverageZones',
     );

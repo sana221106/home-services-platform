@@ -120,6 +120,28 @@ ZONES: tuple[dict[str, object], ...] = (
         "radius_km": Decimal("14"),
         "urgent_multiplier": Decimal("1.30"),
     },
+    {
+        "code": "damietta_city",
+        "name_ar": "دمياط",
+        "governorate": "Damietta",
+        "city": "Damietta",
+        "district": "دمياط",
+        "center_latitude": Decimal("31.416700"),
+        "center_longitude": Decimal("31.808300"),
+        "radius_km": Decimal("14"),
+        "urgent_multiplier": Decimal("1.30"),
+    },
+    {
+        "code": "damietta_new",
+        "name_ar": "دمياط الجديدة",
+        "governorate": "Damietta",
+        "city": "New Damietta",
+        "district": "دمياط الجديدة",
+        "center_latitude": Decimal("31.150000"),
+        "center_longitude": Decimal("31.416700"),
+        "radius_km": Decimal("18"),
+        "urgent_multiplier": Decimal("1.30"),
+    },
 )
 
 # ---------------------------------------------------------------- categories

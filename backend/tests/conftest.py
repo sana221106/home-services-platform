@@ -21,7 +21,9 @@ os.environ.setdefault("DATABASE_URL", "sqlite+pysqlite:///:memory:")
 os.environ.setdefault("RATE_LIMIT_ENABLED", "false")
 os.environ.setdefault("AI_ENABLED", "false")
 os.environ.setdefault("SUPABASE_AUTH_ENABLED", "false")
-os.environ.setdefault("JWT_SECRET", "test-secret-not-for-production")
+# 32 bytes minimum: PyJWT warns on every encode and decode below that, which
+# buried the warnings worth reading. Still not a real key.
+os.environ.setdefault("JWT_SECRET", "test-secret-not-for-production-at-all")
 os.environ.setdefault("STORAGE_ROOT", "./var/test-storage")
 
 from fastapi.testclient import TestClient  # noqa: E402

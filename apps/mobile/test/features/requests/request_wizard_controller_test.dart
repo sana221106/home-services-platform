@@ -3,6 +3,7 @@ import 'dart:typed_data';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:home_services_app/features/properties/data/models/property_models.dart';
+import 'package:home_services_app/features/requests/data/models/coverage_models.dart';
 import 'package:home_services_app/features/requests/data/models/photo_annotation.dart';
 import 'package:home_services_app/features/requests/data/models/request_models.dart';
 import 'package:home_services_app/features/requests/presentation/controllers/request_wizard_controller.dart';
@@ -73,9 +74,25 @@ void main() {
           city: 'Nasr City',
           latitude: 30.0444,
           longitude: 31.2357,
+          zoneCode: 'cairo',
         ),
       );
       expect(wizard(c).canAdvance(RequestWizardStep.location), isTrue);
+    });
+
+    test('a typed city without a picked area cannot advance', () {
+      final ProviderContainer c = container();
+      // The old form accepted free text here, which is exactly what let a
+      // request through to a 422 OUT_OF_COVERAGE at submit time.
+      wizard(c).updateAddress(
+        const AddressSnapshot(
+          governorate: 'دمياط',
+          city: 'دمياط الجديدة',
+          latitude: 31.15,
+          longitude: 31.4167,
+        ),
+      );
+      expect(wizard(c).canAdvance(RequestWizardStep.location), isFalse);
     });
 
     test('an address without coordinates is not submittable', () {
@@ -99,6 +116,7 @@ void main() {
           city: 'Nasr City',
           latitude: 30.0444,
           longitude: 31.2357,
+          zoneCode: 'cairo',
           contactName: 'Mona',
         ),
       );
@@ -110,11 +128,90 @@ void main() {
           city: 'Nasr City',
           latitude: 30.0444,
           longitude: 31.2357,
+          zoneCode: 'cairo',
           contactName: 'Mona',
           contactPhone: '01000000000',
         ),
       );
       expect(wizard(c).canAdvance(RequestWizardStep.location), isTrue);
+    });
+  });
+
+  group('coverage zone selection', () {
+    const CoverageZone damiettaNew = CoverageZone(
+      id: 'zone-2',
+      code: 'damietta_new',
+      nameAr: 'دمياط الجديدة',
+      governorate: 'Damietta',
+      city: 'New Damietta',
+      centerLatitude: 31.15,
+      centerLongitude: 31.4167,
+      radiusKm: 18,
+    );
+
+    test('the picked area supplies the code the backend matches on', () {
+      final ProviderContainer c = container();
+      wizard(c).updateAddress(
+        const AddressSnapshot(
+          governorate: 'dمياط',
+          city: 'دمياط الجديدة',
+          latitude: 31.15,
+          longitude: 31.4167,
+        ),
+      );
+
+      wizard(c).selectCoverageZone(damiettaNew);
+
+      final AddressSnapshot? address = c.read(requestWizardProvider).address;
+      expect(address?.zoneCode, 'damietta_new');
+      expect(address?.zone, 'دمياط الجديدة');
+      // Arabic is what the customer reads; the canonical English pair is what
+      // the backend matches on when no coordinates are available.
+      expect(address?.governorate, 'Damietta');
+      expect(address?.city, 'New Damietta');
+      expect(wizard(c).canAdvance(RequestWizardStep.location), isTrue);
+    });
+
+    test('picking an area does not move the point to its centre', () {
+      final ProviderContainer c = container();
+      wizard(c).updateAddress(
+        const AddressSnapshot(
+          governorate: 'Cairo',
+          city: 'Nasr City',
+          latitude: 30.0444,
+          longitude: 31.2357,
+        ),
+      );
+
+      wizard(c).selectCoverageZone(damiettaNew);
+
+      final AddressSnapshot? address = c.read(requestWizardProvider).address;
+      // The zone says where the platform serves, not where the work happens.
+      expect(address?.latitude, 30.0444);
+      expect(address?.longitude, 31.2357);
+    });
+
+    test('an area without a point stays unsubmitable', () {
+      final ProviderContainer c = container();
+      wizard(c).updateAddress(
+        const AddressSnapshot(
+          governorate: 'Cairo',
+          city: 'Nasr City',
+          latitude: 0,
+          longitude: 0,
+        ),
+      );
+
+      wizard(c).selectCoverageZone(damiettaNew);
+
+      expect(c.read(requestWizardProvider).address?.zoneCode, 'damietta_new');
+      expect(wizard(c).canAdvance(RequestWizardStep.location), isFalse);
+    });
+
+    test('an area picked before any property is ignored', () {
+      final ProviderContainer c = container();
+      wizard(c).selectCoverageZone(damiettaNew);
+      expect(c.read(requestWizardProvider).address, isNull);
     });
   });
 
@@ -202,6 +299,20 @@ void main() {
           governorate: 'Cairo',
           latitude: 30.0444,
           longitude: 31.2357,
+        ),
+      );
+      // A property supplies the point but not the served area, so a complete
+      // wizard has to pick one from the coverage list as well.
+      w.selectCoverageZone(
+        const CoverageZone(
+          id: 'zone-1',
+          code: 'cairo',
+          nameAr: 'القاهرة',
+          governorate: 'Cairo',
+          city: 'Cairo',
+          centerLatitude: 30.0444,
+          centerLongitude: 31.2357,
+          radiusKm: 40,
         ),
       );
       w.setDescription('the tap is leaking badly');

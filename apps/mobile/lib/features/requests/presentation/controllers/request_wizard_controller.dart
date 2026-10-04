@@ -7,6 +7,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../../core/errors/failure.dart';
 import '../../../properties/data/models/property_models.dart';
+import '../../data/models/coverage_models.dart';
 import '../../data/models/photo_annotation.dart';
 import '../../data/models/request_models.dart';
 import '../../data/repositories/requests_repository.dart';
@@ -279,6 +280,30 @@ class RequestWizardController extends Notifier<RequestWizardState> {
 
   void updateAddress(AddressSnapshot address) {
     state = state.copyWith(address: address);
+  }
+
+  /// Applies an address picked from the served-area list.
+  ///
+  /// Kept here rather than in the widget so the mapping from a coverage zone to
+  /// the request payload lives in one place: the Arabic label is shown to the
+  /// customer, while the canonical code and the English governorate and city are
+  /// what the backend matches on (§30).
+  void selectCoverageZone(CoverageZone zone) {
+    final AddressSnapshot? address = state.address;
+    if (address == null) return;
+
+    // Coordinates are deliberately left alone: the zone says where the platform
+    // serves, not where the work happens, so a picked area alone must not put a
+    // technician at the centre of it.
+    state = state.copyWith(
+      address: address.copyWith(
+        zoneCode: zone.code,
+        zone: zone.nameAr,
+        governorate: zone.governorate,
+        city: zone.city,
+        district: zone.district ?? address.district,
+      ),
+    );
   }
 
   void addPhotos(List<PendingPhoto> incoming) {

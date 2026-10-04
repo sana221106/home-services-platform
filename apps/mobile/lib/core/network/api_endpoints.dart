@@ -23,6 +23,14 @@ abstract final class ApiEndpoints {
   static String problemDetail(String problemId) =>
       '$prefix/problems/$problemId';
 
+  // ------------------------------------------------- coverage and geocoding
+  /// Areas currently served. The address form picks from these so coverage is
+  /// decided by the server rather than by how the customer spelled a city.
+  static const String coverageZones = '$prefix/coverage-zones';
+
+  /// Address search, so a typed Arabic address resolves to a point.
+  static const String addressSearch = '$prefix/address-search';
+
   // -------------------------------------------------------------- requests
   static const String requests = '$prefix/requests';
   static const String activeRequests = '$prefix/requests/active';

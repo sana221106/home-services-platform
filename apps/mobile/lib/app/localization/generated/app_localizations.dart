@@ -1559,8 +1559,62 @@ abstract class AppLocalizations {
   /// latitude/longitude required
   ///
   /// In ar, this message translates to:
-  /// **'حدد الموقع على الخريطة'**
+  /// **'ابحث عن العنوان لتحديد الموقع'**
   String get requestsAddressCoordsMissing;
+
+  /// Label for the served-area picker
+  ///
+  /// In ar, this message translates to:
+  /// **'المنطقة التي نخدمها'**
+  String get requestsAddressAreaLabel;
+
+  /// Served area not chosen yet
+  ///
+  /// In ar, this message translates to:
+  /// **'اختر المنطقة أولًا'**
+  String get requestsAddressAreaRequired;
+
+  /// Label for the address search field
+  ///
+  /// In ar, this message translates to:
+  /// **'ابحث عن العنوان'**
+  String get requestsAddressSearchLabel;
+
+  /// Placeholder inside the address search field
+  ///
+  /// In ar, this message translates to:
+  /// **'مثال: شارع الجمهورية، دمياط'**
+  String get requestsAddressSearchHint;
+
+  /// No search hits
+  ///
+  /// In ar, this message translates to:
+  /// **'لم نجد نتائج، جرّب كتابة العنوان بشكل مختلف'**
+  String get requestsAddressSearchEmpty;
+
+  /// Address search failed
+  ///
+  /// In ar, this message translates to:
+  /// **'تعذر البحث عن العنوان، حاول مرة أخرى'**
+  String get requestsAddressSearchError;
+
+  /// A hit that is not in a served area
+  ///
+  /// In ar, this message translates to:
+  /// **'هذه المنطقة خارج نطاق تخدمنا'**
+  String get requestsAddressSearchOutsideCoverage;
+
+  /// Clear the address search field
+  ///
+  /// In ar, this message translates to:
+  /// **'مسح البحث'**
+  String get requestsAddressSearchClear;
+
+  /// Shows which served area was matched
+  ///
+  /// In ar, this message translates to:
+  /// **'المنطقة المحددة'**
+  String get requestsAddressZoneSelected;
 
   /// Review step heading
   ///

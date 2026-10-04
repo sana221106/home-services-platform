@@ -16,11 +16,14 @@ String localisedProblemName(ProblemType problem, String language) =>
 /// trail of separators. Long addresses are truncated to the three most
 /// identifying parts because the row is usually two lines tall at most.
 String addressSummary(AddressSnapshot address) {
+  // The picked area carries the Arabic label, while governorate and city hold
+  // the backend's canonical English values. Listing the Arabic name first keeps
+  // the row in one language (§30).
   final List<String> parts = <String?>[
+    address.zone,
+    address.district,
     address.governorate,
     address.city,
-    address.district,
-    address.zone,
     address.street,
     address.building,
   ].whereType<String>().where((String part) => part.trim().isNotEmpty).toList();

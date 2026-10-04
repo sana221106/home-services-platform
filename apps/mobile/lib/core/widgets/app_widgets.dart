@@ -399,6 +399,9 @@ class StickyFooter extends StatelessWidget {
             AppSpacing.screenHorizontal,
             AppSpacing.md,
           ),
+          // Every child of a `Row` must be flexed: a non-flexed child is laid
+          // out with an unbounded main axis, which a full-width button cannot
+          // accept. Wizard footers therefore wrap their buttons in `Expanded`.
           child: Row(children: children),
         ),
       ),

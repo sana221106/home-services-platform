@@ -97,6 +97,21 @@ class Settings(BaseSettings):
     ai_enabled: bool = False
     ai_classification_threshold: float = 0.55
 
+    # -------------------------------------------------------------- geocoding
+    # Address search is proxied rather than called from the app so the OSM usage
+    # policy is honoured in one place: a single identifying User-Agent, and one
+    # request per second regardless of how many customers are searching (§135).
+    geocoder_enabled: bool = True
+    geocoder_provider: Literal["nominatim", "none"] = "nominatim"
+    nominatim_base_url: str = "https://nominatim.openstreetmap.org"
+    nominatim_user_agent: str = "HomeServicesPlatform/1.0 (ops@example.com)"
+    nominatim_timeout_seconds: float = 8.0
+    geocode_cache_ttl_seconds: int = 86_400
+    geocode_min_query_length: int = 3
+    geocode_max_results: int = 6
+    # Biases every search to Egypt so a bare street name ranks local results.
+    geocode_country_codes: str = "eg"
+
     support_phone: str = "+201000000000"
 
     @field_validator("cors_allow_origins", mode="before")

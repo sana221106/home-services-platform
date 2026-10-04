@@ -144,6 +144,7 @@ class AddressSnapshot extends Equatable {
     required this.latitude,
     required this.longitude,
     this.zone,
+    this.zoneCode,
     this.district,
     this.street,
     this.building,
@@ -162,6 +163,7 @@ class AddressSnapshot extends Equatable {
       latitude: json.decimal('latitude') ?? 0,
       longitude: json.decimal('longitude') ?? 0,
       zone: json.str('zone'),
+      zoneCode: json.str('zone_code'),
       district: json.str('district'),
       street: json.str('street'),
       building: json.str('building'),
@@ -179,6 +181,12 @@ class AddressSnapshot extends Equatable {
   final double latitude;
   final double longitude;
   final String? zone;
+
+  /// Canonical served area from `GET /coverage-zones`, e.g. `damietta_new`.
+  ///
+  /// Sent so the backend resolves coverage from a value this app listed rather
+  /// than by matching the typed city string.
+  final String? zoneCode;
   final String? district;
   final String? street;
   final String? building;
@@ -199,7 +207,13 @@ class AddressSnapshot extends Equatable {
   /// address in the Gulf of Guinea. Treat the zero pair as "not picked".
   bool get hasCoordinates => latitude != 0 || longitude != 0;
 
+  /// True once the served area is known and the coordinates are plausible.
+  ///
+  /// A picked zone is enough for the backend to accept the request, but the
+  /// coordinates are still required because dispatch and routing need a point.
   bool get isSubmittable =>
+      zoneCode != null &&
+      zoneCode!.trim().isNotEmpty &&
       governorate.trim().isNotEmpty &&
       city.trim().isNotEmpty &&
       hasCoordinates &&
@@ -222,6 +236,8 @@ class AddressSnapshot extends Equatable {
     'latitude': latitude,
     'longitude': longitude,
     if (zone != null && zone!.trim().isNotEmpty) 'zone': zone!.trim(),
+    if (zoneCode != null && zoneCode!.trim().isNotEmpty)
+      'zone_code': zoneCode!.trim(),
     if (district != null && district!.trim().isNotEmpty)
       'district': district!.trim(),
     if (street != null && street!.trim().isNotEmpty) 'street': street!.trim(),
@@ -245,6 +261,7 @@ class AddressSnapshot extends Equatable {
     double? latitude,
     double? longitude,
     String? zone,
+    String? zoneCode,
     String? district,
     String? street,
     String? building,
@@ -255,6 +272,7 @@ class AddressSnapshot extends Equatable {
     String? contactName,
     String? contactPhone,
     bool clearZone = false,
+    bool clearZoneCode = false,
     bool clearDistrict = false,
     bool clearContactName = false,
     bool clearContactPhone = false,
@@ -265,6 +283,7 @@ class AddressSnapshot extends Equatable {
       latitude: latitude ?? this.latitude,
       longitude: longitude ?? this.longitude,
       zone: clearZone ? null : (zone ?? this.zone),
+      zoneCode: clearZoneCode ? null : (zoneCode ?? this.zoneCode),
       district: clearDistrict ? null : (district ?? this.district),
       street: street ?? this.street,
       building: building ?? this.building,
@@ -286,6 +305,7 @@ class AddressSnapshot extends Equatable {
     latitude,
     longitude,
     zone,
+    zoneCode,
     district,
     street,
     building,

@@ -4,17 +4,20 @@ from __future__ import annotations
 
 import uuid
 
-from fastapi import APIRouter, HTTPException
+from fastapi import APIRouter, HTTPException, Query
 from sqlalchemy import select
 
 from app.api.dependencies import CurrentCustomer, DbSession
 from app.db.models.catalog import ProblemType, ServiceCategory
 from app.schemas.catalog import (
+    CoverageZoneResponse,
+    GeocodeResult,
     PaymentMethodOption,
     ProblemTypeResponse,
     ServiceCategoryResponse,
     ServiceCategoryWithProblems,
 )
+from app.services import geocoding_service
 
 router = APIRouter(tags=["catalogue"])
 
@@ -126,6 +129,41 @@ def full_catalogue(db: DbSession, _customer: CurrentCustomer) -> list[ServiceCat
 )
 def payment_methods(_customer: CurrentCustomer) -> list[PaymentMethodOption]:
     return PAYMENT_METHODS
+
+
+@router.get(
+    "/coverage-zones",
+    response_model=list[CoverageZoneResponse],
+    summary="Areas currently served",
+)
+def list_coverage_zones(
+    db: DbSession, _customer: CurrentCustomer
+) -> list[CoverageZoneResponse]:
+    """The served areas, so the address form can offer a choice.
+
+    The customer types the rest of the address in free Arabic text; only the
+    area is a fixed value, because that is what decides whether a request can be
+    accepted at all (§29).
+    """
+    return geocoding_service.list_coverage_zones(db)
+
+
+@router.get(
+    "/address-search",
+    response_model=list[GeocodeResult],
+    summary="Search an address",
+)
+def search_address(
+    db: DbSession,
+    _customer: CurrentCustomer,
+    q: str = Query(min_length=2, max_length=200, description="Address text"),
+) -> list[GeocodeResult]:
+    """Turns typed address text into a point plus the area it falls in.
+
+    Each hit carries the coverage zone it matched, so the app can fill the form
+    in one tap and warn about an unserved address before submit.
+    """
+    return geocoding_service.search_address(db, q)
 
 
 @router.get("/problems/{problem_id}", response_model=ProblemTypeResponse, summary="One problem type")

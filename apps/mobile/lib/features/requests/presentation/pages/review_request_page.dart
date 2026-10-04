@@ -40,22 +40,33 @@ class ReviewRequestPage extends ConsumerWidget {
       // is suppressed and the submit bar is supplied at the end of the body.
       bottomBar: StickyFooter(
         children: <Widget>[
-          FilledButton(
-            key: const Key('request-submit'),
-            onPressed: wizard.canSubmit ? () => _submit(context, ref) : null,
-            child: Text(
-              wizard.isSubmitting
-                  ? l10n.requestsSubmitting
-                  : l10n.requestsSubmit,
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              mainAxisSize: MainAxisSize.min,
+              children: <Widget>[
+                FilledButton(
+                  key: const Key('request-submit'),
+                  onPressed: wizard.canSubmit ? () => _submit(context, ref) : null,
+                  child: Text(
+                    wizard.isSubmitting
+                        ? l10n.requestsSubmitting
+                        : l10n.requestsSubmit,
+                  ),
+                ),
+                if (wizard.isSubmitting) ...<Widget>[
+                  const SizedBox(height: AppSpacing.sm),
+                  Text(
+                    _stageLabel(wizard.phase, l10n),
+                    textAlign: TextAlign.center,
+                    style: context.text.caption.copyWith(
+                      color: colors.textSecondary,
+                    ),
+                  ),
+                ],
+              ],
             ),
           ),
-          if (wizard.isSubmitting) ...<Widget>[
-            const SizedBox(height: AppSpacing.sm),
-            Text(
-              _stageLabel(wizard.phase, l10n),
-              style: context.text.caption.copyWith(color: colors.textSecondary),
-            ),
-          ],
         ],
       ),
       body: Column(

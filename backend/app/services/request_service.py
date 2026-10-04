@@ -23,12 +23,13 @@ from app.core.enums import (
 )
 from app.core.exceptions import (
     ConflictError,
+    CoverageError,
     DomainError,
     NotFoundError,
     ValidationError,
 )
 from app.core.logging import get_logger
-from app.db.models.catalog import CoverageZone, ProblemType, ServiceCategory
+from app.db.models.catalog import ProblemType, ServiceCategory
 from app.db.models.properties import Property
 from app.db.models.requests import (
     Inspection,
@@ -43,7 +44,7 @@ from app.schemas.requests import (
     AnnotationPayload,
     CreateServiceRequestRequest,
 )
-from app.services import analytics_service
+from app.services import analytics_service, geocoding_service
 from app.services.analytics_service import AnalyticsEventName
 from app.services.media_service import (
     build_storage_path,
@@ -266,7 +267,7 @@ def create_request(
         raise ValidationError("An inspection-only visit cannot be marked urgent.")
 
     zone_id = _resolve_zone_id(session, address=payload.address)
-    _assert_within_coverage(session, address=payload.address, zone_id=zone_id)
+    _assert_within_coverage(payload.address, zone_id=zone_id)
 
     inspection_required = bool(
         payload.inspection_only
@@ -300,6 +301,10 @@ def create_request(
             governorate=payload.address.governorate,
             city=payload.address.city,
             zone=payload.address.zone,
+            # The canonical coverage area, not the typed text. Analytics and
+            # dispatch read this, so they group by served area rather than by
+            # however the customer happened to spell the city.
+            zone_code=_zone_code_for(session, zone_id=zone_id),
             district=payload.address.district,
             street=payload.address.street,
             building=payload.address.building,
@@ -333,27 +338,76 @@ def create_request(
     return request
 
 
-def _resolve_zone_id(session: Session, *, address: AddressSnapshotPayload) -> uuid.UUID | None:
-    zone = session.execute(
-        select(CoverageZone).where(
-            CoverageZone.is_active.is_(True),
-            CoverageZone.deleted_at.is_(None),
-            CoverageZone.governorate == address.governorate,
-            CoverageZone.city == address.city,
-        )
-    ).scalars().first()
-    return zone.id if zone else None
+def _zone_code_for(session: Session, *, zone_id: uuid.UUID | None) -> str | None:
+    """The canonical code for a resolved area, or None if it is unserved."""
+    if zone_id is None:
+        return None
+    zone = geocoding_service.zone_by_id(session, zone_id)
+    return zone.code if zone is not None else None
+
+
+def _resolve_zone_id(
+    session: Session, *, address: AddressSnapshotPayload
+) -> uuid.UUID | None:
+    """Find the served area an address belongs to.
+
+    The coordinates decide, then an explicitly picked area, then the typed text.
+    Coordinates come first because dispatch sends the technician to exactly
+    those coordinates: an area chosen independently of the point could put a
+    Damietta technician on a Cairo address. The picked area is the safety net
+    for a geocoder that placed the pin just outside every radius, and the text
+    comparison is the last resort. Text matching also tries the Arabic district
+    and zone name, so "دمياط الجديدة" resolves as readily as "New Damietta" (§30).
+    """
+    zones = geocoding_service.active_zones(session)
+    if not zones:
+        return None
+
+    # Both coordinates are required by the schema, so this always runs. The 0,0
+    # pair the app sends for "not picked" matches no zone and falls through to the
+    # explicit area below rather than being served by accident.
+    zone = geocoding_service.zone_for_point(
+        zones, latitude=float(address.latitude), longitude=float(address.longitude)
+    )
+    if zone is not None:
+        return zone.id
+
+    # A choice from the list the server itself produced, so it cannot be
+    # misspelled. It only applies where the point claims no area at all.
+    if address.zone_code:
+        zone = geocoding_service.zone_by_code(session, address.zone_code)
+        if zone is not None:
+            return zone.id
+
+    zone = geocoding_service.zone_by_text(
+        zones, governorate=address.governorate, city=address.city
+    )
+    return zone.id if zone is not None else None
 
 
 def _assert_within_coverage(
-    session: Session, *, address: AddressSnapshotPayload, zone_id: uuid.UUID | None
+    address: AddressSnapshotPayload, zone_id: uuid.UUID | None
 ) -> None:
-    from app.core.exceptions import CoverageError
+    """Rejects an address no served area claims.
 
+    `details` carries the coordinates as well as the text so the client can tell
+    the customer which part failed: an unserved point is a different fix from a
+    misspelled city (§30).
+
+    The coordinates are floats rather than the payload's `Decimal` because
+    `details` is serialised straight into a `JSONResponse`, which has no encoder
+    for `Decimal` and would turn this 422 into a 500.
+    """
     if zone_id is None:
         raise CoverageError(
             "This area is not currently served.",
-            details={"city": address.city, "governorate": address.governorate},
+            details={
+                "city": address.city,
+                "governorate": address.governorate,
+                "zone_code": address.zone_code,
+                "latitude": float(address.latitude),
+                "longitude": float(address.longitude),
+            },
         )
 
 
@@ -405,24 +459,14 @@ def _persist_area_snapshot(session: Session, *, request: ServiceRequest) -> None
     ).scalar_one_or_none()
     if snapshot is None:
         return
-    zone_id = _resolve_zone_id(
-        session,
-        address=AddressSnapshotPayload(
-            governorate=snapshot.governorate,
-            city=snapshot.city,
-            zone=snapshot.zone,
-            district=snapshot.district,
-            street=snapshot.street,
-            building=snapshot.building,
-            floor=snapshot.floor,
-            apartment=snapshot.apartment,
-            landmark=snapshot.landmark,
-            notes=snapshot.notes,
-            latitude=snapshot.latitude,
-            longitude=snapshot.longitude,
-            contact_name=snapshot.contact_name,
-            contact_phone=snapshot.contact_phone,
-        ),
+
+    # The area was already resolved once, when the request was created, and the
+    # code was frozen onto the address snapshot. Re-deriving it here would repeat
+    # work that can only disagree with itself if a zone was edited in between.
+    zone = (
+        geocoding_service.zone_by_code(session, snapshot.zone_code)
+        if snapshot.zone_code
+        else None
     )
     session.add(
         ServiceAreaSnapshot(
@@ -433,7 +477,7 @@ def _persist_area_snapshot(session: Session, *, request: ServiceRequest) -> None
             city=snapshot.city,
             zone=snapshot.zone,
             district=snapshot.district,
-            zone_id=zone_id,
+            zone_id=zone.id if zone is not None else None,
         )
     )
     session.flush()

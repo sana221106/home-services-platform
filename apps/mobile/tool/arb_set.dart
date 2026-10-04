@@ -92,8 +92,8 @@ void writeKeys(String path, Map<String, String> updates) {
       lines.insert(metaIndex, '$indent"$key":$gap$encoded,');
     } else {
       appended
-        ..add('$indent"@$key":${gap}{')
-        ..add('$indent  "description":${gap}"$key copy"')
+        ..add('$indent"@$key":$gap{')
+        ..add('$indent  "description":$gap"$key copy"')
         ..add('$indent},')
         ..add('$indent"$key":$gap$encoded,');
     }
