@@ -1,18 +1,19 @@
 """Opt-in end-to-end check against real Supabase Storage.
 
-Skipped automatically unless both ``SUPABASE_URL`` and
-``SUPABASE_SERVICE_ROLE_KEY`` are present in the environment, so the normal
-suite stays offline and hermetic::
+The suite is hermetic, and ``conftest`` deliberately blanks
+``SUPABASE_URL``/``SUPABASE_SERVICE_ROLE_KEY`` so a developer's real
+``backend/.env`` cannot leak live traffic into the default run. Opt back in
+explicitly::
 
-    export SUPABASE_URL=https://<ref>.supabase.co
-    export SUPABASE_SERVICE_ROLE_KEY=…
-    python -m pytest tests/test_supabase_storage_integration.py -m integration
+    SUPABASE_LIVE_STORAGE_TEST=1 \\
+    SUPABASE_URL=https://<ref>.supabase.co \\
+    SUPABASE_SERVICE_ROLE_KEY=… \\
+    python -m pytest tests/test_supabase_storage_integration.py -m integration -v
 
-Exercises the full path the application uses — FastAPI authorises, the adapter
-writes to the correct private bucket, metadata is persisted, an authorised read
-succeeds, an unauthorised read is refused, and the object is deleted again.
-Every object is written under a unique ``request-media/<uuid>/`` prefix and
-removed in teardown.
+Exercises the full path the application uses: the adapter writes to the correct
+private bucket, an authorised FastAPI read succeeds, an IDOR attempt is refused,
+and the object is deleted again. Every object is written under a unique
+``<bucket>/integration-test/<uuid>/`` prefix and removed in teardown.
 """
 
 from __future__ import annotations

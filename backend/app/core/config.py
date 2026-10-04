@@ -8,11 +8,11 @@ starts and serves the vertical slice without Supabase/Firebase/AI credentials.
 from __future__ import annotations
 
 import functools
-from typing import Literal
+from typing import Annotated, Literal
 from urllib.parse import urlsplit
 
 from pydantic import Field, SecretStr, field_validator
-from pydantic_settings import BaseSettings, SettingsConfigDict
+from pydantic_settings import BaseSettings, NoDecode, SettingsConfigDict
 
 Environment = Literal["development", "test", "staging", "production"]
 
@@ -35,7 +35,13 @@ class Settings(BaseSettings):
     environment: Environment = "development"
     debug: bool = False
     api_v1_prefix: str = "/api/v1"
-    cors_allow_origins: list[str] = Field(default_factory=lambda: ["*"])
+    #: ``NoDecode`` is required: pydantic-settings JSON-decodes list-typed
+    #: environment variables *before* any ``mode="before"`` validator runs, so
+    #: without it a plain ``CORS_ALLOW_ORIGINS=*`` aborts startup with
+    #: ``SettingsError`` instead of reaching :meth:`_split_origins`.
+    cors_allow_origins: Annotated[list[str], NoDecode] = Field(
+        default_factory=lambda: ["*"]
+    )
 
     # ------------------------------------------------------------ database
     database_url: str = "postgresql+psycopg://postgres:postgres@localhost:5432/home_services"
@@ -81,7 +87,10 @@ class Settings(BaseSettings):
     max_upload_bytes: int = 12 * 1024 * 1024
     max_image_dimension: int = 6000
     max_images_per_request: int = 8
-    allowed_image_mimes: frozenset[str] = frozenset(
+    #: ``NoDecode`` for the same reason as ``cors_allow_origins``: a plain
+    #: comma-separated ``ALLOWED_IMAGE_MIMES=image/png,image/webp`` must reach
+    #: :meth:`_wrap_mimes` rather than being JSON-decoded first.
+    allowed_image_mimes: Annotated[frozenset[str], NoDecode] = frozenset(
         {"image/jpeg", "image/png", "image/webp"}
     )
     storage_root: str = "./var/storage"
@@ -156,6 +165,12 @@ class Settings(BaseSettings):
     @field_validator("allowed_image_mimes", mode="before")
     @classmethod
     def _wrap_mimes(cls, value: object) -> object:
+        # ``NoDecode`` hands the raw env string here, so it must be split; a
+        # JSON list still arrives as a real collection from an explicit init.
+        if isinstance(value, str):
+            return frozenset(
+                item.strip() for item in value.split(",") if item.strip()
+            )
         if isinstance(value, (set, frozenset, list, tuple)):
             return frozenset(str(item) for item in value)
         return value
