@@ -20,15 +20,21 @@
     Overrides the baked-in API_BASE_URL. The default is this machine's LAN
     address, which only works for devices on this network.
 
+.PARAMETER CommitApk
+    Allows the fallback of committing the APK into the repository when no release
+    is possible. Off by default because that binary is permanent in history.
+
 .EXAMPLE
     .\infra\publish-apk.ps1
     .\infra\publish-apk.ps1 -BaseUrl https://api.example.com
+    .\infra\publish-apk.ps1 -CommitApk -SkipBuild
 #>
 [CmdletBinding()]
 param(
     [string]$BaseUrl,
     [string]$Tag,
-    [switch]$SkipBuild
+    [switch]$SkipBuild,
+    [switch]$CommitApk
 )
 
 $ErrorActionPreference = 'Stop'
@@ -96,11 +102,22 @@ if ($sizeMb -gt 100) {
 
 Push-Location $root
 try {
+    # `gh` was detected on this machine, but a signed-out gh writes a banner to
+    # stderr. With $ErrorActionPreference = 'Stop' PowerShell promotes that to a
+    # terminating error, so the probe itself becomes the failure. Relaxed for the
+    # duration of the check; $LASTEXITCODE is what actually decides.
     $gh = Get-Command gh -ErrorAction SilentlyContinue
     $ghReady = $false
     if ($gh) {
-        & gh auth status *> $null
-        $ghReady = ($LASTEXITCODE -eq 0)
+        $previous = $ErrorActionPreference
+        $ErrorActionPreference = 'Continue'
+        try {
+            & gh auth status *> $null
+            $ghReady = ($LASTEXITCODE -eq 0)
+        }
+        finally {
+            $ErrorActionPreference = $previous
+        }
     }
 
     if ($ghReady) {
@@ -117,10 +134,22 @@ try {
     }
     else {
         if ($gh) {
-            Write-Host '  gh is installed but not authenticated; skipping the release route.' -ForegroundColor DarkGray
+            Write-Host '  gh is installed but not signed in, so a release is not possible.' -ForegroundColor Yellow
         }
         else {
-            Write-Host '  gh CLI not found; falling back to committing the APK.' -ForegroundColor DarkGray
+            Write-Host '  gh CLI not found, so a release is not possible.' -ForegroundColor Yellow
+        }
+
+        if (-not $CommitApk) {
+            # 58 MB is over the 50 MB line where GitHub starts warning, and it is
+            # permanent: every clone pays it, and every rebuild that changes the
+            # APK adds another copy. Not something to do behind the user's back.
+            Write-Host ''
+            Write-Host "  Committing it would add $sizeMb MB to git history permanently." -ForegroundColor Yellow
+            Write-Host '  Sign in to gh instead:   gh auth login' -ForegroundColor Yellow
+            Write-Host '  Or shrink it first:      flutter build apk --release --split-per-abi' -ForegroundColor Yellow
+            Write-Host '  Or insist:               .\infra\publish-apk.ps1 -CommitApk -SkipBuild' -ForegroundColor Yellow
+            throw 'Stopped instead of committing a large binary without being asked.'
         }
 
         Write-Host ''
