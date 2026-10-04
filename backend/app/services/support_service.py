@@ -107,7 +107,11 @@ def messages(
     )
     grouped: dict[uuid.UUID, list[str]] = {}
     for item in attachments:
-        grouped.setdefault(item.message_id, []).append(item.storage_path)
+        # Authorised API routes, never the raw storage path: a path carries the
+        # bucket plus customer/conversation/attachment UUIDs (§79).
+        grouped.setdefault(item.message_id, []).append(
+            f"/api/v1/media/message-attachments/{item.id}/content"
+        )
     return [
         {
             "id": row.id,
@@ -194,17 +198,24 @@ def send_message(
     session.flush()
 
     for attachment_id in payload.attachment_ids:
+        # message_attachments has no customer_id or conversation_id of its own,
+        # so ownership is proven by walking attachment -> message -> conversation.
         owned = session.execute(
-            select(MessageAttachment.id).where(
+            select(MessageAttachment.id)
+            .join(Message, Message.id == MessageAttachment.message_id)
+            .join(Conversation, Conversation.id == Message.conversation_id)
+            .where(
                 MessageAttachment.id == attachment_id,
-                MessageAttachment.customer_id == customer_id,
+                Conversation.customer_id == customer_id,
             )
         ).scalar_one_or_none()
         if owned is None:
             raise NotFoundError("Attachment not found.")
-        attachment = session.get(MessageAttachment, attachment_id)
+        # Ownership is already proven above, so this fetch cannot come back empty.
+        attachment = session.execute(
+            select(MessageAttachment).where(MessageAttachment.id == attachment_id)
+        ).scalar_one()
         attachment.message_id = message.id
-        attachment.conversation_id = conversation.id
 
     from app.utils.time import now_utc
 

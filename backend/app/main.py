@@ -36,10 +36,15 @@ log = get_logger(__name__)
 @asynccontextmanager
 async def lifespan(_app: FastAPI) -> AsyncIterator[None]:
     configure_logging()
+    # Refuse to serve production traffic with a dev secret, a plaintext DSN or
+    # a second identity provider switched on (§135).
+    settings.assert_production_safe()
     log.info(
         "startup",
         environment=settings.environment,
         version=settings.app_version,
+        supabase_configured=settings.supabase_configured,
+        supabase_auth_enabled=settings.supabase_auth_enabled,
     )
     yield
     log.info("shutdown")

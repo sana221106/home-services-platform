@@ -617,13 +617,14 @@ def add_media(
         extension=validated.extension,
         media_id=media_id,
     )
-    make_storage_client().write(path, validated.content)
+    storage = make_storage_client()
+    storage.write(path, validated.content)
 
     media = RequestMedia(
         id=media_id,
         request_id=request.id,
         storage_path=path,
-        storage_provider="local",
+        storage_provider=storage.provider,
         mime_type=validated.mime_type,
         size_bytes=validated.size_bytes,
         width=validated.width,

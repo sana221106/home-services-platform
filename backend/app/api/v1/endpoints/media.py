@@ -16,7 +16,7 @@ from app.core.enums import Permission
 from app.core.exceptions import NotFoundError
 from app.db.models.finance import PaymentProof
 from app.db.models.requests import RequestMedia, ServiceRequest
-from app.db.models.support import MessageAttachment
+from app.db.models.support import Conversation, Message, MessageAttachment
 from app.services.media_service import make_storage_client
 
 router = APIRouter(prefix="/media", tags=["media"])
@@ -61,7 +61,10 @@ def staff_request_media_content(
 
     assert_permission(staff.permissions, Permission.REQUEST_READ)
     media = db.get(RequestMedia, media_id)
-    if media is None or media.deleted_at is None:
+    # A soft-deleted photo is gone for everyone, staff included. This condition
+    # was previously inverted (``deleted_at is None``), which 404'd every live
+    # photo and served every soft-deleted one.
+    if media is None or media.deleted_at is not None:
         raise NotFoundError("Media not found.")
     return Response(
         content=_read(media.storage_path),
@@ -82,7 +85,41 @@ def message_attachment_content(
 
     assert_permission(staff.permissions, Permission.CHAT_READ)
     attachment = db.get(MessageAttachment, attachment_id)
-    if attachment is None or attachment.deleted_at is not None:
+    # message_attachments has no soft-delete column; absence is the only way an
+    # attachment goes away, and the FK cascade removes the row.
+    if attachment is None:
+        raise NotFoundError("Attachment not found.")
+    return Response(
+        content=_read(attachment.storage_path),
+        media_type=attachment.mime_type,
+        headers={"Cache-Control": "private, max-age=3600"},
+    )
+
+
+@router.get(
+    "/message-attachments/{attachment_id}/content",
+    summary="Stream your own chat attachment",
+    response_class=Response,
+)
+def customer_message_attachment_content(
+    attachment_id: uuid.UUID,
+    db: DbSession,
+    customer: CurrentCustomer,
+) -> Response:
+    """Customer-facing counterpart to the staff route.
+
+    ``message_attachments`` links to a message and nothing else, so ownership is
+    proven by walking attachment → message → conversation → customer. Returning
+    the raw ``storage_path`` instead would leak internal bucket paths (§79).
+    """
+    attachment = db.get(MessageAttachment, attachment_id)
+    if attachment is None:
+        raise NotFoundError("Attachment not found.")
+    message = db.get(Message, attachment.message_id)
+    if message is None:
+        raise NotFoundError("Attachment not found.")
+    conversation = db.get(Conversation, message.conversation_id)
+    if conversation is None or conversation.customer_id != customer.profile.id:
         raise NotFoundError("Attachment not found.")
     return Response(
         content=_read(attachment.storage_path),
