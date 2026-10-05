@@ -12,10 +12,10 @@ enum Environment {
   final String label;
 
   static Environment fromDartDefine(String? raw) {
-    if (raw == null || raw.isEmpty) return Environment.development;
+    if (raw == null || raw.isEmpty) return Environment.production;
     for (final environment in Environment.values) {
       if (environment.value == raw) return environment;
     }
-    return Environment.development;
+    return Environment.production;
   }
 }

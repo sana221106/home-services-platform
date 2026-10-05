@@ -18,7 +18,7 @@ abstract final class FlavorConfig {
   static String baseUrl(Environment environment) {
     if (_baseUrlRaw.isNotEmpty) return _stripTrailingSlash(_baseUrlRaw);
     return switch (environment) {
-      Environment.production => 'https://api.homeservices.example.com',
+      Environment.production => 'https://api-production-abe8e.up.railway.app',
       Environment.staging => 'https://staging-api.homeservices.example.com',
       Environment.development => 'http://10.0.2.2:8000',
     };

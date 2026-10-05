@@ -1,17 +1,29 @@
-# home_services_app
+﻿# Home Services Mobile App
 
-A new Flutter project.
+A Flutter mobile application for the Home Services Platform.
 
 ## Getting Started
 
-This project is a starting point for a Flutter application.
+### Running the app
 
-A few resources to get you started if this is your first Flutter project:
+By default, running the app connects to the live production backend:
 
-- [Learn Flutter](https://docs.flutter.dev/get-started/learn-flutter)
-- [Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Flutter learning resources](https://docs.flutter.dev/reference/learning-resources)
+`ash
+cd apps/mobile
+flutter pub get
+flutter run
+`
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+This will connect to: https://api-production-abe8e.up.railway.app
+
+### Optional overrides
+
+Development mode:
+`ash
+flutter run --dart-define=ENVIRONMENT=development --dart-define=API_BASE_URL=http://10.0.2.2:8000
+`
+
+Production (explicit):
+`ash
+flutter run --dart-define=ENVIRONMENT=production --dart-define=API_BASE_URL=https://api-production-abe8e.up.railway.app
+`
