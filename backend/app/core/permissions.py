@@ -9,7 +9,7 @@ from __future__ import annotations
 
 from collections.abc import Iterable
 
-from app.core.enums import Permission, ROLE_PERMISSIONS, StaffRole
+from app.core.enums import ROLE_PERMISSIONS, Permission, StaffRole
 
 
 def permissions_for_roles(roles: Iterable[StaffRole | str]) -> frozenset[Permission]:
@@ -23,10 +23,7 @@ def permissions_for_roles(roles: Iterable[StaffRole | str]) -> frozenset[Permiss
 
 
 def has_permission(granted: Iterable[Permission | str], required: Permission) -> bool:
-    for item in granted:
-        if str(item) == str(required):
-            return True
-    return False
+    return any(str(item) == str(required) for item in granted)
 
 
 def has_any_permission(

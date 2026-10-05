@@ -383,7 +383,7 @@ def list_for_staff(
     return rows, total
 
 
-def open_complaints_stmt() -> Select[tuple[Complaint]]:
+def open_complaints_stmt() -> Select[Complaint]:
     return select(Complaint).where(
         Complaint.status.in_(
             [

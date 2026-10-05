@@ -117,7 +117,8 @@ def test_write_targets_the_mapped_bucket_and_object_key() -> None:
         "/storage/v1/object/request-media/customer-1/request-2/photo.jpg"
     )
     assert request.content == SAMPLE
-    assert request.headers["content-type"] == "application/octet-stream"
+    # The buckets only allow image/*, so the mime is derived from the extension.
+    assert request.headers["content-type"] == "image/jpeg"
     assert request.headers["x-upsert"] == "false"
 
 

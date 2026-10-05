@@ -37,9 +37,15 @@ from sqlalchemy.orm import Session, sessionmaker
 from app.core.config import settings
 
 
+def _is_sqlite(url: str) -> bool:
+    """SQLite has no TLS. Injecting sslmode there emits an SAWarning on every
+    engine creation, because pysqlite silently drops unknown URI arguments."""
+    return url.startswith("sqlite")
+
+
 def _with_sslmode(url: str, sslmode: str) -> str:
     """Return *url* with ``sslmode`` applied unless it already specifies one."""
-    if not sslmode:
+    if not sslmode or _is_sqlite(url):
         return url
     parsed: URL = make_url(url)
     if "sslmode" in parsed.query:

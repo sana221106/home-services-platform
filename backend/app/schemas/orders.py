@@ -7,11 +7,9 @@ from datetime import datetime
 
 from pydantic import BaseModel, ConfigDict, Field, field_validator
 
-from app.core.enums import AssignmentStatus, InspectionStatus, RequestStatus
-
+from app.core.enums import AssignmentStatus, RequestStatus
 from app.schemas.requests import (
     ExpectedArrival,
-    InspectionSummary,
     RequestEventResponse,
     TechnicianSummary,
 )

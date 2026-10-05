@@ -78,6 +78,45 @@ def test_sqlite_is_left_on_default_pooling() -> None:
     assert connect_args["check_same_thread"] is False
 
 
+def test_sqlite_url_is_never_given_an_sslmode() -> None:
+    """pysqlite drops unknown URI arguments, so injecting sslmode only produced
+    an SAWarning on every engine creation."""
+    with _no_sa_warning():
+        existing = _with_sslmode("sqlite+pysqlite:///./local.db?sslmode=require", "require")
+        clean = _with_sslmode("sqlite+pysqlite:///./local.db", "require")
+    assert "sslmode" in existing, "an existing sslmode must not be stripped"
+    assert "sslmode" not in clean
+
+
+def test_sslmode_injection_still_works_for_postgres() -> None:
+    assert "sslmode=require" in _with_sslmode(
+        "postgresql+psycopg://u:p@db.example.supabase.co:5432/postgres", "require"
+    )
+
+
+class _no_sa_warning:
+    """Assert no SQLAlchemyWarning is raised inside the block."""
+
+    def __enter__(self):
+        import warnings
+
+        self._ctx = warnings.catch_warnings(record=True)
+        self._log = self._ctx.__enter__()
+        import sqlalchemy
+
+        warnings.simplefilter("always", sqlalchemy.exc.SAWarning)
+        return self
+
+    def __exit__(self, *exc):
+        log = list(self._log)
+        self._ctx.__exit__(*exc)
+        sa_warnings = [
+            w for w in log if "sqlite" in str(w.message).lower() or "sslmode" in str(w.message)
+        ]
+        assert not sa_warnings, f"unexpected SAWarning: {[str(w.message) for w in sa_warnings]}"
+        return False
+
+
 # --------------------------------------------------------- production guard
 
 

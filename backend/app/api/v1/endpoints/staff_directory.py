@@ -8,7 +8,7 @@ from typing import Annotated
 from fastapi import APIRouter, Depends, Query
 from sqlalchemy import func, select
 
-from app.api.dependencies import DbSession, require
+from app.api.dependencies import AuthenticatedStaff, DbSession, require
 from app.core.enums import Permission
 from app.db.models.catalog import (
     CancellationPolicy,
@@ -26,7 +26,6 @@ from app.db.models.workforce import (
 )
 from app.schemas.admin import (
     CreateTechnicianRequest,
-    Customer360Response,
     PricingPreviewRequest,
     PricingPreviewResponse,
     TechnicianListItem,
@@ -47,12 +46,12 @@ from app.services import audit_service, dashboard_service, pricing_service
 
 router = APIRouter(prefix="/staff", tags=["staff-directory"])
 
-CustomerReadGuard = Annotated[..., Depends(require(Permission.CUSTOMER_READ))]
-CustomerPiiGuard = Annotated[..., Depends(require(Permission.CUSTOMER_READ_PII))]
-TechnicianReadGuard = Annotated[..., Depends(require(Permission.TECHNICIAN_READ))]
-TechnicianWriteGuard = Annotated[..., Depends(require(Permission.TECHNICIAN_WRITE))]
-CatalogGuard = Annotated[..., Depends(require(Permission.CATALOG_WRITE))]
-PricingGuard = Annotated[..., Depends(require(Permission.PRICING_WRITE))]
+CustomerReadGuard = Annotated[AuthenticatedStaff, Depends(require(Permission.CUSTOMER_READ))]
+CustomerPiiGuard = Annotated[AuthenticatedStaff, Depends(require(Permission.CUSTOMER_READ_PII))]
+TechnicianReadGuard = Annotated[AuthenticatedStaff, Depends(require(Permission.TECHNICIAN_READ))]
+TechnicianWriteGuard = Annotated[AuthenticatedStaff, Depends(require(Permission.TECHNICIAN_WRITE))]
+CatalogGuard = Annotated[AuthenticatedStaff, Depends(require(Permission.CATALOG_WRITE))]
+PricingGuard = Annotated[AuthenticatedStaff, Depends(require(Permission.PRICING_WRITE))]
 
 
 # ------------------------------------------------------------------ customers
@@ -230,14 +229,14 @@ def update_technician(
         for category_id in skill_ids:
             db.add(TechnicianSkill(technician_id=technician.id, category_id=category_id))
     if zone_ids is not None:
-        for row in list(
+        for zone_row in list(
             db.execute(
                 select(TechnicianZone).where(
                     TechnicianZone.technician_id == technician.id
                 )
             ).scalars()
         ):
-            db.delete(row)
+            db.delete(zone_row)
         for zone_id in zone_ids:
             db.add(TechnicianZone(technician_id=technician.id, zone_id=zone_id))
     db.commit()
@@ -385,7 +384,7 @@ def pricing_preview(
         urgency_fee=Decimal(str(estimate["urgency_fee"])),
         inspection_fee=Decimal(str(estimate["inspection_fee"])),
         deposit_percent=rule.deposit_percent if rule else Decimal("0"),
-        estimated_duration_minutes=int(estimate["estimated_duration_minutes"]),
+        estimated_duration_minutes=int(Decimal(str(estimate["estimated_duration_minutes"]))),
         matched_rule_id=rule.id if rule else None,
     )
 

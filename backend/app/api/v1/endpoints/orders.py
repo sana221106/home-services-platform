@@ -180,6 +180,6 @@ def track_order(
         address_summary_ar=_address_line(db, request),
         events=[RequestEventResponse.model_validate(event) for event in events],
         can_cancel=status in order_service.CANCELLABLE_STATUSES,
-        can_open_complaint=order_service.can_customer_complain(request),
-        can_rate=order_service.can_customer_rate(request),
+        can_open_complaint=order_service.can_customer_complain(db, request=request),
+        can_rate=order_service.can_customer_rate(db, request=request),
     )

@@ -43,9 +43,24 @@ def write_env(tmp_path: Path, *extra: str) -> Path:
     return env
 
 
+_CONTROLLED = (
+    "CORS_ALLOW_ORIGINS",
+    "ALLOWED_IMAGE_MIMES",
+    "SUPABASE_URL",
+    "SUPABASE_SERVICE_ROLE_KEY",
+    "SUPABASE_PUBLISHABLE_KEY",
+    "SUPABASE_ANON_KEY",
+)
+
+
 def load(tmp_path: Path, *extra: str) -> Settings:
-    """Build Settings the way the app does, with no ambient env interference."""
-    saved = {k: os.environ.pop(k, None) for k in ("CORS_ALLOW_ORIGINS", "ALLOWED_IMAGE_MIMES")}
+    """Build Settings the way the app does, with no ambient env interference.
+
+    ``conftest`` blanks the Supabase variables in ``os.environ``, and
+    ``os.environ`` outranks any ``.env`` file, so they must be popped here for the
+    per-test values below to take effect.
+    """
+    saved = {k: os.environ.pop(k, None) for k in _CONTROLLED}
     try:
         return Settings(_env_file=write_env(tmp_path, *extra))
     finally:
@@ -184,3 +199,61 @@ def test_a_genuinely_invalid_environment_still_raises(
     monkeypatch.setenv("ENVIRONMENT", "productionn")
     with pytest.raises((SettingsError, ValidationError)):
         Settings(_env_file=None)
+
+
+# ------------------------------------------------- blank service-role key
+
+
+def test_a_blank_service_role_key_is_not_configured(tmp_path: Path) -> None:
+    """``SUPABASE_SERVICE_ROLE_KEY=`` must not count as configured.
+
+    A ``SecretStr`` wrapping an empty string is a truthy object, so
+    ``supabase_configured`` used to report True with no key present. The app then
+    logged ``supabase_configured=true`` and every upload picked the Supabase
+    Storage backend, which raised ``IntegrationUnavailableError`` on first use
+    instead of falling back to local storage.
+    """
+    settings = load(
+        tmp_path,
+        "SUPABASE_URL=https://example.supabase.co",
+        "SUPABASE_SERVICE_ROLE_KEY=",
+    )
+    assert settings.supabase_service_role_key is not None
+    assert settings.supabase_service_role_key.get_secret_value() == ""
+    assert settings.supabase_configured is False
+
+
+def test_a_present_service_role_key_is_configured(tmp_path: Path) -> None:
+    settings = load(
+        tmp_path,
+        "SUPABASE_URL=https://example.supabase.co",
+        "SUPABASE_SERVICE_ROLE_KEY=sb_secret_a-real-key",
+    )
+    assert settings.supabase_configured is True
+
+
+def test_a_key_without_a_url_is_not_configured(tmp_path: Path) -> None:
+    settings = load(tmp_path, "SUPABASE_SERVICE_ROLE_KEY=sb_secret_a-real-key")
+    assert settings.supabase_configured is False
+
+
+def test_missing_key_entirely_is_not_configured(tmp_path: Path) -> None:
+    settings = load(tmp_path, "SUPABASE_URL=https://example.supabase.co")
+    assert settings.supabase_configured is False
+
+
+def test_blank_key_falls_back_to_local_storage(tmp_path: Path, monkeypatch) -> None:
+    """The backend selection must follow ``supabase_configured``."""
+    monkeypatch.setenv("SUPABASE_URL", "https://example.supabase.co")
+    monkeypatch.setenv("SUPABASE_SERVICE_ROLE_KEY", "")
+
+    import importlib
+
+    import app.core.config as config_module
+
+    reloaded = importlib.reload(config_module)
+    try:
+        assert reloaded.settings.supabase_configured is False
+    finally:
+        monkeypatch.undo()
+        importlib.reload(config_module)

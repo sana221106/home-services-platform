@@ -18,12 +18,12 @@ import argparse
 import secrets
 import sys
 from decimal import Decimal
+from typing import NotRequired, TypedDict
 
 from sqlalchemy import select
 from sqlalchemy.orm import Session
 
-from app.core.enums import Permission, StaffRole
-from app.core.enums import ROLE_PERMISSIONS
+from app.core.enums import ROLE_PERMISSIONS, Permission, StaffRole
 from app.core.security import hash_password
 from app.db.models import (
     CancellationPolicy,
@@ -37,7 +37,7 @@ from app.db.models import (
     StaffUser,
     User,
 )
-from app.db.session import SessionLocal, session_scope
+from app.db.session import session_scope
 
 # --------------------------------------------------------------------- roles
 
@@ -53,7 +53,45 @@ ROLE_NAMES_AR: dict[StaffRole, str] = {
 
 # --------------------------------------------------------------------- zones
 
-ZONES: tuple[dict[str, object], ...] = (
+# TypedDict keeps mypy from widening `row["code"]` to `object`, which then broke
+# dict indexing; each row is applied to the matching ORM model with setattr.
+class ZoneRow(TypedDict):
+    code: str
+    name_ar: str
+    governorate: str
+    city: str
+    district: str
+    center_latitude: Decimal
+    center_longitude: Decimal
+    radius_km: Decimal
+    urgent_multiplier: Decimal
+
+
+class CategoryRow(TypedDict):
+    code: str
+    name_ar: str
+    name_en: str
+    description_ar: str
+    icon_key: str
+    color_hex: str
+    soft_background_hex: str
+    sort_order: int
+    estimated_duration_minutes: int
+    requires_inspection_default: NotRequired[bool]
+
+
+class CancellationPolicyRow(TypedDict):
+    # code/label_ar only exist on some windows; the model keys off name_ar.
+    code: NotRequired[str]
+    label_ar: NotRequired[str]
+    name_ar: str
+    window_minutes: int
+    refund_percent: Decimal
+    requires_approval: bool
+    rules: list[dict[str, str]]
+
+
+ZONES: tuple[ZoneRow, ...] = (
     {
         "code": "cai_madint_nasr",
         "name_ar": "مدينة نصر - القاهرة",
@@ -146,7 +184,7 @@ ZONES: tuple[dict[str, object], ...] = (
 
 # ---------------------------------------------------------------- categories
 
-CATEGORIES: tuple[dict[str, object], ...] = (
+CATEGORIES: tuple[CategoryRow, ...] = (
     {
         "code": "plumbing",
         "name_ar": "سباكة",
@@ -240,7 +278,8 @@ CATEGORIES: tuple[dict[str, object], ...] = (
 
 # ------------------------------------------------------- problem types
 
-PROBLEM_TYPES: tuple[tuple[str, tuple[tuple[str, str, str], ...]], ...] = (
+# (category code, ((code, name_ar, name_en, sort_order, hint_ar | None), ...))
+PROBLEM_TYPES: tuple[tuple[str, tuple[tuple[str, str, str, int, str | None], ...]], ...] = (
     (
         "plumbing",
         (
@@ -320,7 +359,7 @@ PROBLEM_TYPES: tuple[tuple[str, tuple[tuple[str, str, str], ...]], ...] = (
 
 # ---------------------------------------------------- cancellation policies
 
-CANCELLATION_POLICIES: tuple[dict[str, object], ...] = (
+CANCELLATION_POLICIES: tuple[CancellationPolicyRow, ...] = (
     {
         "name_ar": "إلغاء مجاني قبل 24 ساعة",
         "window_minutes": 1440,
@@ -366,14 +405,21 @@ def seed_permissions(session: Session) -> dict[str, PermissionRecord]:
 
 def seed_roles(session: Session) -> dict[StaffRole, Role]:
     permissions = seed_permissions(session)
-    existing = {role.code: role for role in session.scalars(select(Role))}
+    # Keyed by the StaffRole enum, not the stored code string, so callers get the
+    # typed mapping the signature promises.
+    existing: dict[StaffRole, Role] = {}
+    for stored_role in session.scalars(select(Role)):
+        try:
+            existing[StaffRole(stored_role.code)] = stored_role
+        except ValueError:
+            continue
     for role in StaffRole:
-        db_role = existing.get(role.value)
+        db_role = existing.get(role)
         if db_role is None:
             db_role = Role(code=role.value, name_ar=ROLE_NAMES_AR[role])
             session.add(db_role)
             session.flush()
-            existing[role.value] = db_role
+            existing[role] = db_role
 
         granted = {
             row.permission_id
@@ -477,6 +523,10 @@ def seed_demo_admin(session: Session) -> tuple[str, str]:
         staff.password_hash = hash_password(password)
 
     role = session.scalar(select(Role).where(Role.code == StaffRole.SUPER_ADMIN.value))
+    if role is None:
+        raise RuntimeError(
+            "SUPER_ADMIN role is missing; run seed_roles() before seed_demo_admin()."
+        )
     already = session.scalar(
         select(StaffRoleAssignment).where(
             StaffRoleAssignment.staff_id == staff.id, StaffRoleAssignment.role_id == role.id

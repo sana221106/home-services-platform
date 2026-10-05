@@ -10,7 +10,7 @@ from typing import Annotated
 from fastapi import APIRouter, Depends, Query
 from sqlalchemy import select
 
-from app.api.dependencies import DbSession, require
+from app.api.dependencies import AuthenticatedStaff, DbSession, require
 from app.core.enums import (
     AssignmentStatus,
     CancellationReason,
@@ -36,17 +36,16 @@ from app.schemas.admin import (
     AiClassifyRequestRequest,
     AiClassifyResponse,
     AiReviewDecisionRequest,
-    CreateQuoteRequest,
     QuoteResponse,
 )
 from app.schemas.common import MessageResponse, Page
-from app.schemas.requests import RequestMediaResponse
 from app.schemas.orders import (
     AssignmentResponse,
     AssignTechnicianRequest,
     DispatchCandidatesResponse,
     TechnicianCandidate,
 )
+from app.schemas.requests import CreateQuoteRequest, RequestMediaResponse
 from app.services import (
     ai_service,
     audit_service,
@@ -61,8 +60,8 @@ from app.utils.time import age_minutes, now_utc
 
 router = APIRouter(prefix="/staff/requests", tags=["staff-requests"])
 
-OpsGuard = Annotated[..., Depends(require(Permission.REQUEST_READ))]
-WriteGuard = Annotated[..., Depends(require(Permission.REQUEST_REVIEW))]
+OpsGuard = Annotated[AuthenticatedStaff, Depends(require(Permission.REQUEST_READ))]
+WriteGuard = Annotated[AuthenticatedStaff, Depends(require(Permission.REQUEST_REVIEW))]
 
 
 def _list_item(db: DbSession, request, *, technician_name: str | None = None):  # noqa: ANN001, ANN202
@@ -95,13 +94,12 @@ def _list_item(db: DbSession, request, *, technician_name: str | None = None):  
 
 
 def _technician_name(db: DbSession, request_id: uuid.UUID) -> str | None:
-    row = db.execute(
+    return db.execute(
         select(Technician.name)
         .join(Assignment, Assignment.technician_id == Technician.id)
         .where(Assignment.request_id == request_id, Assignment.is_current.is_(True))
         .limit(1)
     ).scalar_one_or_none()
-    return row
 
 
 @router.get("", response_model=Page[AdminRequestListItem], summary="Operations queue")
@@ -190,10 +188,9 @@ def get_request(
     complaint = db.execute(
         select(Complaint).where(Complaint.request_id == request.id)
     ).scalar_one_or_none()
-    payments = [
-        row
-        for row in payment_service.payments_for_request(db, request_id=request.id)
-    ]
+    payments = list(
+        payment_service.payments_for_request(db, request_id=request.id)
+    )
     notes = list(
         db.execute(select(StaffNote).where(StaffNote.request_id == request.id)).scalars()
     )
@@ -669,7 +666,9 @@ def qc_review(
     db: DbSession,
     staff: WriteGuard,
 ) -> MessageResponse:
-    request = request_service.get_request_for_staff(db, request_id=request.id)
+    # The name ``request`` was undefined here (the HTTP request object shadows
+    # nothing here), so this route raised NameError on every QC review.
+    request = request_service.get_request_for_staff(db, request_id=request_id)
     inspection = inspection_service.get_inspection(db, request_id=request.id)
     if inspection is None:
         from app.core.exceptions import NotFoundError

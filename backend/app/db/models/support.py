@@ -28,8 +28,8 @@ from app.core.enums import (
     ReviewStatus,
 )
 from app.db.base import (
-    Base,
     GUID,
+    Base,
     JSONType,
     TimestampMixin,
     UUIDPrimaryKeyMixin,
@@ -178,10 +178,10 @@ class ReworkVisit(UUIDPrimaryKeyMixin, TimestampMixin, Base):
         GUID(), ForeignKey("complaints.id", ondelete="CASCADE"), nullable=False, index=True
     )
     request_id: Mapped[uuid.UUID | None] = mapped_column(
-        GUID(), ForeignKey("service_requests.id", ondelete="SET NULL")
+        GUID(), ForeignKey("service_requests.id", ondelete="SET NULL"), index=True
     )
     technician_id: Mapped[uuid.UUID | None] = mapped_column(
-        GUID(), ForeignKey("technicians.id", ondelete="SET NULL")
+        GUID(), ForeignKey("technicians.id", ondelete="SET NULL"), index=True
     )
     scheduled_start: Mapped[datetime | None] = mapped_column(DateTime(timezone=True))
     completed_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True))

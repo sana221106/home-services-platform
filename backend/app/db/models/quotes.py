@@ -11,12 +11,13 @@ from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from app.core.enums import QuoteStatus, Urgency
 from app.db.base import (
-    Base,
     GUID,
+    Base,
     TimestampMixin,
     UUIDPrimaryKeyMixin,
     enum_column,
 )
+from app.db.models.requests import ServiceRequest
 
 
 class Quote(UUIDPrimaryKeyMixin, TimestampMixin, Base):
@@ -54,10 +55,10 @@ class Quote(UUIDPrimaryKeyMixin, TimestampMixin, Base):
     decided_by_customer_id: Mapped[uuid.UUID | None] = mapped_column(GUID())
     expires_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), index=True)
     supersedes_quote_id: Mapped[uuid.UUID | None] = mapped_column(
-        GUID(), ForeignKey("quotes.id", ondelete="SET NULL")
+        GUID(), ForeignKey("quotes.id", ondelete="SET NULL"), index=True
     )
 
-    request: Mapped["ServiceRequest"] = relationship(back_populates="quotes")  # noqa: F821
+    request: Mapped[ServiceRequest] = relationship(back_populates="quotes")
     items: Mapped[list[QuoteItem]] = relationship(
         back_populates="quote", cascade="all, delete-orphan", order_by="QuoteItem.position"
     )

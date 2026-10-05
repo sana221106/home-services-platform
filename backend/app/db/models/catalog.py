@@ -5,6 +5,7 @@ from __future__ import annotations
 import uuid
 from datetime import datetime
 from decimal import Decimal
+from typing import TYPE_CHECKING
 
 from sqlalchemy import (
     Boolean,
@@ -20,13 +21,16 @@ from sqlalchemy import (
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from app.db.base import (
-    Base,
     GUID,
+    Base,
     JSONType,
     SoftDeleteMixin,
     TimestampMixin,
     UUIDPrimaryKeyMixin,
 )
+
+if TYPE_CHECKING:  # pragma: no cover - import cycle broken for type checkers only
+    from app.db.models.workforce import TechnicianZone
 
 
 class ServiceCategory(UUIDPrimaryKeyMixin, TimestampMixin, SoftDeleteMixin, Base):

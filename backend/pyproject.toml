@@ -52,7 +52,12 @@ ignore = [
 
 [tool.ruff.lint.per-file-ignores]
 "tests/*" = ["S105", "S106", "S311", "ARG", "SIM"]
-"alembic/*" = ["E402"]
+# Migrations are historical records: never reformat or reorder them, or the
+# authoritative chain stops matching what was reviewed and applied. F401/F811
+# are included because the applied revisions contain a duplicate import that
+# must stay byte-identical; deleting it to satisfy the linter would rewrite
+# history.
+"alembic/*" = ["E402", "I001", "F401", "F811"]
 
 [tool.mypy]
 python_version = "3.11"

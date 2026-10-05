@@ -7,7 +7,7 @@ from sqlalchemy import select
 
 from app.api.dependencies import CurrentStaff, DbSession
 from app.core.rate_limit import LOGIN_LIMIT, limiter
-from app.db.models.identity import StaffRole
+from app.db.models.identity import Role
 from app.schemas.admin import (
     StaffLoginRequest,
     StaffProfileResponse,
@@ -43,15 +43,20 @@ def login(payload: StaffLoginRequest, request: Request, db: DbSession) -> TokenP
     summary="Current staff identity, roles and effective permissions",
 )
 def me(db: DbSession, staff: CurrentStaff) -> StaffProfileResponse:
+    # Role is the mapped table. StaffRole is the enum re-exported from
+    # app.db.models.identity, so selecting it built an unresolvable FROM clause
+    # and /staff/auth/me failed for every staff user.
     roles = list(
-        db.execute(select(StaffRole).where(StaffRole.code.in_(staff.roles))).scalars()
+        db.execute(select(Role).where(Role.code.in_(staff.roles))).scalars()
     )
     return StaffProfileResponse(
         staff_id=staff.staff.id,
-        email=staff.staff.email,
+        # StaffUser has no email column; auth_service.staff_email resolves the
+        # real contact identity. staff.staff.email raised AttributeError.
+        email=auth_service.staff_email(staff),
         full_name=staff.staff.full_name,
         is_active=staff.staff.is_active,
-        roles=[role.code for role in roles],
+        roles=sorted(role.code for role in roles),
         permissions=sorted(staff.permissions),
     )
 

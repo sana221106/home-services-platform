@@ -9,7 +9,7 @@ from typing import Annotated
 from fastapi import APIRouter, Depends, Query
 from sqlalchemy import select
 
-from app.api.dependencies import DbSession, require
+from app.api.dependencies import AuthenticatedStaff, DbSession, require
 from app.core.enums import Permission
 from app.schemas.admin import (
     AreaAnalyticsRow,
@@ -25,8 +25,8 @@ from app.utils.time import now_utc
 
 router = APIRouter(tags=["analytics"])
 
-AnalyticsGuard = Annotated[..., Depends(require(Permission.ANALYTICS_READ))]
-AuditGuard = Annotated[..., Depends(require(Permission.AUDIT_READ))]
+AnalyticsGuard = Annotated[AuthenticatedStaff, Depends(require(Permission.ANALYTICS_READ))]
+AuditGuard = Annotated[AuthenticatedStaff, Depends(require(Permission.AUDIT_READ))]
 
 
 @router.get("/staff/analytics/overview", response_model=OverviewResponse, summary="Dashboard")
@@ -38,11 +38,12 @@ def overview(
 ) -> OverviewResponse:
     from decimal import Decimal
 
+    from sqlalchemy import func
+
     from app.core.enums import RequestStatus
+    from app.db.models.finance import Payment, PaymentStatus
     from app.db.models.requests import ServiceRequest
     from app.db.models.support import Complaint
-    from app.db.models.finance import Payment, PaymentStatus
-    from sqlalchemy import func
 
     end = now_utc()
     start = end - timedelta(days=days)

@@ -123,6 +123,10 @@ class Settings(BaseSettings):
     #: app.integrations.supabase.storage.BUCKET_BY_PREFIX.
     supabase_storage_bucket: str = "request-media"
     supabase_storage_timeout_seconds: float = 30.0
+    #: Uploads carry up to ``max_upload_bytes`` (12 MB by default) and the
+    #: upload has to complete before the server can answer, so a request-sized
+    #: timeout is not enough on a slow link. Downloads stay on the shorter one.
+    supabase_storage_upload_timeout_seconds: float = 180.0
     #: Stays false: the platform owns its OTP/JWT flow, and enabling Supabase
     #: Auth would create a second, conflicting identity system (§135).
     supabase_auth_enabled: bool = False
@@ -181,7 +185,15 @@ class Settings(BaseSettings):
 
     @property
     def supabase_configured(self) -> bool:
-        return bool(self.supabase_url and self.supabase_service_role_key)
+        """True only when a non-empty service-role key is present.
+
+        A ``SecretStr`` wrapping an empty string is still a truthy object, so a
+        plain ``bool(self.supabase_service_role_key)`` reported "configured" while
+        the key was blank - which selected the Supabase Storage backend and then
+        failed on the first request instead of falling back to local storage.
+        """
+        key = self.supabase_service_role_key
+        return bool(self.supabase_url) and key is not None and bool(key.get_secret_value())
 
     @property
     def supabase_publishable(self) -> SecretStr | None:

@@ -22,8 +22,8 @@ from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from app.core.enums import InspectionStatus, MediaKind, RequestStatus, Urgency
 from app.db.base import (
-    Base,
     GUID,
+    Base,
     JSONType,
     SoftDeleteMixin,
     TimestampMixin,
@@ -32,6 +32,8 @@ from app.db.base import (
 )
 
 if TYPE_CHECKING:
+    from app.db.models.identity import CustomerProfile
+    from app.db.models.properties import Property
     from app.db.models.quotes import Quote
     from app.db.models.workforce import Assignment
 
@@ -84,8 +86,8 @@ class ServiceRequest(UUIDPrimaryKeyMixin, TimestampMixin, Base):
 
     internal_notes_count: Mapped[int] = mapped_column(Integer, default=0, nullable=False)
 
-    customer: Mapped["CustomerProfile"] = relationship(foreign_keys=[customer_id])  # noqa: F821
-    property: Mapped["Property"] = relationship(foreign_keys=[property_id])  # noqa: F821
+    customer: Mapped[CustomerProfile] = relationship(foreign_keys=[customer_id])  # noqa: F821
+    property: Mapped[Property] = relationship(foreign_keys=[property_id])  # noqa: F821
     address_snapshot: Mapped[OrderAddressSnapshot | None] = relationship(
         back_populates="request", uselist=False, cascade="all, delete-orphan"
     )

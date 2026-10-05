@@ -239,7 +239,8 @@ def _to_result(
     except (KeyError, TypeError, ValueError):
         return None
 
-    address = entry.get("address") if isinstance(entry.get("address"), dict) else {}
+    raw_address = entry.get("address")
+    address: dict[str, Any] = raw_address if isinstance(raw_address, dict) else {}
     zone = zone_for_point(zones, latitude=latitude, longitude=longitude)
 
     return GeocodeResult(

@@ -24,7 +24,6 @@ from app.core.enums import (
 from app.core.exceptions import (
     ConflictError,
     CoverageError,
-    DomainError,
     NotFoundError,
     ValidationError,
 )
@@ -755,7 +754,7 @@ def request_counts_by_status(
     return {RequestStatus(status): int(count) for status, count in rows}
 
 
-def requests_needing_follow_up(session: Session, *, since: datetime) -> Select[tuple[Any]]:
+def requests_needing_follow_up(session: Session, *, since: datetime) -> Select[ServiceRequest]:
     """Funnel-stall detector for the call centre (§74)."""
     return (
         select(ServiceRequest)

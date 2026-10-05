@@ -10,18 +10,17 @@ from sqlalchemy import func, select
 from sqlalchemy.orm import Session
 
 from app.core.exceptions import NotFoundError
-from app.db.models.catalog import ProblemType, ServiceCategory
+from app.db.models.catalog import ServiceCategory
 from app.db.models.intelligence import MaintenanceRecord
 from app.db.models.properties import Property, PropertyContact
 from app.db.models.workforce import Technician
-from app.utils.pagination import offset_for
-from app.utils.time import now_utc
-
 from app.schemas.catalog import (
     CreatePropertyRequest,
     PropertyContactRequest,
     UpdatePropertyRequest,
 )
+from app.utils.pagination import offset_for
+from app.utils.time import now_utc
 
 
 def get_for_customer(
@@ -120,10 +119,9 @@ def update_property(
                 PropertyContact.property_id == prop.id, PropertyContact.is_primary.is_(True)
             )
         ).scalar_one_or_none()
-        if contact is None:
-            if contact_name:
-                contact = PropertyContact(property_id=prop.id, contact_name=contact_name, phone="")
-                session.add(contact)
+        if contact is None and contact_name:
+            contact = PropertyContact(property_id=prop.id, contact_name=contact_name, phone="")
+            session.add(contact)
         if contact is not None:
             if contact_name:
                 contact.contact_name = contact_name
@@ -250,9 +248,6 @@ def history_payload(
             select(ServiceRequest).where(ServiceRequest.id.in_(request_ids))
         ).scalars()
     } if request_ids else {}
-    problems_by_code = {
-        row.code: row for row in session.execute(select(ProblemType)).scalars()
-    }
     technician_ids = {record.technician_id for record in records if record.technician_id}
     technicians = (
         {
@@ -271,7 +266,6 @@ def history_payload(
     for record in records:
         category = categories.get(record.category_code)
         request_row = request_rows.get(record.request_id)
-        problem = problems_by_code.get(record.problem_code or "")
         if record.price is not None and record.is_completed:
             total_spent += Decimal(record.price)
         if record.is_completed:

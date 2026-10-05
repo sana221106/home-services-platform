@@ -50,7 +50,7 @@ class Page(BaseModel, Generic[T]):
     @classmethod
     def build(
         cls, items: list[T], *, total: int, page: int, per_page: int
-    ) -> "Page[T]":
+    ) -> Page[T]:
         total_pages = (total + per_page - 1) // per_page if per_page else 0
         return cls(
             items=items,

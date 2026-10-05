@@ -33,7 +33,7 @@ os.environ.setdefault("STORAGE_ROOT", "./var/test-storage")
 # be hermetic, so Supabase Storage is switched off here and the opt-in live
 # integration test re-enables it via an explicit marker/flag.
 # Opt in with SUPABASE_LIVE_STORAGE_TEST=1 to run the real bucket tests.
-_LIVE_STORAGE = os.environ.get("SUPABASE_LIVE_STORAGE_TEST", "").lower() in {
+_LIVE_STORAGE = os.environ.get("SUPABASE_LIVE_STORAGE_TEST", "").strip().lower() in {
     "1",
     "true",
     "yes",
@@ -59,10 +59,10 @@ from app.db.models import (  # noqa: E402
     CustomerProfile,
     OtpChallenge,
     Payment,
-    RequestMedia,
     PricingRule,
     ProblemType,
     Property,
+    RequestMedia,
     Role,
     RolePermission,
     ServiceCategory,

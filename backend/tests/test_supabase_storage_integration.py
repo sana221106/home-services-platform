@@ -30,7 +30,11 @@ pytestmark = [
     pytest.mark.filterwarnings("ignore::DeprecationWarning"),
 ]
 
-LIVE = bool(settings.supabase_url and settings.supabase_service_role_key)
+# Truthiness on the fields themselves is not enough: SecretStr("") is a
+# non-empty-looking value that pydantic-settings happily builds when
+# conftest blanks the variables for a hermetic run. ``supabase_configured`` is
+# the non-empty check both fields should be gated on.
+LIVE = settings.supabase_configured
 
 pytestmark.append(
     pytest.mark.skipif(

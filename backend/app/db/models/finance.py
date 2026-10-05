@@ -9,6 +9,7 @@ from __future__ import annotations
 import uuid
 from datetime import datetime
 from decimal import Decimal
+from typing import TYPE_CHECKING
 
 from sqlalchemy import (
     Boolean,
@@ -31,12 +32,15 @@ from app.core.enums import (
     RefundStatus,
 )
 from app.db.base import (
-    Base,
     GUID,
+    Base,
     TimestampMixin,
     UUIDPrimaryKeyMixin,
     enum_column,
 )
+
+if TYPE_CHECKING:  # pragma: no cover - import cycle broken for type checkers only
+    from app.db.models.requests import ServiceRequest
 
 
 class Payment(UUIDPrimaryKeyMixin, TimestampMixin, Base):
@@ -68,7 +72,7 @@ class Payment(UUIDPrimaryKeyMixin, TimestampMixin, Base):
     )
     notes: Mapped[str | None] = mapped_column(Text)
 
-    request: Mapped["ServiceRequest"] = relationship()  # noqa: F821
+    request: Mapped[ServiceRequest] = relationship()  # noqa: F821
     proofs: Mapped[list[PaymentProof]] = relationship(
         back_populates="payment", cascade="all, delete-orphan"
     )
@@ -111,7 +115,7 @@ class Deposit(UUIDPrimaryKeyMixin, TimestampMixin, Base):
         enum_column(DepositStatus), default=DepositStatus.PENDING, nullable=False, index=True
     )
     policy_id: Mapped[uuid.UUID | None] = mapped_column(
-        GUID(), ForeignKey("cancellation_policies.id", ondelete="SET NULL")
+        GUID(), ForeignKey("cancellation_policies.id", ondelete="SET NULL"), index=True
     )
     due_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True))
 
@@ -130,7 +134,7 @@ class Refund(UUIDPrimaryKeyMixin, TimestampMixin, Base):
         enum_column(RefundStatus), default=RefundStatus.PENDING, nullable=False, index=True
     )
     policy_id: Mapped[uuid.UUID | None] = mapped_column(
-        GUID(), ForeignKey("cancellation_policies.id", ondelete="SET NULL")
+        GUID(), ForeignKey("cancellation_policies.id", ondelete="SET NULL"), index=True
     )
     requested_by_id: Mapped[uuid.UUID | None] = mapped_column(GUID())
     approved_by_id: Mapped[uuid.UUID | None] = mapped_column(GUID())
@@ -176,7 +180,7 @@ class Invoice(UUIDPrimaryKeyMixin, TimestampMixin, Base):
     total: Mapped[Decimal] = mapped_column(Numeric(10, 2), default=Decimal("0"))
     issued_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), nullable=False)
     quote_id: Mapped[uuid.UUID | None] = mapped_column(
-        GUID(), ForeignKey("quotes.id", ondelete="SET NULL")
+        GUID(), ForeignKey("quotes.id", ondelete="SET NULL"), index=True
     )
 
 
@@ -185,14 +189,14 @@ class Receipt(UUIDPrimaryKeyMixin, TimestampMixin, Base):
 
     number: Mapped[str] = mapped_column(String(40), unique=True, nullable=False)
     invoice_id: Mapped[uuid.UUID | None] = mapped_column(
-        GUID(), ForeignKey("invoices.id", ondelete="SET NULL")
+        GUID(), ForeignKey("invoices.id", ondelete="SET NULL"), index=True
     )
     payment_id: Mapped[uuid.UUID | None] = mapped_column(
-        GUID(), ForeignKey("payments.id", ondelete="SET NULL")
+        GUID(), ForeignKey("payments.id", ondelete="SET NULL"), index=True
     )
     amount: Mapped[Decimal] = mapped_column(Numeric(10, 2), nullable=False)
     issued_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), nullable=False)
     issued_to_customer_id: Mapped[uuid.UUID | None] = mapped_column(
-        GUID(), ForeignKey("customer_profiles.id", ondelete="SET NULL")
+        GUID(), ForeignKey("customer_profiles.id", ondelete="SET NULL"), index=True
     )
     receipt_number: Mapped[str | None] = mapped_column(String(80))
