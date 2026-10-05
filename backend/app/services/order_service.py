@@ -8,11 +8,11 @@ brain (§138, §140).
 from __future__ import annotations
 
 import uuid
-from datetime import datetime, timedelta
+from datetime import timedelta
 from decimal import Decimal
 from typing import Any
 
-from sqlalchemy import select, update
+from sqlalchemy import func, select, update
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy.orm import Session
 
@@ -24,11 +24,10 @@ from app.core.enums import (
     RequestStatus,
     Urgency,
 )
-from app.core.exceptions import ConflictError, NotFoundError, ValidationError
+from app.core.exceptions import ConflictError, NotFoundError
 from app.core.logging import get_logger
 from app.db.models.finance import Cancellation
 from app.db.models.intelligence import MaintenanceRecord
-from app.db.models.quotes import Quote
 from app.db.models.requests import ServiceRequest
 from app.db.models.support import Complaint
 from app.db.models.workforce import Assignment, Technician
@@ -239,9 +238,12 @@ def update_assignment_status(
     if target == AssignmentStatus.ARRIVED:
         assignment.actual_arrival = now
         technician = session.get(Technician, assignment.technician_id)
-        if technician is not None and assignment.expected_arrival_end is not None:
-            if assignment.expected_arrival_end < now:
-                technician.late_arrivals += 1
+        if (
+            technician is not None
+            and assignment.expected_arrival_end is not None
+            and assignment.expected_arrival_end < now
+        ):
+            technician.late_arrivals += 1
     if target == AssignmentStatus.IN_PROGRESS:
         assignment.work_started_at = now
     if target == AssignmentStatus.COMPLETED:
@@ -337,10 +339,15 @@ def _write_maintenance_record(
     )
 
     group_key = f"{request.property_id}:{request.category_id}:{problem.code if problem else 'general'}"
+    # A SELECT Result has no .rowcount (that attribute lives on DML cursors, and
+    # would be -1 here anyway), so this raised AttributeError on every completed
+    # request. Count with an aggregate instead.
     occurrence = int(
         session.execute(
-            select(MaintenanceRecord.id).where(MaintenanceRecord.recurrence_group_key == group_key)
-        ).rowcount
+            select(func.count(MaintenanceRecord.id)).where(
+                MaintenanceRecord.recurrence_group_key == group_key
+            )
+        ).scalar_one()
         or 0
     )
 

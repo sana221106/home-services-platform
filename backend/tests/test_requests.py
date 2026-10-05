@@ -8,7 +8,6 @@ out-of-coverage addresses, IDOR).
 from __future__ import annotations
 
 import uuid
-from datetime import timedelta
 from decimal import Decimal
 
 import pytest

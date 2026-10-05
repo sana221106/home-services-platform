@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import uuid
 from datetime import datetime
+from typing import TYPE_CHECKING
 
 from sqlalchemy import (
     Boolean,
@@ -17,7 +18,10 @@ from sqlalchemy import (
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from app.core.enums import StaffRole
-from app.db.base import Base, GUID, SoftDeleteMixin, TimestampMixin, UUIDPrimaryKeyMixin
+from app.db.base import GUID, Base, SoftDeleteMixin, TimestampMixin, UUIDPrimaryKeyMixin
+
+if TYPE_CHECKING:  # pragma: no cover - import cycle broken for type checkers only
+    from app.db.models.properties import Property
 
 
 class User(UUIDPrimaryKeyMixin, TimestampMixin, Base):
@@ -54,7 +58,7 @@ class CustomerProfile(UUIDPrimaryKeyMixin, TimestampMixin, SoftDeleteMixin, Base
     preferred_language: Mapped[str] = mapped_column(String(8), default="ar", nullable=False)
 
     user: Mapped[User] = relationship(back_populates="customer_profile")
-    properties: Mapped[list["Property"]] = relationship(  # noqa: F821
+    properties: Mapped[list[Property]] = relationship(  # noqa: F821
         back_populates="owner", cascade="all, delete-orphan"
     )
 
@@ -111,7 +115,7 @@ class RolePermission(Base):
         GUID(), ForeignKey("roles.id", ondelete="CASCADE"), primary_key=True
     )
     permission_id: Mapped[uuid.UUID] = mapped_column(
-        GUID(), ForeignKey("permissions.id", ondelete="CASCADE"), primary_key=True
+        GUID(), ForeignKey("permissions.id", ondelete="CASCADE"), primary_key=True, index=True
     )
 
     role: Mapped[Role] = relationship(back_populates="permissions")
@@ -125,7 +129,7 @@ class StaffRoleAssignment(UUIDPrimaryKeyMixin, TimestampMixin, Base):
         GUID(), ForeignKey("staff_users.id", ondelete="CASCADE"), nullable=False
     )
     role_id: Mapped[uuid.UUID] = mapped_column(
-        GUID(), ForeignKey("roles.id", ondelete="CASCADE"), nullable=False
+        GUID(), ForeignKey("roles.id", ondelete="CASCADE"), nullable=False, index=True
     )
 
     staff: Mapped[StaffUser] = relationship(back_populates="roles")

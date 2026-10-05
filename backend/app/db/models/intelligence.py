@@ -10,19 +10,19 @@ from decimal import Decimal
 from sqlalchemy import (
     Boolean,
     DateTime,
-    func,
     ForeignKey,
     Index,
     Integer,
     Numeric,
     String,
     Text,
+    func,
 )
 from sqlalchemy.orm import Mapped, mapped_column
 
 from app.db.base import (
-    Base,
     GUID,
+    Base,
     JSONType,
     TimestampMixin,
     UUIDPrimaryKeyMixin,
@@ -143,7 +143,7 @@ class MaintenanceRecord(UUIDPrimaryKeyMixin, TimestampMixin, Base):
     recurrence_group_key: Mapped[str | None] = mapped_column(String(96), index=True)
     recurrence_index: Mapped[int] = mapped_column(Integer, default=1, nullable=False)
     related_request_id: Mapped[uuid.UUID | None] = mapped_column(
-        GUID(), ForeignKey("service_requests.id", ondelete="SET NULL")
+        GUID(), ForeignKey("service_requests.id", ondelete="SET NULL"), index=True
     )
 
     __table_args__ = (

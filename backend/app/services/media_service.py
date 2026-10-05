@@ -33,7 +33,9 @@ WEBP_TAG = b"WEBP"
 
 _JPEG_SOF_MARKERS = frozenset(range(0xC0, 0xD0)) - {0xC4, 0xC8, 0xCC}
 
-_EXTENSION_BY_FORMAT: dict[str, str] = {
+# Public: three call sites referenced the un-prefixed name, so extension checks
+# on upload raised NameError instead of validating anything.
+EXTENSION_BY_FORMAT: dict[str, str] = {
     "jpeg": ".jpg",
     "png": ".png",
     "webp": ".webp",

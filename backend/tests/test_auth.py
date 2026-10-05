@@ -17,7 +17,6 @@ from tests.conftest import (
     staff_token,
 )
 
-
 # ------------------------------------------------------------------ OTP login
 
 

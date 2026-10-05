@@ -262,7 +262,7 @@ class MaintenanceRecordCreate(BaseModel):
         return value
 
     @model_validator(mode="after")
-    def _check_numbers(self) -> "MaintenanceRecordCreate":
+    def _check_numbers(self) -> MaintenanceRecordCreate:
         if self.recurrence_index < 1:
             raise ValueError("recurrence_index must be >= 1")
         return self

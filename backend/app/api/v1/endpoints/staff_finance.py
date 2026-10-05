@@ -12,10 +12,9 @@ from typing import Annotated
 from fastapi import APIRouter, Depends, Query
 from sqlalchemy import select
 
-from app.api.dependencies import DbSession, require
+from app.api.dependencies import AuthenticatedStaff, DbSession, require
 from app.core.enums import Permission
 from app.db.models.finance import Payment
-from app.schemas.common import MessageResponse
 from app.schemas.finance import (
     AdminRecordPaymentRequest,
     AdminVerifyPaymentRequest,
@@ -28,10 +27,10 @@ from app.services import audit_service, payment_service, request_service
 
 router = APIRouter(prefix="/staff", tags=["staff-finance"])
 
-ReadGuard = Annotated[..., Depends(require(Permission.PAYMENT_READ))]
-RecordGuard = Annotated[..., Depends(require(Permission.PAYMENT_RECORD))]
-VerifyGuard = Annotated[..., Depends(require(Permission.PAYMENT_VERIFY))]
-RefundApproveGuard = Annotated[..., Depends(require(Permission.REFUND_APPROVE))]
+ReadGuard = Annotated[AuthenticatedStaff, Depends(require(Permission.PAYMENT_READ))]
+RecordGuard = Annotated[AuthenticatedStaff, Depends(require(Permission.PAYMENT_RECORD))]
+VerifyGuard = Annotated[AuthenticatedStaff, Depends(require(Permission.PAYMENT_VERIFY))]
+RefundApproveGuard = Annotated[AuthenticatedStaff, Depends(require(Permission.REFUND_APPROVE))]
 
 
 @router.get(

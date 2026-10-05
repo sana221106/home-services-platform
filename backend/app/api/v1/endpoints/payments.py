@@ -95,6 +95,7 @@ def submit_payment(
     payment = payment_service.submit_customer_payment(
         db,
         request=request,
+        customer_id=customer.profile.id,
         method=payload.method,
         amount=payload.amount,
         reference_number=payload.reference_number,

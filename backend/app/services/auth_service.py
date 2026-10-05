@@ -330,7 +330,7 @@ def authenticate_staff(
         subject=str(staff.user.id),
         roles=roles,
         permissions=tuple(sorted(permissions)),
-        staff_id=str(staff.staff.id),
+        staff_id=str(staff.id),
     )
     refresh_token = token_service.create_refresh_token(subject=str(staff.user.id))
     session.add(

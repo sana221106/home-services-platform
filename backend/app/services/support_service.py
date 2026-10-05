@@ -3,11 +3,13 @@
 from __future__ import annotations
 
 import uuid
+from decimal import Decimal
 from typing import Any
 
 from sqlalchemy import func, select
 from sqlalchemy.orm import Session
 
+from app.core.enums import ReviewStatus
 from app.core.exceptions import NotFoundError, ValidationError
 from app.db.models.requests import ServiceRequest
 from app.db.models.support import (
@@ -21,9 +23,6 @@ from app.schemas.support import (
     SendMessageRequest,
     StartConversationRequest,
 )
-
-from app.services import notification_service
-
 
 # ------------------------------------------------------------------ chat
 
@@ -107,7 +106,11 @@ def messages(
     )
     grouped: dict[uuid.UUID, list[str]] = {}
     for item in attachments:
-        grouped.setdefault(item.message_id, []).append(item.storage_path)
+        # Authorised API routes, never the raw storage path: a path carries the
+        # bucket plus customer/conversation/attachment UUIDs (§79).
+        grouped.setdefault(item.message_id, []).append(
+            f"/api/v1/media/message-attachments/{item.id}/content"
+        )
     return [
         {
             "id": row.id,
@@ -188,23 +191,32 @@ def send_message(
         sent_at=now_utc(),
     )
     if payload.latitude is not None and payload.longitude is not None:
-        message.latitude = payload.latitude
-        message.longitude = payload.longitude
+        # The columns are Numeric(9, 6); round-tripping through Decimal keeps the
+        # stored scale identical to the schema instead of relying on the driver.
+        message.latitude = Decimal(str(round(payload.latitude, 6)))
+        message.longitude = Decimal(str(round(payload.longitude, 6)))
     session.add(message)
     session.flush()
 
     for attachment_id in payload.attachment_ids:
+        # message_attachments has no customer_id or conversation_id of its own,
+        # so ownership is proven by walking attachment -> message -> conversation.
         owned = session.execute(
-            select(MessageAttachment.id).where(
+            select(MessageAttachment.id)
+            .join(Message, Message.id == MessageAttachment.message_id)
+            .join(Conversation, Conversation.id == Message.conversation_id)
+            .where(
                 MessageAttachment.id == attachment_id,
-                MessageAttachment.customer_id == customer_id,
+                Conversation.customer_id == customer_id,
             )
         ).scalar_one_or_none()
         if owned is None:
             raise NotFoundError("Attachment not found.")
-        attachment = session.get(MessageAttachment, attachment_id)
+        # Ownership is already proven above, so this fetch cannot come back empty.
+        attachment = session.execute(
+            select(MessageAttachment).where(MessageAttachment.id == attachment_id)
+        ).scalar_one()
         attachment.message_id = message.id
-        attachment.conversation_id = conversation.id
 
     from app.utils.time import now_utc
 
@@ -228,8 +240,10 @@ def mark_conversation_read(
     )
     from app.utils.time import now_utc
 
+    # ``Message`` tracks read state with read_at only; there is no is_read
+    # column, so assigning one silently created a dead attribute that was never
+    # persisted. The query above already selects only read_at IS NULL rows.
     for row in rows:
-        row.is_read = True
         row.read_at = now_utc()
     session.flush()
 
@@ -238,16 +252,14 @@ def close_conversation(
     session: Session, *, conversation: Conversation, customer_id: uuid.UUID
 ) -> Conversation:
     _assert_customer(session, conversation=conversation, customer_id=customer_id)
-    conversation.is_open = False
-    conversation.closed_at = _now()
-    session.flush()
-    return conversation
-
-
-def _now():  # noqa: ANN202
+    # Closing is recorded as is_open=False plus last_message_at; Conversation has
+    # no closed_at column. Keep the timestamp bump so "last activity" stays true.
     from app.utils.time import now_utc
 
-    return now_utc()
+    conversation.is_open = False
+    conversation.last_message_at = now_utc()
+    session.flush()
+    return conversation
 
 
 def unread_chat_count(session: Session, *, customer_id: uuid.UUID) -> int:
@@ -279,10 +291,17 @@ def log_call(
     notes: str | None,
     next_follow_up_at=None,  # noqa: ANN001
 ) -> SupportCallLog:
+    # SupportCallLog names the agent FK agent_id, not staff_id; passing staff_id
+    # raised TypeError, so no call was ever logged.
+    from app.utils.time import now_utc
+
+    # called_at has no server default and is NOT NULL: leaving it unset raised
+    # IntegrityError on insert, so the call log could not be written at all.
     call = SupportCallLog(
         customer_id=customer_id,
         request_id=request_id,
-        staff_id=staff_id,
+        agent_id=staff_id,
+        called_at=now_utc(),
         direction=direction,
         outcome=outcome,
         duration_seconds=duration_seconds,
@@ -337,17 +356,21 @@ def create_review(
     if existing is not None:
         existing.rating = rating
         existing.text = text
-        existing.has_image = existing.has_image or has_image
         session.flush()
         return existing
 
+    # ``Review`` stores an optional image path, not a boolean flag, so passing
+    # has_image raised TypeError and no review could ever be created. There is
+    # no review-image upload route in this build, so image_storage_path stays
+    # NULL and has_image is recorded nowhere: it is an unreferenced client flag,
+    # kept in the signature for schema compatibility only.
     review = Review(
         request_id=request_id,
         customer_id=customer_id,
         rating=rating,
         text=text,
-        has_image=has_image,
-        publication_status="PENDING",
+        image_storage_path=None,
+        publication_status=ReviewStatus.PENDING,
     )
     session.add(review)
     session.flush()

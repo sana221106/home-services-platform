@@ -14,7 +14,6 @@ from app.core.enums import (
     ReviewStatus,
 )
 
-
 # ----------------------------------------------------------------- complaints
 
 

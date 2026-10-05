@@ -35,7 +35,7 @@ class VerifyOtpRequest(BaseModel):
 class TokenPair(BaseModel):
     access_token: str
     refresh_token: str
-    token_type: str = "Bearer"
+    token_type: str = "Bearer"  # noqa: S105 - RFC 6750 scheme, not a secret
     expires_in: int
     expires_at: datetime
 

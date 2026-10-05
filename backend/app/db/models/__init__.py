@@ -67,8 +67,8 @@ from app.db.models.support import (
     SupportCallLog,
 )
 from app.db.models.workforce import (
-    Assignment,
     Appointment,
+    Assignment,
     Technician,
     TechnicianAvailability,
     TechnicianSkill,

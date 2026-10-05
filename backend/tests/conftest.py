@@ -26,6 +26,25 @@ os.environ.setdefault("SUPABASE_AUTH_ENABLED", "false")
 os.environ.setdefault("JWT_SECRET", "test-secret-not-for-production-at-all")
 os.environ.setdefault("STORAGE_ROOT", "./var/test-storage")
 
+# These are assigned, not setdefault: a developer's real ``backend/.env`` sets
+# SUPABASE_URL and SUPABASE_SERVICE_ROLE_KEY, and pydantic-settings reads that
+# file. Left alone, `settings.supabase_configured` becomes true and the suite
+# starts writing to live private buckets instead of ``STORAGE_ROOT``. Tests must
+# be hermetic, so Supabase Storage is switched off here and the opt-in live
+# integration test re-enables it via an explicit marker/flag.
+# Opt in with SUPABASE_LIVE_STORAGE_TEST=1 to run the real bucket tests.
+_LIVE_STORAGE = os.environ.get("SUPABASE_LIVE_STORAGE_TEST", "").strip().lower() in {
+    "1",
+    "true",
+    "yes",
+}
+if not _LIVE_STORAGE:
+    os.environ["SUPABASE_URL"] = ""
+    os.environ["SUPABASE_SERVICE_ROLE_KEY"] = ""
+    os.environ["SUPABASE_PUBLISHABLE_KEY"] = ""
+    os.environ["SUPABASE_ANON_KEY"] = ""
+os.environ["FIREBASE_ENABLED"] = "false"
+
 from fastapi.testclient import TestClient  # noqa: E402
 from sqlalchemy import create_engine  # noqa: E402
 from sqlalchemy.orm import Session  # noqa: E402
@@ -40,10 +59,10 @@ from app.db.models import (  # noqa: E402
     CustomerProfile,
     OtpChallenge,
     Payment,
-    RequestMedia,
     PricingRule,
     ProblemType,
     Property,
+    RequestMedia,
     Role,
     RolePermission,
     ServiceCategory,

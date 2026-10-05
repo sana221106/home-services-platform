@@ -24,7 +24,6 @@ from app.core.enums import (
 from app.core.exceptions import (
     ConflictError,
     CoverageError,
-    DomainError,
     NotFoundError,
     ValidationError,
 )
@@ -617,13 +616,14 @@ def add_media(
         extension=validated.extension,
         media_id=media_id,
     )
-    make_storage_client().write(path, validated.content)
+    storage = make_storage_client()
+    storage.write(path, validated.content)
 
     media = RequestMedia(
         id=media_id,
         request_id=request.id,
         storage_path=path,
-        storage_provider="local",
+        storage_provider=storage.provider,
         mime_type=validated.mime_type,
         size_bytes=validated.size_bytes,
         width=validated.width,
@@ -754,7 +754,7 @@ def request_counts_by_status(
     return {RequestStatus(status): int(count) for status, count in rows}
 
 
-def requests_needing_follow_up(session: Session, *, since: datetime) -> Select[tuple[Any]]:
+def requests_needing_follow_up(session: Session, *, since: datetime) -> Select[ServiceRequest]:
     """Funnel-stall detector for the call centre (§74)."""
     return (
         select(ServiceRequest)

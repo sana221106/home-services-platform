@@ -15,9 +15,9 @@ from __future__ import annotations
 import uuid
 from datetime import datetime, timedelta
 from decimal import Decimal
-from typing import Any
+from typing import Any, cast
 
-from sqlalchemy import select, update
+from sqlalchemy import CursorResult, select, update
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy.orm import Session
 
@@ -419,13 +419,16 @@ def expire_stale_quotes(session: Session, *, at: datetime | None = None) -> int:
     """Called by the worker. Expired quotes are terminal for the customer but
     the revision row is preserved for audit."""
     moment = at or now_utc()
+    # UPDATE returns a CursorResult; the plain Result annotation hides rowcount.
     result = session.execute(
         update(Quote)
         .where(Quote.status == QuoteStatus.SENT, Quote.expires_at.is_not(None), Quote.expires_at <= moment)
         .values(status=QuoteStatus.EXPIRED)
     )
     session.commit()
-    return int(result.rowcount or 0)
+    # UPDATE via the ORM connection is a CursorResult at runtime; the annotation
+    # is widened only at the call site because Session.execute is overloaded.
+    return int(cast("CursorResult[Any]", result).rowcount or 0)
 
 
 def assert_quote_actionable(quote: Quote | None) -> Quote:

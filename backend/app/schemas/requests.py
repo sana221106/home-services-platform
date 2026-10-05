@@ -42,7 +42,7 @@ class AddressSnapshotPayload(BaseModel):
     contact_phone: str | None = Field(default=None, max_length=32)
 
     @model_validator(mode="after")
-    def _require_contact_phone_if_named(self) -> "AddressSnapshotPayload":
+    def _require_contact_phone_if_named(self) -> AddressSnapshotPayload:
         if self.contact_name and not self.contact_phone:
             raise ValueError("contact_phone is required when contact_name is provided")
         return self
@@ -90,7 +90,7 @@ class AnnotationPayload(BaseModel):
     note: str | None = Field(default=None, max_length=255)
 
     @model_validator(mode="after")
-    def _validate_normalised(self) -> "AnnotationPayload":
+    def _validate_normalised(self) -> AnnotationPayload:
         geometry = self.geometry
         for axis in ("x", "y"):
             if axis in geometry:

@@ -12,7 +12,7 @@ import uuid
 from datetime import date, datetime, time, timedelta
 from typing import Any
 
-from sqlalchemy import Select, func, select
+from sqlalchemy import func, select
 from sqlalchemy.orm import Session, selectinload
 
 from app.core.enums import AssignmentStatus, RequestStatus, TechnicianStatus
@@ -104,7 +104,10 @@ def score_candidates(
     ).scalar_one_or_none()
     zone_id = area.zone_id if area is not None else None
 
-    stmt: Select[tuple[Technician]] = (
+    # No explicit Select[...] annotation: SQLAlchemy 2 types ``select(Entity)`` as
+    # Select[Entity], and a mismatched annotation made .scalars() look like it
+    # returned tuples.
+    stmt = (
         select(Technician)
         .options(
             selectinload(Technician.skills),

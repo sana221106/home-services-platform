@@ -22,12 +22,14 @@ from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from app.core.enums import AssignmentStatus, TechnicianStatus
 from app.db.base import (
-    Base,
     GUID,
+    Base,
     TimestampMixin,
     UUIDPrimaryKeyMixin,
     enum_column,
 )
+from app.db.models.catalog import CoverageZone
+from app.db.models.requests import ServiceRequest
 
 
 class Technician(UUIDPrimaryKeyMixin, TimestampMixin, Base):
@@ -41,7 +43,7 @@ class Technician(UUIDPrimaryKeyMixin, TimestampMixin, Base):
         enum_column(TechnicianStatus), default=TechnicianStatus.ACTIVE, nullable=False
     )
     base_zone_id: Mapped[uuid.UUID | None] = mapped_column(
-        GUID(), ForeignKey("coverage_zones.id", ondelete="SET NULL")
+        GUID(), ForeignKey("coverage_zones.id", ondelete="SET NULL"), index=True
     )
     notes: Mapped[str | None] = mapped_column(Text)
     hire_date: Mapped[datetime | None] = mapped_column(Date)
@@ -94,7 +96,7 @@ class TechnicianZone(UUIDPrimaryKeyMixin, TimestampMixin, Base):
     )
 
     technician: Mapped[Technician] = relationship(back_populates="zones")
-    zone: Mapped["CoverageZone"] = relationship(back_populates="technician_zones")  # noqa: F821
+    zone: Mapped[CoverageZone] = relationship(back_populates="technician_zones")
 
     __table_args__ = (
         UniqueConstraint("technician_id", "zone_id", name="uq_technician_zones_tech_zone"),
@@ -148,7 +150,7 @@ class Assignment(UUIDPrimaryKeyMixin, TimestampMixin, Base):
     cancelled_reason: Mapped[str | None] = mapped_column(String(255))
     internal_notes: Mapped[str | None] = mapped_column(Text)
 
-    request: Mapped["ServiceRequest"] = relationship(back_populates="assignments")  # noqa: F821
+    request: Mapped[ServiceRequest] = relationship(back_populates="assignments")
     technician: Mapped[Technician] = relationship()
 
     __table_args__ = (
@@ -164,7 +166,7 @@ class Appointment(UUIDPrimaryKeyMixin, TimestampMixin, Base):
         GUID(), ForeignKey("service_requests.id", ondelete="CASCADE"), nullable=False, index=True
     )
     assignment_id: Mapped[uuid.UUID | None] = mapped_column(
-        GUID(), ForeignKey("assignments.id", ondelete="SET NULL")
+        GUID(), ForeignKey("assignments.id", ondelete="SET NULL"), index=True
     )
     scheduled_start: Mapped[datetime] = mapped_column(DateTime(timezone=True), nullable=False)
     scheduled_end: Mapped[datetime] = mapped_column(DateTime(timezone=True), nullable=False)

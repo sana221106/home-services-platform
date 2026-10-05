@@ -10,25 +10,19 @@ from pydantic import BaseModel, ConfigDict, Field
 
 from app.core.enums import (
     AuditAction,
-    InspectionStatus,
-    PaymentStatus,
-    QuoteStatus,
     RequestStatus,
     TechnicianStatus,
     Urgency,
 )
-
-from app.schemas.catalog import PropertyResponse, ServiceCategoryResponse
+from app.schemas.catalog import PropertyResponse
 from app.schemas.finance import PaymentSummaryResponse
 from app.schemas.orders import AssignmentResponse
-from app.schemas.support import ComplaintResponse, ReviewResponse
 from app.schemas.requests import (
     AddressSnapshotPayload,
-    CancellationPreviewResponse,
-    CreateQuoteRequest,
     QuoteResponse,
     RequestMediaResponse,
 )
+from app.schemas.support import ComplaintResponse, ReviewResponse
 
 
 class AdminRequestListItem(BaseModel):
@@ -62,7 +56,7 @@ class AdminRequestDetail(AdminRequestListItem):
     complaint: ComplaintResponse | None = None
     payments: list[PaymentSummaryResponse] = Field(default_factory=list)
     internal_notes: list[str] = Field(default_factory=list)
-    ai_suggestion: "AiSuggestionSummary | None" = None
+    ai_suggestion: AiSuggestionSummary | None = None
     funnels: dict[str, str | None] = Field(default_factory=dict)
 
 

@@ -66,6 +66,12 @@ def get_current_staff(
 
 CurrentStaff = Annotated[auth_service.AuthenticatedStaff, Depends(get_current_staff)]
 
+# Permission guards are `Annotated[AuthenticatedStaff, Depends(require(...))]`.
+# Using `Annotated[..., ...]` instead works at runtime but leaves the injected
+# parameter untyped, which defeats FastAPI's parameter inference for tooling and
+# is rejected by mypy. This alias is the first argument those guards need.
+AuthenticatedStaff = auth_service.AuthenticatedStaff
+
 
 def require(*permissions: Permission) -> Callable[[auth_service.AuthenticatedStaff], auth_service.AuthenticatedStaff]:
     """Guard factory. Super admin bypasses; everyone else needs every listed

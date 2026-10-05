@@ -11,7 +11,7 @@ from datetime import datetime
 from decimal import Decimal
 from typing import Any
 
-from sqlalchemy import Integer, Select, cast, func, select
+from sqlalchemy import Integer, ScalarSelect, func, select
 from sqlalchemy.orm import Session
 
 from app.core.enums import PaymentStatus, RequestStatus, Urgency
@@ -98,7 +98,8 @@ def record_event(
     return event
 
 
-def _stage_stmt(stage: str) -> Select[tuple[int]]:
+def _stage_stmt(stage: str) -> ScalarSelect[int]:
+    """A correlated scalar subquery, not a Select, despite the select() call."""
     return (
         select(func.count(func.distinct(AnalyticsEvent.request_id)))
         .where(

@@ -8,10 +8,11 @@ from typing import Annotated
 from fastapi import APIRouter, Depends, Query
 from sqlalchemy import select
 
-from app.api.dependencies import DbSession, require
+from app.api.dependencies import AuthenticatedStaff, DbSession, require
 from app.core.enums import ComplaintStatus, Permission, ReviewStatus
+from app.db.models.identity import CustomerProfile
 from app.db.models.support import Complaint, Review
-from app.schemas.common import MessageResponse, Page
+from app.schemas.common import Page
 from app.schemas.support import (
     ComplaintAssignRequest,
     ComplaintResolveRequest,
@@ -22,18 +23,17 @@ from app.schemas.support import (
     ReviewResponse,
 )
 from app.services import audit_service, complaint_service, support_service
-from app.db.models.identity import CustomerProfile
 
 router = APIRouter(prefix="/staff", tags=["staff-support"])
 
-ComplaintReadGuard = Annotated[..., Depends(require(Permission.COMPLAINT_READ))]
-ComplaintWriteGuard = Annotated[..., Depends(require(Permission.COMPLAINT_WRITE))]
-ComplaintAssignGuard = Annotated[..., Depends(require(Permission.COMPLAINT_ASSIGN))]
-ComplaintResolveGuard = Annotated[..., Depends(require(Permission.COMPLAINT_RESOLVE))]
-ReviewGuard = Annotated[..., Depends(require(Permission.REVIEW_MODERATE))]
-ChatReadGuard = Annotated[..., Depends(require(Permission.CHAT_READ))]
-ChatSendGuard = Annotated[..., Depends(require(Permission.CHAT_SEND))]
-CallLogGuard = Annotated[..., Depends(require(Permission.CALL_LOG_WRITE))]
+ComplaintReadGuard = Annotated[AuthenticatedStaff, Depends(require(Permission.COMPLAINT_READ))]
+ComplaintWriteGuard = Annotated[AuthenticatedStaff, Depends(require(Permission.COMPLAINT_WRITE))]
+ComplaintAssignGuard = Annotated[AuthenticatedStaff, Depends(require(Permission.COMPLAINT_ASSIGN))]
+ComplaintResolveGuard = Annotated[AuthenticatedStaff, Depends(require(Permission.COMPLAINT_RESOLVE))]
+ReviewGuard = Annotated[AuthenticatedStaff, Depends(require(Permission.REVIEW_MODERATE))]
+ChatReadGuard = Annotated[AuthenticatedStaff, Depends(require(Permission.CHAT_READ))]
+ChatSendGuard = Annotated[AuthenticatedStaff, Depends(require(Permission.CHAT_SEND))]
+CallLogGuard = Annotated[AuthenticatedStaff, Depends(require(Permission.CALL_LOG_WRITE))]
 
 
 @router.get(
@@ -237,24 +237,28 @@ def reply_to_customer(
     db: DbSession,
     staff: ChatSendGuard,
 ) -> dict:
-    from app.db.models.support import Conversation, Message as MessageModel
+    from app.db.models.support import Conversation
+    from app.db.models.support import Message as MessageModel
 
     conversation = db.get(Conversation, conversation_id)
     if conversation is None:
         from app.core.exceptions import NotFoundError
 
         raise NotFoundError("Conversation not found.")
-    message = MessageModel(
-        conversation_id=conversation.id,
-        request_id=conversation.request_id,
-        sender_type="staff",
-        sender_staff_id=staff.staff.id,
-        body=str(body.get("body", ""))[:4000],
-        is_read=False,
-    )
-    db.add(message)
     from app.utils.time import now_utc
 
+    # ``Message`` has no request_id/is_read/sender_staff_id columns: the request
+    # is reachable through the conversation, staff identity lives in sender_id
+    # alongside sender_type, and read state is read_at (NULL until the customer
+    # opens it). Passing the old names raised TypeError on every staff reply.
+    message = MessageModel(
+        conversation_id=conversation.id,
+        sender_type="staff",
+        sender_id=staff.staff.id,
+        body=str(body.get("body", ""))[:4000],
+        sent_at=now_utc(),
+    )
+    db.add(message)
     conversation.last_message_at = now_utc()
     db.commit()
     return {"id": str(message.id), "sent_at": message.sent_at}

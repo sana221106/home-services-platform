@@ -4,11 +4,15 @@ from __future__ import annotations
 
 import uuid
 from decimal import Decimal
+from typing import TYPE_CHECKING
 
 from sqlalchemy import Boolean, ForeignKey, Index, Numeric, String, Text
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
-from app.db.base import Base, GUID, SoftDeleteMixin, TimestampMixin, UUIDPrimaryKeyMixin
+from app.db.base import GUID, Base, SoftDeleteMixin, TimestampMixin, UUIDPrimaryKeyMixin
+
+if TYPE_CHECKING:  # pragma: no cover - import cycle broken for type checkers only
+    from app.db.models.identity import CustomerProfile
 
 
 class Property(UUIDPrimaryKeyMixin, TimestampMixin, SoftDeleteMixin, Base):
@@ -33,7 +37,7 @@ class Property(UUIDPrimaryKeyMixin, TimestampMixin, SoftDeleteMixin, Base):
     latitude: Mapped[Decimal | None] = mapped_column(Numeric(9, 6))
     longitude: Mapped[Decimal | None] = mapped_column(Numeric(9, 6))
 
-    owner: Mapped["CustomerProfile"] = relationship(  # noqa: F821
+    owner: Mapped[CustomerProfile] = relationship(  # noqa: F821
         back_populates="properties"
     )
     contacts: Mapped[list[PropertyContact]] = relationship(

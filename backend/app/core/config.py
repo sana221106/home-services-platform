@@ -8,12 +8,17 @@ starts and serves the vertical slice without Supabase/Firebase/AI credentials.
 from __future__ import annotations
 
 import functools
-from typing import Literal
+from typing import Annotated, Literal
+from urllib.parse import urlsplit
 
 from pydantic import Field, SecretStr, field_validator
-from pydantic_settings import BaseSettings, SettingsConfigDict
+from pydantic_settings import BaseSettings, NoDecode, SettingsConfigDict
 
 Environment = Literal["development", "test", "staging", "production"]
+
+#: Placeholder shipped in the source tree. It is not a secret and is rejected
+#: outright when ``ENVIRONMENT=production``.
+INSECURE_JWT_SECRET = "dev-only-insecure-secret-change-me"  # noqa: S105
 
 
 class Settings(BaseSettings):
@@ -30,7 +35,13 @@ class Settings(BaseSettings):
     environment: Environment = "development"
     debug: bool = False
     api_v1_prefix: str = "/api/v1"
-    cors_allow_origins: list[str] = Field(default_factory=lambda: ["*"])
+    #: ``NoDecode`` is required: pydantic-settings JSON-decodes list-typed
+    #: environment variables *before* any ``mode="before"`` validator runs, so
+    #: without it a plain ``CORS_ALLOW_ORIGINS=*`` aborts startup with
+    #: ``SettingsError`` instead of reaching :meth:`_split_origins`.
+    cors_allow_origins: Annotated[list[str], NoDecode] = Field(
+        default_factory=lambda: ["*"]
+    )
 
     # ------------------------------------------------------------ database
     database_url: str = "postgresql+psycopg://postgres:postgres@localhost:5432/home_services"
@@ -38,6 +49,22 @@ class Settings(BaseSettings):
     db_pool_size: int = 10
     db_max_overflow: int = 20
     db_pool_pre_ping: bool = True
+    #: Recycle a pooled connection after N seconds. Supabase and most managed
+    #: proxies drop idle sessions well before an hour, so this stays short of
+    #: the usual 3600 to avoid handing out dead sockets.
+    db_pool_recycle_seconds: int = 600
+    #: Seconds to wait for a free pooled connection before raising.
+    db_pool_timeout_seconds: int = 10
+    #: Seconds to wait for a new TCP/TLS handshake.
+    db_connect_timeout_seconds: int = 10
+    #: Applied only when DATABASE_URL carries no ``sslmode`` of its own.
+    #: ``require`` is correct for Supabase; leave empty for a local socket.
+    db_sslmode: str = ""
+    #: Reported to Postgres so operators can attribute connections in
+    #: ``pg_stat_activity``.
+    db_application_name: str = "home-services-api"
+    #: Refuse to boot in production while these still hold their dev defaults.
+    db_reject_insecure_production_url: bool = True
 
     # --------------------------------------------------------- seeding/demo
     #: Only consumed by ``python -m app.db.seed --demo``. An empty password
@@ -46,7 +73,7 @@ class Settings(BaseSettings):
     seed_admin_password: str = ""
 
     # ------------------------------------------------------------ security
-    jwt_secret: SecretStr = SecretStr("dev-only-insecure-secret-change-me")
+    jwt_secret: SecretStr = SecretStr(INSECURE_JWT_SECRET)
     jwt_algorithm: str = "HS256"
     access_token_ttl_minutes: int = 60 * 12
     refresh_token_ttl_days: int = 30
@@ -60,7 +87,10 @@ class Settings(BaseSettings):
     max_upload_bytes: int = 12 * 1024 * 1024
     max_image_dimension: int = 6000
     max_images_per_request: int = 8
-    allowed_image_mimes: frozenset[str] = frozenset(
+    #: ``NoDecode`` for the same reason as ``cors_allow_origins``: a plain
+    #: comma-separated ``ALLOWED_IMAGE_MIMES=image/png,image/webp`` must reach
+    #: :meth:`_wrap_mimes` rather than being JSON-decoded first.
+    allowed_image_mimes: Annotated[frozenset[str], NoDecode] = frozenset(
         {"image/jpeg", "image/png", "image/webp"}
     )
     storage_root: str = "./var/storage"
@@ -81,9 +111,24 @@ class Settings(BaseSettings):
     # ---------------------------------------------------------- integrations
     # All optional (§135). Adapters degrade to an explicit "not configured" state.
     supabase_url: str | None = None
+    #: Supabase's current name for the anon key. Preferred over
+    #: :attr:`supabase_anon_key`; both resolve through
+    #: :attr:`supabase_publishable` so operators can use either spelling.
+    supabase_publishable_key: SecretStr | None = None
+    #: Legacy Supabase name for the same key, kept for older dashboards.
     supabase_anon_key: SecretStr | None = None
     supabase_service_role_key: SecretStr | None = None
+    #: Fallback bucket for storage paths that carry no recognised logical
+    #: prefix. Real paths are routed by the first path segment; see
+    #: app.integrations.supabase.storage.BUCKET_BY_PREFIX.
     supabase_storage_bucket: str = "request-media"
+    supabase_storage_timeout_seconds: float = 30.0
+    #: Uploads carry up to ``max_upload_bytes`` (12 MB by default) and the
+    #: upload has to complete before the server can answer, so a request-sized
+    #: timeout is not enough on a slow link. Downloads stay on the shorter one.
+    supabase_storage_upload_timeout_seconds: float = 180.0
+    #: Stays false: the platform owns its OTP/JWT flow, and enabling Supabase
+    #: Auth would create a second, conflicting identity system (§135).
     supabase_auth_enabled: bool = False
 
     firebase_credentials_json: str | None = None
@@ -124,6 +169,12 @@ class Settings(BaseSettings):
     @field_validator("allowed_image_mimes", mode="before")
     @classmethod
     def _wrap_mimes(cls, value: object) -> object:
+        # ``NoDecode`` hands the raw env string here, so it must be split; a
+        # JSON list still arrives as a real collection from an explicit init.
+        if isinstance(value, str):
+            return frozenset(
+                item.strip() for item in value.split(",") if item.strip()
+            )
         if isinstance(value, (set, frozenset, list, tuple)):
             return frozenset(str(item) for item in value)
         return value
@@ -134,7 +185,20 @@ class Settings(BaseSettings):
 
     @property
     def supabase_configured(self) -> bool:
-        return bool(self.supabase_url and self.supabase_service_role_key)
+        """True only when a non-empty service-role key is present.
+
+        A ``SecretStr`` wrapping an empty string is still a truthy object, so a
+        plain ``bool(self.supabase_service_role_key)`` reported "configured" while
+        the key was blank - which selected the Supabase Storage backend and then
+        failed on the first request instead of falling back to local storage.
+        """
+        key = self.supabase_service_role_key
+        return bool(self.supabase_url) and key is not None and bool(key.get_secret_value())
+
+    @property
+    def supabase_publishable(self) -> SecretStr | None:
+        """The publishable/anon key, accepting either Supabase spelling."""
+        return self.supabase_publishable_key or self.supabase_anon_key
 
     @property
     def firebase_configured(self) -> bool:
@@ -143,6 +207,45 @@ class Settings(BaseSettings):
     @property
     def ai_configured(self) -> bool:
         return bool(self.ai_enabled and self.ai_api_key and self.ai_provider != "none")
+
+    # ------------------------------------------------------------ validation
+
+    def _production_problems(self) -> list[str]:
+        """Insecure-by-default settings that must not survive a production boot."""
+        problems: list[str] = []
+        if self.jwt_secret.get_secret_value() == INSECURE_JWT_SECRET:
+            problems.append("JWT_SECRET still holds its built-in development value")
+        if self.supabase_auth_enabled:
+            problems.append(
+                "SUPABASE_AUTH_ENABLED must stay false: the platform owns its OTP/JWT flow"
+            )
+        problems.extend(self._database_url_problems())
+        return problems
+
+    def _database_url_problems(self) -> list[str]:
+        if not self.db_reject_insecure_production_url:
+            return []
+        url = self.database_url
+        if not url.startswith("postgresql+psycopg://"):
+            return ["DATABASE_URL must use the postgresql+psycopg driver"]
+        parsed = urlsplit(url.replace("postgresql+psycopg://", "postgresql://", 1))
+        problems: list[str] = []
+        if parsed.password is None:
+            problems.append("DATABASE_URL is missing a password")
+        if parsed.query.find("sslmode") < 0 and not self.db_sslmode:
+            problems.append("DATABASE_URL must set sslmode for a managed database")
+        return problems
+
+    def assert_production_safe(self) -> None:
+        """Fail fast at boot rather than serving with a known-bad secret."""
+        if not self.is_production:
+            return
+        problems = self._production_problems()
+        if problems:
+            raise RuntimeError(
+                "Refusing to start in production with unsafe configuration: "
+                + "; ".join(problems)
+            )
 
 
 @functools.lru_cache
