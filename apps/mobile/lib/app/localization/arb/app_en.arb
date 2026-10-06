@@ -42,6 +42,8 @@
     "authPhoneInvalid":  "Invalid phone number",
     "authPhoneNewAccountHint":  "New number? We will create your account automatically after verification.",
     "authPhoneRequired":  "Phone number is unknown. Please enter it again.",
+    "authGoogleDivider":  "or",
+    "authGoogleSignIn":  "Continue with Google",
     "authNameLabel":  "Full name",
     "authNameHint":  "Enter your name",
     "authOtpTitle":  "Verification code",

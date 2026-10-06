@@ -76,6 +76,17 @@ class AuthRemoteDataSource {
     return AuthSession.fromJson(response);
   }
 
+  /// Exchanges the ID token Google issued on this device for our own session.
+  ///
+  /// The token is opaque here: Google's identity is verified server-side and
+  /// only the resulting session is trusted.
+  Future<AuthSession> signInWithGoogle({required String idToken}) async {
+    final response = await _post(ApiEndpoints.authGoogle, <String, dynamic>{
+      'id_token': idToken,
+    });
+    return AuthSession.fromJson(response);
+  }
+
   Future<CustomerProfile> me() async {
     final response = await _dio.get<Map<String, dynamic>>(ApiEndpoints.authMe);
     return CustomerProfile.fromJson(_data(response));

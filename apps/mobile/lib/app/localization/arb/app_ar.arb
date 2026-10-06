@@ -42,6 +42,8 @@
     "authPhoneInvalid":  "رقم الهاتف غير صحيح",
     "authPhoneNewAccountHint":  "رقم جديد؟ سننشئ لك حساباً تلقائياً عند التحقق.",
     "authPhoneRequired":  "رقم الهاتف غير معروف. أعد إدخاله.",
+    "authGoogleDivider":  "أو",
+    "authGoogleSignIn":  "المتابعة بحساب Google",
     "authNameLabel":  "الاسم بالكامل",
     "authNameHint":  "اكتب اسمك",
     "authOtpTitle":  "رمز التحقق",

@@ -1,14 +1,19 @@
 """Authentication and authorisation tests (§90, §93).
 
-Covers the OTP login flow, refresh rotation, and — most importantly — that a
-customer token can never reach another customer's data.
+Covers the OTP login flow, refresh rotation, Google sign-in, and — most
+importantly — that a customer token can never reach another customer's data.
 """
 
 from __future__ import annotations
 
+from types import SimpleNamespace
+
 from fastapi.testclient import TestClient
 from sqlalchemy.orm import Session
 
+from app.core.config import settings
+from app.db.models import User
+from app.services import auth_service
 from tests.conftest import (
     auth_header,
     customer_token,
@@ -71,6 +76,120 @@ def test_otp_is_single_use(client: TestClient, db: Session) -> None:
     # 410 OTP_EXPIRED is the correct answer once the challenge is consumed:
     # there is simply no live challenge left to verify against.
     assert replay.status_code in {401, 410}
+
+
+# ------------------------------------------------------------------ Google
+
+
+def _claims(**overrides: object) -> dict[str, object]:
+    claims: dict[str, object] = {
+        "iss": "https://accounts.google.com",
+        "aud": settings.google_client_ids[0],
+        "sub": "1118273645",
+        "email": "mohamed@gmail.com",
+        "email_verified": True,
+        "name": "محمد علي",
+        "picture": "https://example.com/a.png",
+    }
+    claims.update(overrides)
+    return claims
+
+
+def _stub_verifier(monkeypatch, claims: dict[str, object]) -> None:
+    """Stand in for Google so the suite never needs the network."""
+    monkeypatch.setattr(
+        auth_service,
+        "id_token",
+        SimpleNamespace(verify_oauth2_token=lambda *_args, **_kwargs: claims),
+    )
+
+
+def test_google_sign_in_creates_a_phone_less_customer(
+    client: TestClient, db: Session, monkeypatch
+) -> None:
+    _stub_verifier(monkeypatch, _claims())
+
+    response = client.post("/api/v1/auth/google", json={"id_token": "x" * 40})
+    assert response.status_code == 200
+    body = response.json()
+    assert body["tokens"]["access_token"]
+    assert body["customer"]["email"] == "mohamed@gmail.com"
+
+    # The whole point of the migration: no fake number is written anywhere.
+    assert body["customer"]["phone"] is None
+
+    me = client.get(
+        "/api/v1/auth/me", headers=auth_header(body["tokens"]["access_token"])
+    )
+    assert me.status_code == 200
+    assert me.json()["phone"] is None
+    assert me.json()["full_name"] == "محمد علي"
+
+    user = db.query(User).filter(User.google_sub == "1118273645").one()
+    assert user.phone is None
+
+
+def test_google_sign_in_is_idempotent(client: TestClient, db: Session, monkeypatch) -> None:
+    _stub_verifier(monkeypatch, _claims())
+
+    first = client.post("/api/v1/auth/google", json={"id_token": "x" * 40})
+    second = client.post("/api/v1/auth/google", json={"id_token": "x" * 40})
+    assert first.status_code == second.status_code == 200
+    assert first.json()["customer"]["id"] == second.json()["customer"]["id"]
+    assert db.query(User).filter(User.google_sub == "1118273645").count() == 1
+
+
+def test_google_sign_in_reuses_an_existing_otp_account(
+    client: TestClient, db: Session, customer, monkeypatch
+) -> None:
+    """The same human must not end up with two accounts, one per sign-in method."""
+    _stub_verifier(monkeypatch, _claims(email="ahmed@example.com"))
+
+    response = client.post("/api/v1/auth/google", json={"id_token": "x" * 40})
+    assert response.status_code == 200
+    assert response.json()["customer"]["id"] == str(customer.id)
+
+    linked = db.query(User).filter(User.id == customer.user_id).one()
+    assert linked.google_sub == "1118273645"
+    assert linked.phone == "+201000000001", "the OTP number must survive the link"
+    assert db.query(User).filter(User.google_sub == "1118273645").count() == 1
+
+
+def test_google_rejects_a_token_issued_to_another_client(
+    client: TestClient, db: Session, monkeypatch
+) -> None:
+    """A real Google token for someone else's app must not sign anyone in here."""
+    _stub_verifier(monkeypatch, _claims(aud="attacker-client.apps.googleusercontent.com"))
+
+    response = client.post("/api/v1/auth/google", json={"id_token": "x" * 40})
+    assert response.status_code == 401
+    assert response.json()["code"] == "INVALID_CREDENTIALS"
+    assert db.query(User).filter(User.google_sub == "1118273645").count() == 0
+
+
+def test_google_rejects_a_token_from_another_issuer(client: TestClient, monkeypatch) -> None:
+    _stub_verifier(monkeypatch, _claims(iss="https://evil.example.com"))
+
+    response = client.post("/api/v1/auth/google", json={"id_token": "x" * 40})
+    assert response.status_code == 401
+
+
+def test_google_rejects_an_unverified_email(client: TestClient, monkeypatch) -> None:
+    _stub_verifier(monkeypatch, _claims(email_verified=False))
+
+    response = client.post("/api/v1/auth/google", json={"id_token": "x" * 40})
+    assert response.status_code == 401
+
+
+def test_google_sign_in_reports_a_missing_configuration(
+    client: TestClient, monkeypatch
+) -> None:
+    """Without a client ID every token is unverifiable, so say that plainly."""
+    monkeypatch.setattr(settings, "google_client_ids", [])
+
+    response = client.post("/api/v1/auth/google", json={"id_token": "x" * 40})
+    assert response.status_code == 401
+    assert response.json()["code"] == "GOOGLE_NOT_CONFIGURED"
 
 
 # --------------------------------------------------------------------- tokens

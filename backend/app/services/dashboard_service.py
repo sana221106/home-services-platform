@@ -259,7 +259,7 @@ def customer_360(
         "customer": {
             "id": profile.id if profile else customer_id,
             "full_name": profile.full_name if profile else "",
-            "phone": (profile.user.phone if profile and profile.user else ""),
+            "phone": ((profile.user.phone or "") if profile and profile.user else ""),
             "email": profile.email if profile else None,
             "created_at": profile.created_at if profile else None,
         },

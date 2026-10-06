@@ -165,6 +165,32 @@ class _PhoneEntryScreenState extends ConsumerState<PhoneEntryScreen> {
                 ).textTheme.bodySmall?.copyWith(color: colors.textSecondary),
               ),
             ],
+            const SizedBox(height: AppSpacing.xl),
+            Row(
+              children: <Widget>[
+                const Expanded(child: Divider()),
+                Padding(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: AppSpacing.md,
+                  ),
+                  child: Text(
+                    l10n.authGoogleDivider,
+                    style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                      color: colors.textSecondary,
+                    ),
+                  ),
+                ),
+                const Expanded(child: Divider()),
+              ],
+            ),
+            const SizedBox(height: AppSpacing.md),
+            OutlinedButton.icon(
+              onPressed: state.isSubmitting
+                  ? null
+                  : () => ref.read(authProvider.notifier).signInWithGoogle(),
+              icon: const Icon(Icons.account_circle_outlined, size: 22),
+              label: Text(l10n.authGoogleSignIn),
+            ),
           ],
         ),
       ),

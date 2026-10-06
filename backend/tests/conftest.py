@@ -24,6 +24,11 @@ os.environ.setdefault("SUPABASE_AUTH_ENABLED", "false")
 # 32 bytes minimum: PyJWT warns on every encode and decode below that, which
 # buried the warnings worth reading. Still not a real key.
 os.environ.setdefault("JWT_SECRET", "test-secret-not-for-production-at-all")
+# The audience Google's ID tokens are checked against; tests still exercise the
+# rejection path by overriding the setting rather than by clearing it.
+os.environ.setdefault(
+    "GOOGLE_CLIENT_IDS", "test-web-client.apps.googleusercontent.com"
+)
 os.environ.setdefault("STORAGE_ROOT", "./var/test-storage")
 
 # These are assigned, not setdefault: a developer's real ``backend/.env`` sets

@@ -139,6 +139,12 @@ class AppLocalizationsEn extends AppLocalizations {
       'Phone number is unknown. Please enter it again.';
 
   @override
+  String get authGoogleDivider => 'or';
+
+  @override
+  String get authGoogleSignIn => 'Continue with Google';
+
+  @override
   String get authNameLabel => 'Full name';
 
   @override

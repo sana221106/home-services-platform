@@ -1,7 +1,9 @@
 import 'package:equatable/equatable.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 
 import '../../../../app/bootstrap/app_bootstrap.dart';
+import '../../../../app/config/flavor_config.dart';
 import '../../../../core/logging/app_logger.dart';
 import '../../../../core/errors/failure.dart';
 import '../../data/datasources/auth_remote_data_source.dart';
@@ -236,6 +238,49 @@ class AuthController extends Notifier<AuthState> {
       return true;
     } on ApiFailure catch (failure) {
       state = state.copyWith(isSubmitting: false, error: failure.message);
+      return false;
+    }
+  }
+
+  /// Signs in with the Google account already on this device.
+  ///
+  /// Cancelling the sheet is a normal outcome rather than a failure, so it
+  /// returns false without putting an error on screen.
+  Future<bool> signInWithGoogle() async {
+    state = state.copyWith(isSubmitting: true, clearError: true);
+    try {
+      final GoogleSignIn signIn = GoogleSignIn.instance;
+      // The server audience decides which client ID Google stamps on the token,
+      // which is the one the backend checks against — without it the backend
+      // would reject every token as belonging to someone else's app.
+      await signIn.initialize(
+        serverClientId: FlavorConfig.googleServerClientId,
+      );
+      final GoogleSignInAccount account = await signIn.authenticate();
+      final String? idToken = account.authentication.idToken;
+      if (idToken == null || idToken.isEmpty) {
+        state = state.copyWith(isSubmitting: false);
+        return false;
+      }
+
+      final customer = await ref
+          .read(authRepositoryProvider)
+          .signInWithGoogle(idToken: idToken);
+      if (!ref.mounted) return false;
+      state = state.copyWith(
+        stage: AuthStage.authenticated,
+        customer: customer,
+        isSubmitting: false,
+        clearResend: true,
+      );
+      return true;
+    } on ApiFailure catch (failure) {
+      state = state.copyWith(isSubmitting: false, error: failure.message);
+      return false;
+    } catch (_) {
+      // Dismissed sheet or a plugin failure before a token existed: there is
+      // nothing useful to tell the customer, so leave the form as it was.
+      state = state.copyWith(isSubmitting: false);
       return false;
     }
   }

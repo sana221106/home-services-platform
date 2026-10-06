@@ -38,15 +38,31 @@ class AuthRepository {
         code: code,
         fullName: fullName,
       );
-      await _tokenStore.write(
-        TokenPair(
-          accessToken: session.tokens.accessToken,
-          refreshToken: session.tokens.refreshToken,
-          expiresAt: session.tokens.expiresAt,
-        ),
-      );
-      return session.customer;
+      return _adopt(session);
     });
+  }
+
+  /// Signs the customer in with the ID token their Google session produced.
+  ///
+  /// Google is the credential: this platform never sees a password, a phone or
+  /// a code, only a token it verifies with Google before issuing its own.
+  Future<CustomerProfile> signInWithGoogle({required String idToken}) {
+    return _guard(() async {
+      final session = await _remote.signInWithGoogle(idToken: idToken);
+      return _adopt(session);
+    });
+  }
+
+  /// Makes a freshly issued session the only one, then returns its customer.
+  Future<CustomerProfile> _adopt(AuthSession session) async {
+    await _tokenStore.write(
+      TokenPair(
+        accessToken: session.tokens.accessToken,
+        refreshToken: session.tokens.refreshToken,
+        expiresAt: session.tokens.expiresAt,
+      ),
+    );
+    return session.customer;
   }
 
   /// Restores a session at app start.

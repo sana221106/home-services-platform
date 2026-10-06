@@ -44,12 +44,14 @@ void main() {
     });
 
     test('no Arabic string leaks Latin words', () {
-      // Values that are deliberately non-Arabic: a phone placeholder, and the
-      // image format names the backend actually accepts (JPEG/PNG/WebP).
+      // Values that are deliberately non-Arabic: a phone placeholder, the
+      // image format names the backend actually accepts (JPEG/PNG/WebP), and a
+      // brand name that Arabic copy keeps in Latin script by convention.
       const allowlisted = <String>{
         'authPhoneHint',
         'profileEmailHint',
         'requestsPhotosHintSize',
+        'authGoogleSignIn',
       };
       final ar = _arb('app_ar.arb');
       final offenders = <String>[];

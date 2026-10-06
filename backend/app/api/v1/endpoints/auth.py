@@ -11,6 +11,7 @@ from app.db.models.identity import CustomerProfile
 from app.schemas.auth import (
     AuthSessionResponse,
     CustomerProfileResponse,
+    GoogleSignInRequest,
     LogoutRequest,
     OtpResponse,
     PhoneRequest,
@@ -78,6 +79,16 @@ def verify_otp(payload: VerifyOtpRequest, request: Request, db: DbSession) -> Au
         code=payload.code,
         full_name=payload.full_name,
     )
+    db.commit()
+    return AuthSessionResponse(tokens=_token_pair(tokens), customer=_customer_payload(customer))
+
+
+@router.post("/google", response_model=AuthSessionResponse, summary="Sign in with Google")
+@limiter.limit(LOGIN_LIMIT)
+def sign_in_with_google(
+    payload: GoogleSignInRequest, request: Request, db: DbSession
+) -> AuthSessionResponse:
+    customer, tokens = auth_service.google_sign_in(db, id_token_value=payload.id_token)
     db.commit()
     return AuthSessionResponse(tokens=_token_pair(tokens), customer=_customer_payload(customer))
 

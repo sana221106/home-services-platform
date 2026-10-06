@@ -88,7 +88,7 @@ def list_customers(
             {
                 "id": profile.id,
                 "full_name": profile.full_name,
-                "phone": phone,
+                "phone": phone or "",
                 "created_at": profile.created_at,
                 "requests_count": requests_count,
                 "segment": dashboard_service._segment(

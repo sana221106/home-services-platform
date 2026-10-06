@@ -350,6 +350,18 @@ abstract class AppLocalizations {
   /// **'رقم الهاتف غير معروف. أعد إدخاله.'**
   String get authPhoneRequired;
 
+  /// No description provided for @authGoogleDivider.
+  ///
+  /// In ar, this message translates to:
+  /// **'أو'**
+  String get authGoogleDivider;
+
+  /// No description provided for @authGoogleSignIn.
+  ///
+  /// In ar, this message translates to:
+  /// **'المتابعة بحساب Google'**
+  String get authGoogleSignIn;
+
   /// No description provided for @authNameLabel.
   ///
   /// In ar, this message translates to:

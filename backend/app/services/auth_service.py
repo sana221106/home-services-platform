@@ -11,6 +11,8 @@ import uuid
 from dataclasses import dataclass
 from datetime import datetime, timedelta
 
+from google.auth.transport.requests import Request as GoogleAuthRequest
+from google.oauth2 import id_token
 from sqlalchemy import func, or_, select
 from sqlalchemy.orm import Session, selectinload
 
@@ -113,7 +115,10 @@ def start_otp(
     )
     session.flush()
 
-    masked = f"{user.phone[:4]}***{user.phone[-3:]}"
+    # Only ever reached for the OTP path, which has just created the user from a
+    # phone number, so the null case is unreachable but not worth a crash on.
+    phone = user.phone or ""
+    masked = f"{phone[:4]}***{phone[-3:]}"
     session.add(
         OtpDeliveryLog(
             user_id=user.id,
@@ -181,6 +186,119 @@ def verify_otp(
     elif full_name and not profile.full_name:
         profile.full_name = full_name.strip()[:160]
 
+    tokens = _issue_tokens(session, user=user, customer_id=profile.id)
+    return AuthenticatedCustomer(user=user, profile=profile), tokens
+
+
+#: Google signs tokens from either of these; both are accepted because the SDK
+#: reports the accounts host differently across versions.
+GOOGLE_ISSUERS = frozenset({"https://accounts.google.com", "accounts.google.com"})
+
+
+def _verify_google_id_token(id_token_value: str) -> dict[str, object]:
+    """Validate a Google-issued ID token and return its claims.
+
+    A token Google minted for another application is still a perfectly valid
+    Google token, so the signature alone is not enough: the audience has to be
+    one of ours or anyone could sign into this platform with their own Google
+    app's token.
+    """
+    if not settings.google_client_ids:
+        raise AuthenticationError(
+            "Google sign-in is not configured.", code="GOOGLE_NOT_CONFIGURED"
+        )
+
+    # One message for every check below: telling the client which claim failed
+    # would hand an attacker a checklist, and the honest one is always the same.
+    rejected = InvalidCredentialsError("Google could not verify this sign-in.")
+    try:
+        claims: dict[str, object] = id_token.verify_oauth2_token(
+            id_token_value, GoogleAuthRequest()
+        )
+    except ValueError as exc:  # google-auth reports every rejection as ValueError
+        log.info("google_id_token_rejected", reason=str(exc))
+        raise rejected from exc
+
+    if claims.get("iss") not in GOOGLE_ISSUERS:
+        raise rejected
+    if claims.get("aud") not in settings.google_client_ids:
+        raise rejected
+    if claims.get("email_verified") is False:
+        raise rejected
+    if not claims.get("sub"):
+        raise rejected
+    return claims
+
+
+def google_sign_in(
+    session: Session, *, id_token_value: str
+) -> tuple[AuthenticatedCustomer, IssuedTokens]:
+    """Sign a customer in with the ID token their Google session produced.
+
+    The customer carries no phone here, which is exactly why the phone column
+    became nullable: inventing one would have leaked it into their own profile.
+    """
+    claims = _verify_google_id_token(id_token_value)
+    sub = str(claims["sub"])
+    email = str(claims.get("email") or "").strip().lower() or None
+    name = str(claims.get("name") or "").strip()[:160]
+    picture = str(claims.get("picture") or "").strip()[:512] or None
+
+    user = session.execute(
+        select(User).where(User.google_sub == sub)
+    ).scalar_one_or_none()
+
+    if user is None and email:
+        # The same person may have arrived through the OTP path first, so their
+        # profile email links the two rather than leaving two accounts behind.
+        linked = (
+            session.execute(
+                select(User)
+                .join(CustomerProfile, CustomerProfile.user_id == User.id)
+                .where(func.lower(CustomerProfile.email) == email)
+            )
+            .scalars()
+            .first()
+        )
+        if linked is not None:
+            user = linked
+            user.google_sub = sub
+
+    is_new = user is None
+    if user is None:
+        user = User(google_sub=sub)  # phone stays NULL by design
+        session.add(user)
+        session.flush()
+
+    if not user.is_active:
+        raise AuthenticationError("This account is not active.", code="ACCOUNT_INACTIVE")
+
+    user.last_login_at = now_utc()
+    user.failed_login_count = 0
+
+    profile = session.execute(
+        select(CustomerProfile).where(CustomerProfile.user_id == user.id)
+    ).scalar_one_or_none()
+    if profile is None:
+        # full_name is NOT NULL, so a Google account without a display name
+        # falls back to the local part of its address rather than a blank row.
+        profile = CustomerProfile(
+            user_id=user.id,
+            full_name=name or (email or "").split("@")[0] or "عميل جديد",
+            email=email,
+            avatar_url=picture,
+        )
+        session.add(profile)
+        session.flush()
+    else:
+        if not profile.full_name and name:
+            profile.full_name = name
+        if not profile.email and email:
+            profile.email = email
+        if not profile.avatar_url and picture:
+            profile.avatar_url = picture
+
+    log.info("customer_signed_in", user_id=str(user.id), provider="google", is_new=is_new)
     tokens = _issue_tokens(session, user=user, customer_id=profile.id)
     return AuthenticatedCustomer(user=user, profile=profile), tokens
 

@@ -119,7 +119,9 @@ class ProfileController extends Notifier<ProfileState> {
           CustomerProfile(
             id: current.id,
             fullName: profile.fullName,
-            phone: profile.phone,
+            // The profile endpoint sends an empty string for a Google account
+            // that never had a number, which is not the same as having one.
+            phone: profile.phone.isEmpty ? null : profile.phone,
             email: profile.email,
             avatarUrl: profile.avatarUrl,
             preferredLanguage: profile.preferredLanguage,

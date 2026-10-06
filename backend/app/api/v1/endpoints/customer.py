@@ -29,7 +29,7 @@ def profile(db: DbSession, customer: CurrentCustomer) -> ProfileResponse:
     payload = dashboard_service.profile_payload(
         db,
         customer_id=customer.profile.id,
-        phone=customer.user.phone,
+        phone=customer.user.phone or "",
         created_at=customer.profile.created_at,
     )
     return ProfileResponse(

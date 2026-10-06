@@ -32,6 +32,17 @@ class VerifyOtpRequest(BaseModel):
     full_name: str | None = Field(default=None, max_length=160)
 
 
+class GoogleSignInRequest(BaseModel):
+    """The ID token minted by the mobile SDK for the signed-in Google account.
+
+    It is not a credential this platform can mint, so it carries no password and
+    no phone: the server verifies it against Google and derives identity from the
+    claims (§90).
+    """
+
+    id_token: str = Field(min_length=32, max_length=4096)
+
+
 class TokenPair(BaseModel):
     access_token: str
     refresh_token: str
@@ -45,7 +56,8 @@ class CustomerProfileResponse(BaseModel):
 
     id: uuid.UUID
     full_name: str
-    phone: str
+    #: Null for a customer who signed in with Google and never gave a phone.
+    phone: str | None = None
     email: str | None = None
     avatar_url: str | None = None
     preferred_language: str = "ar"

@@ -30,12 +30,19 @@ class User(UUIDPrimaryKeyMixin, TimestampMixin, Base):
 
     __tablename__ = "users"
 
-    phone: Mapped[str] = mapped_column(String(32), unique=True, nullable=False, index=True)
+    # Nullable because a Google-signed-in customer has no phone at all, and the
+    # phone is only meaningful to the OTP path. Every phone lookup in the code
+    # supplies a number, so a NULL can never match one of those queries.
+    phone: Mapped[str | None] = mapped_column(String(32), unique=True, index=True)
     phone_country_code: Mapped[str] = mapped_column(String(8), default="+20", nullable=False)
     is_active: Mapped[bool] = mapped_column(Boolean, default=True, nullable=False)
     is_staff: Mapped[bool] = mapped_column(Boolean, default=False, nullable=False)
     last_login_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True))
     supabase_user_id: Mapped[str | None] = mapped_column(String(128), unique=True)
+    #: Google's `sub`, the stable identifier for a Google account. Kept rather
+    #: than the email because emails can be changed or aliased, so it is the only
+    #: value that reliably maps back to this row on the next sign-in.
+    google_sub: Mapped[str | None] = mapped_column(String(128), unique=True)
     failed_login_count: Mapped[int] = mapped_column(Integer, default=0, nullable=False)
 
     customer_profile: Mapped[CustomerProfile | None] = relationship(

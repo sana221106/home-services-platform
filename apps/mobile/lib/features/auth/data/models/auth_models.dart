@@ -19,7 +19,8 @@ class CustomerProfile extends Equatable {
     return CustomerProfile(
       id: json['id'] as String,
       fullName: json['full_name'] as String,
-      phone: json['phone'] as String,
+      // Null for a customer who signed in with Google and never gave a phone.
+      phone: json['phone'] as String?,
       email: json['email'] as String?,
       avatarUrl: json['avatar_url'] as String?,
       preferredLanguage: json['preferred_language'] as String? ?? 'ar',
@@ -28,7 +29,7 @@ class CustomerProfile extends Equatable {
 
   final String id;
   final String fullName;
-  final String phone;
+  final String? phone;
   final String? email;
   final String? avatarUrl;
   final String preferredLanguage;

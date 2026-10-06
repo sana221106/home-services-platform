@@ -137,6 +137,12 @@ class AppLocalizationsAr extends AppLocalizations {
   String get authPhoneRequired => 'رقم الهاتف غير معروف. أعد إدخاله.';
 
   @override
+  String get authGoogleDivider => 'أو';
+
+  @override
+  String get authGoogleSignIn => 'المتابعة بحساب Google';
+
+  @override
   String get authNameLabel => 'الاسم بالكامل';
 
   @override

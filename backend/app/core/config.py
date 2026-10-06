@@ -157,11 +157,35 @@ class Settings(BaseSettings):
     # Biases every search to Egypt so a bare street name ranks local results.
     geocode_country_codes: str = "eg"
 
+    # ------------------------------------------------------------ google sign-in
+    # The Web client ID the mobile SDK is configured with, and optionally the
+    # Android one. Google signs the token with `aud` set to whichever client
+    # requested it, so both are accepted rather than pinning the app to a single
+    # build configuration.
+    #
+    # NoDecode keeps pydantic-settings from demanding JSON: a client ID is a
+    # bare string in .env, and the validator below is what splits a list.
+    # A default keeps a fresh clone signable: a client ID is public by design
+    # (it ships inside the APK) and the app carries the same one.
+    google_client_ids: Annotated[list[str], NoDecode] = Field(
+        default_factory=lambda: [
+            "423399881855-cqrpnda8gasr3jmnhjgutff6j1fvjlp1.apps.googleusercontent.com"
+        ]
+    )
+    google_hd: str | None = None
+
     support_phone: str = "+201000000000"
 
     @field_validator("cors_allow_origins", mode="before")
     @classmethod
     def _split_origins(cls, value: object) -> object:
+        if isinstance(value, str):
+            return [item.strip() for item in value.split(",") if item.strip()]
+        return value
+
+    @field_validator("google_client_ids", mode="before")
+    @classmethod
+    def _split_client_ids(cls, value: object) -> object:
         if isinstance(value, str):
             return [item.strip() for item in value.split(",") if item.strip()]
         return value
