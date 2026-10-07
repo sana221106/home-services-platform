@@ -52,9 +52,9 @@ class ProfileHeader extends StatelessWidget {
               Text(
                 profile.phone.isNotEmpty ? profile.phone : '—',
                 style: context.text.body.copyWith(color: colors.textSecondary),
-                // The phone is shown read-only; it is the sign-in identity and
-                // changing it needs a verified number, not a profile edit. A
-                // Google account has no number to show, so show a dash.
+                // The phone is shown read-only; it is not part of sign-in and
+                // is only captured because the customer volunteered it. A
+                // customer who never gave a number sees a dash.
               ),
               if (profile.memberSince != null) ...<Widget>[
                 const SizedBox(height: AppSpacing.xxs),

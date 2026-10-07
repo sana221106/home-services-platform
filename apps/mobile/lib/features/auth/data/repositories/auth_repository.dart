@@ -23,32 +23,21 @@ class AuthRepository {
   final TokenStore _tokenStore;
   final ApiClient _client;
 
-  Future<OtpChallenge> requestOtp({required String phone, String? fullName}) {
-    return _guard(() => _remote.requestOtp(phone: phone, fullName: fullName));
+  Future<OtpChallenge> requestOtp({required String email, String? phone}) {
+    return _guard(() => _remote.requestOtp(email: email, phone: phone));
   }
 
   Future<CustomerProfile> verifyOtp({
-    required String phone,
+    required String email,
     required String code,
     String? fullName,
   }) {
     return _guard(() async {
       final session = await _remote.verifyOtp(
-        phone: phone,
+        email: email,
         code: code,
         fullName: fullName,
       );
-      return _adopt(session);
-    });
-  }
-
-  /// Signs the customer in with the ID token their Google session produced.
-  ///
-  /// Google is the credential: this platform never sees a password, a phone or
-  /// a code, only a token it verifies with Google before issuing its own.
-  Future<CustomerProfile> signInWithGoogle({required String idToken}) {
-    return _guard(() async {
-      final session = await _remote.signInWithGoogle(idToken: idToken);
       return _adopt(session);
     });
   }

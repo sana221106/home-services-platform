@@ -41,6 +41,7 @@ from app.db.models.identity import (
     StaffUser,
     User,
 )
+from app.services import email_service
 from app.utils.time import ensure_aware, now_utc
 
 log = get_logger(__name__)
@@ -77,6 +78,12 @@ def normalise_phone(phone: str) -> str:
     return cleaned if cleaned.startswith("+") else f"+{cleaned.lstrip('0') or '0'}"
 
 
+def normalise_email(email: str) -> str:
+    """Case-fold only. ``Example@Gmail.com`` and ``example@gmail.com`` are the
+    same mailbox, and the unique index on :attr:`User.email` has to agree."""
+    return email.strip().lower()
+
+
 def _refresh_expiry() -> datetime:
     return now_utc() + timedelta(days=settings.refresh_token_ttl_days)
 
@@ -84,22 +91,47 @@ def _refresh_expiry() -> datetime:
 # ------------------------------------------------------------------ customer
 
 
-def find_or_create_user(session: Session, *, phone: str) -> tuple[User, bool]:
-    normalised = normalise_phone(phone)
-    user = session.execute(select(User).where(User.phone == normalised)).scalar_one_or_none()
+def find_or_create_user(
+    session: Session, *, email: str, phone: str | None = None
+) -> tuple[User, bool]:
+    """Land the customer on the one row they already own.
+
+    The email is the identity. The phone is contact detail: whatever number is
+    typed now wins so a correction actually sticks, but a blank field never
+    clears one already on file — "optional" must not mean "deleted when skipped".
+    """
+    normalised = normalise_email(email)
+    user = session.execute(select(User).where(User.email == normalised)).scalar_one_or_none()
     if user is not None:
+        if phone:
+            user.phone = normalise_phone(phone)
+            session.flush()
         return user, False
-    user = User(phone=normalised, phone_country_code="+20")
+
+    user = User(
+        email=normalised,
+        phone=normalise_phone(phone) if phone else None,
+        phone_country_code="+20",
+    )
     session.add(user)
     session.flush()
     return user, True
 
 
 def start_otp(
-    session: Session, *, phone: str, ip_address: str | None = None
+    session: Session,
+    *,
+    email: str,
+    phone: str | None = None,
+    ip_address: str | None = None,
 ) -> tuple[User, bool, int]:
-    """Create a challenge and return ``(user, is_new_customer, ttl_seconds)``."""
-    user, _created = find_or_create_user(session, phone=phone)
+    """Create a challenge and return ``(user, is_new_customer, ttl_seconds)``.
+
+    The name deliberately is not taken here: nothing about this request has been
+    verified yet, so no profile row is written until the code comes back. The
+    caller carries the name forward and hands it to :func:`verify_otp`.
+    """
+    user, _created = find_or_create_user(session, email=email, phone=phone)
     if not user.is_active:
         raise AuthenticationError("This account is not active.", code="ACCOUNT_INACTIVE")
 
@@ -115,23 +147,34 @@ def start_otp(
     )
     session.flush()
 
-    # Only ever reached for the OTP path, which has just created the user from a
-    # phone number, so the null case is unreachable but not worth a crash on.
-    phone = user.phone or ""
-    masked = f"{phone[:4]}***{phone[-3:]}"
+    destination = normalise_email(email)
+    masked = email_service.mask_email(destination)
+    if settings.email_configured:
+        # Raises on a refused send, so a code is never recorded as delivered
+        # when it is still sitting in the outbound queue.
+        email_service.send_verification_code(
+            destination, code=code, ttl_minutes=settings.otp_ttl_minutes
+        )
+        provider = "smtp"
+    else:
+        # No relay configured (§135). The log is the only channel that exists;
+        # printing the code is the documented development fallback and is gated
+        # on debug so it cannot leak from a production deployment (§93).
+        provider = "log_only"
+        if settings.debug:
+            log.info("otp_issued", email_masked=masked, otp_debug_value=code)
+        else:
+            log.warning("otp_email_unconfigured", email_masked=masked)
+
     session.add(
         OtpDeliveryLog(
             user_id=user.id,
-            provider="log_only",
+            provider=provider,
             destination_masked=masked,
             delivered=True,
         )
     )
     session.flush()
-
-    if settings.debug:
-        # Development only: the OTP reaches the log, never the API response (§93).
-        log.info("otp_issued", phone_masked=masked, otp_debug_value=code)
 
     return user, True, settings.otp_ttl_minutes * 60
 
@@ -139,12 +182,12 @@ def start_otp(
 def verify_otp(
     session: Session,
     *,
-    phone: str,
+    email: str,
     code: str,
     full_name: str | None = None,
 ) -> tuple[AuthenticatedCustomer, IssuedTokens]:
-    normalised = normalise_phone(phone)
-    user = session.execute(select(User).where(User.phone == normalised)).scalar_one_or_none()
+    normalised = normalise_email(email)
+    user = session.execute(select(User).where(User.email == normalised)).scalar_one_or_none()
     if user is None:
         raise InvalidCredentialsError()
 
@@ -172,6 +215,8 @@ def verify_otp(
     challenge.consumed_at = now
     user.last_login_at = now
     user.failed_login_count = 0
+    if not user.email:
+        user.email = normalised
 
     profile = session.execute(
         select(CustomerProfile).where(CustomerProfile.user_id == user.id)
@@ -179,12 +224,16 @@ def verify_otp(
     if profile is None:
         profile = CustomerProfile(
             user_id=user.id,
-            full_name=(full_name or f"عميل {normalised[-4:]}").strip()[:160],
+            full_name=(full_name or "").strip()[:160] or "عميل جديد",
+            email=normalised,
         )
         session.add(profile)
         session.flush()
-    elif full_name and not profile.full_name:
-        profile.full_name = full_name.strip()[:160]
+    else:
+        if full_name and not profile.full_name:
+            profile.full_name = full_name.strip()[:160]
+        if not profile.email:
+            profile.email = normalised
 
     tokens = _issue_tokens(session, user=user, customer_id=profile.id)
     return AuthenticatedCustomer(user=user, profile=profile), tokens
@@ -249,26 +298,30 @@ def google_sign_in(
     ).scalar_one_or_none()
 
     if user is None and email:
-        # The same person may have arrived through the OTP path first, so their
-        # profile email links the two rather than leaving two accounts behind.
-        linked = (
-            session.execute(
-                select(User)
-                .join(CustomerProfile, CustomerProfile.user_id == User.id)
-                .where(func.lower(CustomerProfile.email) == email)
+        # The same person may have arrived through the OTP path first, so both
+        # the address on their user row and the one on a profile created before
+        # `users.email` existed are accepted as the link.
+        user = session.execute(select(User).where(User.email == email)).scalar_one_or_none()
+        if user is None:
+            user = (
+                session.execute(
+                    select(User)
+                    .join(CustomerProfile, CustomerProfile.user_id == User.id)
+                    .where(func.lower(CustomerProfile.email) == email)
+                )
+                .scalars()
+                .first()
             )
-            .scalars()
-            .first()
-        )
-        if linked is not None:
-            user = linked
+        if user is not None:
             user.google_sub = sub
 
     is_new = user is None
     if user is None:
-        user = User(google_sub=sub)  # phone stays NULL by design
+        user = User(google_sub=sub, email=email)  # phone stays NULL by design
         session.add(user)
         session.flush()
+    elif email and not user.email:
+        user.email = email
 
     if not user.is_active:
         raise AuthenticationError("This account is not active.", code="ACCOUNT_INACTIVE")

@@ -116,10 +116,27 @@ class AppLocalizationsEn extends AppLocalizations {
   String get onboardingGetStarted => 'Get started';
 
   @override
-  String get authPhoneTitle => 'Phone number';
+  String get authSignInTitle => 'Sign in';
 
   @override
-  String get authPhoneBody => 'Enter your phone number to continue';
+  String get authSignInBody => 'Enter your details to continue';
+
+  @override
+  String get authEmailLabel => 'Email address';
+
+  @override
+  String get authEmailHint => 'name@example.com';
+
+  @override
+  String get authEmailInvalid => 'Invalid email address';
+
+  @override
+  String get authEmailNewAccountHint =>
+      'New account? We create it automatically once your email is verified.';
+
+  @override
+  String get authEmailRequired =>
+      'Email address is unknown. Please enter it again.';
 
   @override
   String get authPhoneLabel => 'Phone number';
@@ -129,20 +146,6 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get authPhoneInvalid => 'Invalid phone number';
-
-  @override
-  String get authPhoneNewAccountHint =>
-      'New number? We will create your account automatically after verification.';
-
-  @override
-  String get authPhoneRequired =>
-      'Phone number is unknown. Please enter it again.';
-
-  @override
-  String get authGoogleDivider => 'or';
-
-  @override
-  String get authGoogleSignIn => 'Continue with Google';
 
   @override
   String get authNameLabel => 'Full name';
@@ -155,7 +158,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String authOtpBody(Object count) {
-    return 'We sent a $count-digit code to your phone';
+    return 'We sent a $count-digit code to your email address';
   }
 
   @override
@@ -170,13 +173,13 @@ class AppLocalizationsEn extends AppLocalizations {
   String get authOtpVerify => 'Verify';
 
   @override
-  String get authOtpChangeNumber => 'Change phone number';
+  String get authOtpChangeEmail => 'Change email address';
 
   @override
   String get authOtpField => 'Verification code';
 
   @override
-  String get authOtpSent => 'Verification code sent';
+  String get authOtpSent => 'Verification code sent to your email';
 
   @override
   String homeGreeting(Object name) {

@@ -8,7 +8,6 @@ abstract final class ApiEndpoints {
   // ------------------------------------------------------------------ auth
   static const String authRequestOtp = '$prefix/auth/request-otp';
   static const String authVerifyOtp = '$prefix/auth/verify-otp';
-  static const String authGoogle = '$prefix/auth/google';
   static const String authRefresh = '$prefix/auth/refresh';
   static const String authLogout = '$prefix/auth/logout';
   static const String authMe = '$prefix/auth/me';

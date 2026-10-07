@@ -38,7 +38,6 @@ class AuthInterceptor extends Interceptor {
   static const Set<String> publicPaths = <String>{
     ApiEndpoints.authRequestOtp,
     ApiEndpoints.authVerifyOtp,
-    ApiEndpoints.authGoogle,
     ApiEndpoints.authRefresh,
   };
 
@@ -112,6 +111,5 @@ class AuthInterceptor extends Interceptor {
   static bool _isAuthEndpoint(String path) =>
       path == ApiEndpoints.authRefresh ||
       path == ApiEndpoints.authRequestOtp ||
-      path == ApiEndpoints.authVerifyOtp ||
-      path == ApiEndpoints.authGoogle;
+      path == ApiEndpoints.authVerifyOtp;
 }

@@ -174,6 +174,27 @@ class Settings(BaseSettings):
     )
     google_hd: str | None = None
 
+    # ------------------------------------------------------------------ email
+    # Verification codes are delivered by email. The 6-digit code itself, its
+    # hashing, its TTL and its attempt budget are unchanged: only the transport
+    # that carries it moved off SMS.
+    #
+    # An empty SMTP_HOST is a supported state (§135): the code is written to the
+    # log instead of an inbox, so a fresh clone signs a customer in end to end
+    # without any mail credentials. Setting a host makes delivery real — and a
+    # failed send then fails the request rather than silently dropping a code
+    # the customer will wait forever for.
+    smtp_host: str = ""
+    smtp_port: int = 587
+    smtp_user: str = ""
+    smtp_password: SecretStr | None = None
+    smtp_starttls: bool = True
+    smtp_timeout_seconds: float = 15.0
+    #: RFC 5322 sender. Falls back to ``smtp_user`` because most relays reject
+    #: a From address that is not the authenticated account.
+    email_from: str = ""
+    email_from_name: str = "Home Services"
+
     support_phone: str = "+201000000000"
 
     @field_validator("cors_allow_origins", mode="before")
@@ -231,6 +252,15 @@ class Settings(BaseSettings):
     @property
     def ai_configured(self) -> bool:
         return bool(self.ai_enabled and self.ai_api_key and self.ai_provider != "none")
+
+    @property
+    def email_configured(self) -> bool:
+        """True when a real outbound mail relay is available.
+
+        A ``SecretStr`` wrapping an empty password is still a truthy object, so
+        the host is what decides: without one there is nowhere to send to.
+        """
+        return bool(self.smtp_host.strip())
 
     # ------------------------------------------------------------ validation
 

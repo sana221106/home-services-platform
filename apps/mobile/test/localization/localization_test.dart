@@ -49,9 +49,9 @@ void main() {
       // brand name that Arabic copy keeps in Latin script by convention.
       const allowlisted = <String>{
         'authPhoneHint',
+        'authEmailHint',
         'profileEmailHint',
         'requestsPhotosHintSize',
-        'authGoogleSignIn',
       };
       final ar = _arb('app_ar.arb');
       final offenders = <String>[];
@@ -151,6 +151,7 @@ void main() {
         // These are deliberately non-Arabic values.
         const allowlisted = <String>{
           'authPhoneHint',
+          'authEmailHint',
           'profileEmailHint',
           'requestsPhotosHintSize',
         };

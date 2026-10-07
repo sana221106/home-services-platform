@@ -19,7 +19,7 @@ class CustomerProfile extends Equatable {
     return CustomerProfile(
       id: json['id'] as String,
       fullName: json['full_name'] as String,
-      // Null for a customer who signed in with Google and never gave a phone.
+      // Null for a customer who signed in without volunteering a phone.
       phone: json['phone'] as String?,
       email: json['email'] as String?,
       avatarUrl: json['avatar_url'] as String?,
@@ -55,7 +55,7 @@ class CustomerProfile extends Equatable {
 /// Result of `POST /api/v1/auth/request-otp`.
 ///
 /// The OTP code itself is never returned to the client in production, so this
-/// carries only the confirmation copy and whether the phone is new.
+/// carries only the confirmation copy and whether the address is new.
 class OtpChallenge extends Equatable {
   const OtpChallenge({
     required this.message,

@@ -29,11 +29,6 @@ dependencies:
   shared_preferences: ^2.5.5
   flutter_secure_storage: ^11.2.0
 
-  # Sign-in (§4). Google issues the ID token on the device and the backend
-  # verifies it, so this app never handles a password or an SMS code.
-  google_sign_in: ^7.2.0
-
-
   # Formatting (§60 - Africa/Cairo presentation).
   # Pinned to whatever flutter_localizations resolves for this SDK.
   intl: 0.20.2

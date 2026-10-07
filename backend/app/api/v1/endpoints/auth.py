@@ -11,10 +11,10 @@ from app.db.models.identity import CustomerProfile
 from app.schemas.auth import (
     AuthSessionResponse,
     CustomerProfileResponse,
+    EmailOtpRequest,
     GoogleSignInRequest,
     LogoutRequest,
     OtpResponse,
-    PhoneRequest,
     RefreshRequest,
     TokenPair,
     VerifyOtpRequest,
@@ -49,12 +49,15 @@ def _customer_payload(customer: auth_service.AuthenticatedCustomer) -> CustomerP
     "/request-otp",
     response_model=OtpResponse,
     status_code=status.HTTP_202_ACCEPTED,
-    summary="Send an OTP to a phone number",
+    summary="Send a verification code to an email address",
 )
 @limiter.limit(OTP_LIMIT)
-def request_otp(payload: PhoneRequest, request: Request, db: DbSession) -> OtpResponse:
+def request_otp(payload: EmailOtpRequest, request: Request, db: DbSession) -> OtpResponse:
     user, _is_new_user, ttl = auth_service.start_otp(
-        db, phone=payload.phone, ip_address=client_ip(request)
+        db,
+        email=payload.email,
+        phone=payload.phone,
+        ip_address=client_ip(request),
     )
     db.commit()
     profile_exists = (
@@ -64,7 +67,7 @@ def request_otp(payload: PhoneRequest, request: Request, db: DbSession) -> OtpRe
         is not None
     )
     return OtpResponse(
-        message="تم إرسال رمز التحقق إلى هاتفك.",
+        message="تم إرسال رمز التحقق إلى بريدك الإلكتروني.",
         expires_in_seconds=ttl,
         is_new_customer=not profile_exists,
     )
@@ -75,7 +78,7 @@ def request_otp(payload: PhoneRequest, request: Request, db: DbSession) -> OtpRe
 def verify_otp(payload: VerifyOtpRequest, request: Request, db: DbSession) -> AuthSessionResponse:
     customer, tokens = auth_service.verify_otp(
         db,
-        phone=payload.phone,
+        email=payload.email,
         code=payload.code,
         full_name=payload.full_name,
     )

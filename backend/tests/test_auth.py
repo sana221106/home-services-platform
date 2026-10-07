@@ -1,6 +1,6 @@
 """Authentication and authorisation tests (§90, §93).
 
-Covers the OTP login flow, refresh rotation, Google sign-in, and — most
+Covers the email-OTP login flow, refresh rotation, Google sign-in, and — most
 importantly — that a customer token can never reach another customer's data.
 """
 
@@ -9,11 +9,12 @@ from __future__ import annotations
 from types import SimpleNamespace
 
 from fastapi.testclient import TestClient
+from httpx import Response
 from sqlalchemy.orm import Session
 
 from app.core.config import settings
-from app.db.models import User
-from app.services import auth_service
+from app.db.models import OtpDeliveryLog, User
+from app.services import auth_service, email_service
 from tests.conftest import (
     auth_header,
     customer_token,
@@ -25,8 +26,15 @@ from tests.conftest import (
 # ------------------------------------------------------------------ OTP login
 
 
+def _request(client: TestClient, email: str, phone: str | None = None) -> Response:
+    payload: dict[str, object] = {"email": email}
+    if phone is not None:
+        payload["phone"] = phone
+    return client.post("/api/v1/auth/request-otp", json=payload)
+
+
 def test_request_otp_creates_challenge(client: TestClient, db: Session) -> None:
-    response = client.post("/api/v1/auth/request-otp", json={"phone": "+201000000009"})
+    response = _request(client, "sara@example.com")
     assert response.status_code == 202
     body = response.json()
     assert body["expires_in_seconds"] > 0
@@ -34,13 +42,21 @@ def test_request_otp_creates_challenge(client: TestClient, db: Session) -> None:
     assert "code" not in body, "the OTP must never be echoed in a response"
 
 
+def test_a_malformed_email_is_rejected_before_anything_is_written(
+    client: TestClient, db: Session
+) -> None:
+    response = client.post("/api/v1/auth/request-otp", json={"email": "not-an-email"})
+    assert response.status_code == 422
+    assert db.query(User).count() == 0
+
+
 def test_verify_otp_issues_tokens(client: TestClient, db: Session) -> None:
-    client.post("/api/v1/auth/request-otp", json={"phone": "+201000000009"})
-    code = latest_otp(db, "+201000000009")
+    _request(client, "sara@example.com")
+    code = latest_otp(db, "sara@example.com")
 
     response = client.post(
         "/api/v1/auth/verify-otp",
-        json={"phone": "+201000000009", "code": code, "full_name": "سارة علي"},
+        json={"email": "sara@example.com", "code": code, "full_name": "سارة علي"},
     )
     assert response.status_code == 200
     tokens = response.json()["tokens"]
@@ -50,16 +66,68 @@ def test_verify_otp_issues_tokens(client: TestClient, db: Session) -> None:
 
     me = client.get("/api/v1/auth/me", headers=auth_header(tokens["access_token"]))
     assert me.status_code == 200
-    assert me.json()["phone"] == "+201000000009"
+    assert me.json()["email"] == "sara@example.com"
     assert me.json()["full_name"] == "سارة علي"
+    assert me.json()["phone"] is None, "a blank phone must stay blank, not invented"
+
+
+def test_the_phone_is_optional_but_really_stored(
+    client: TestClient, db: Session
+) -> None:
+    """The number the customer does give has to come back on their own profile."""
+    _request(client, "nour@example.com", phone="+201001234567")
+    code = latest_otp(db, "nour@example.com")
+
+    session = client.post(
+        "/api/v1/auth/verify-otp",
+        json={"email": "nour@example.com", "code": code, "full_name": "نور"},
+    ).json()["tokens"]
+    me = client.get("/api/v1/auth/me", headers=auth_header(session["access_token"]))
+    assert me.json()["phone"] == "+201001234567"
+
+
+def test_the_same_email_is_always_the_same_account(
+    client: TestClient, db: Session
+) -> None:
+    """A different number on the next visit must not fork the customer."""
+    assert _request(client, "nour@example.com", phone="+201000000020").json()[
+        "is_new_customer"
+    ]
+    code = latest_otp(db, "nour@example.com")
+    assert (
+        client.post(
+            "/api/v1/auth/verify-otp",
+            json={"email": "nour@example.com", "code": code, "full_name": "نور"},
+        ).status_code
+        == 200
+    )
+
+    again = _request(client, "nour@example.com", phone="+201000000021")
+    assert again.json()["is_new_customer"] is False
+    assert db.query(User).filter(User.email == "nour@example.com").count() == 1
+
+    user = db.query(User).filter(User.email == "nour@example.com").one()
+    assert user.phone == "+201000000021", "a corrected number has to stick"
+
+
+def test_email_matching_ignores_case(client: TestClient, db: Session) -> None:
+    _request(client, "Sara@Example.com")
+    code = latest_otp(db, "sara@example.com")
+
+    response = client.post(
+        "/api/v1/auth/verify-otp",
+        json={"email": "SARA@EXAMPLE.COM", "code": code, "full_name": "سارة"},
+    )
+    assert response.status_code == 200
+    assert db.query(User).filter(User.email == "sara@example.com").count() == 1
 
 
 def test_verify_otp_rejects_wrong_code(client: TestClient, db: Session) -> None:
-    client.post("/api/v1/auth/request-otp", json={"phone": "+201000000010"})
-    code = latest_otp(db, "+201000000010")
+    _request(client, "nada@example.com")
+    code = latest_otp(db, "nada@example.com")
 
     response = client.post(
-        "/api/v1/auth/verify-otp", json={"phone": "+201000000010", "code": "000000"}
+        "/api/v1/auth/verify-otp", json={"email": "nada@example.com", "code": "000000"}
     )
     assert response.status_code == 401
     assert response.json()["code"] in {"INVALID_CREDENTIALS", "OTP_ATTEMPTS_EXCEEDED"}
@@ -67,15 +135,60 @@ def test_verify_otp_rejects_wrong_code(client: TestClient, db: Session) -> None:
 
 
 def test_otp_is_single_use(client: TestClient, db: Session) -> None:
-    client.post("/api/v1/auth/request-otp", json={"phone": "+201000000011"})
-    code = latest_otp(db, "+201000000011")
-    payload = {"phone": "+201000000011", "code": code, "full_name": "أحمد"}
+    _request(client, "mona@example.com")
+    code = latest_otp(db, "mona@example.com")
+    payload = {"email": "mona@example.com", "code": code, "full_name": "أحمد"}
 
     assert client.post("/api/v1/auth/verify-otp", json=payload).status_code == 200
     replay = client.post("/api/v1/auth/verify-otp", json=payload)
     # 410 OTP_EXPIRED is the correct answer once the challenge is consumed:
     # there is simply no live challenge left to verify against.
     assert replay.status_code in {401, 410}
+
+
+def test_a_code_for_an_unknown_address_is_rejected(
+    client: TestClient, db: Session
+) -> None:
+    response = client.post(
+        "/api/v1/auth/verify-otp",
+        json={"email": "nobody@example.com", "code": "123456"},
+    )
+    assert response.status_code == 401
+
+
+def test_an_unconfigured_relay_still_completes_the_flow(
+    client: TestClient, db: Session, monkeypatch
+) -> None:
+    """§135: no mail credentials means the log carries the code, not a failure."""
+    monkeypatch.setattr(settings, "smtp_host", "")
+
+    assert _request(client, "offline@example.com").status_code == 202
+    code = latest_otp(db, "offline@example.com")
+    assert client.post(
+        "/api/v1/auth/verify-otp",
+        json={"email": "offline@example.com", "code": code},
+    ).status_code == 200
+
+    log_row = db.query(OtpDeliveryLog).order_by(OtpDeliveryLog.created_at.desc()).first()
+    assert log_row is not None and log_row.provider == "log_only"
+    assert log_row.destination_masked == "o***@example.com"
+
+
+def test_a_refused_send_fails_the_request_rather_than_dropping_the_code(
+    client: TestClient, db: Session, monkeypatch
+) -> None:
+    """"Code sent" must never be shown for a code that could not leave."""
+    monkeypatch.setattr(settings, "smtp_host", "smtp.example.com")
+
+    def _boom(*_args: object, **_kwargs: object) -> None:
+        raise OSError("connection refused")
+
+    monkeypatch.setattr(email_service.smtplib, "SMTP", _boom)
+
+    response = _request(client, "blocked@example.com")
+    assert response.status_code == 503
+    assert response.json()["code"] == "INTEGRATION_UNAVAILABLE"
+    assert db.query(OtpDeliveryLog).count() == 0
 
 
 # ------------------------------------------------------------------ Google
@@ -196,11 +309,11 @@ def test_google_sign_in_reports_a_missing_configuration(
 
 
 def test_refresh_rotates_and_revokes_old_token(client: TestClient, db: Session) -> None:
-    client.post("/api/v1/auth/request-otp", json={"phone": "+201000000012"})
-    code = latest_otp(db, "+201000000012")
+    client.post("/api/v1/auth/request-otp", json={"email": "rotating@example.com"})
+    code = latest_otp(db, "rotating@example.com")
     first = client.post(
         "/api/v1/auth/verify-otp",
-        json={"phone": "+201000000012", "code": code, "full_name": "س"},
+        json={"email": "rotating@example.com", "code": code, "full_name": "س"},
     ).json()["tokens"]
 
     rotated = client.post(

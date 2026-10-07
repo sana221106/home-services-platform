@@ -119,7 +119,7 @@ if (-not $SkipApk) {
 
 Write-Host '  Starting the API. Leave this window open while the demo runs.' -ForegroundColor Yellow
 Write-Host ''
-Write-Host '  Signing in: any phone number works, and a new account is created on the' -ForegroundColor DarkGray
+Write-Host '  Signing in: any email address works, and a new account is created on the' -ForegroundColor DarkGray
 Write-Host '  first use. The one-time code is printed below as otp_issued, so read it' -ForegroundColor DarkGray
 Write-Host '  out of this window and type it into the app.' -ForegroundColor DarkGray
 Write-Host ''

@@ -308,17 +308,47 @@ abstract class AppLocalizations {
   /// **'ابدأ الآن'**
   String get onboardingGetStarted;
 
-  /// No description provided for @authPhoneTitle.
+  /// No description provided for @authSignInTitle.
   ///
   /// In ar, this message translates to:
-  /// **'رقم الهاتف'**
-  String get authPhoneTitle;
+  /// **'تسجيل الدخول'**
+  String get authSignInTitle;
 
-  /// No description provided for @authPhoneBody.
+  /// No description provided for @authSignInBody.
   ///
   /// In ar, this message translates to:
-  /// **'أدخل رقم هاتفك للمتابعة'**
-  String get authPhoneBody;
+  /// **'أدخل بياناتك للمتابعة'**
+  String get authSignInBody;
+
+  /// No description provided for @authEmailLabel.
+  ///
+  /// In ar, this message translates to:
+  /// **'البريد الإلكتروني'**
+  String get authEmailLabel;
+
+  /// No description provided for @authEmailHint.
+  ///
+  /// In ar, this message translates to:
+  /// **'name@example.com'**
+  String get authEmailHint;
+
+  /// No description provided for @authEmailInvalid.
+  ///
+  /// In ar, this message translates to:
+  /// **'البريد الإلكتروني غير صحيح'**
+  String get authEmailInvalid;
+
+  /// No description provided for @authEmailNewAccountHint.
+  ///
+  /// In ar, this message translates to:
+  /// **'حساب جديد؟ سننشئه تلقائياً بعد التحقق من بريدك.'**
+  String get authEmailNewAccountHint;
+
+  /// No description provided for @authEmailRequired.
+  ///
+  /// In ar, this message translates to:
+  /// **'البريد الإلكتروني غير معروف. أعد إدخاله.'**
+  String get authEmailRequired;
 
   /// No description provided for @authPhoneLabel.
   ///
@@ -337,30 +367,6 @@ abstract class AppLocalizations {
   /// In ar, this message translates to:
   /// **'رقم الهاتف غير صحيح'**
   String get authPhoneInvalid;
-
-  /// No description provided for @authPhoneNewAccountHint.
-  ///
-  /// In ar, this message translates to:
-  /// **'رقم جديد؟ سننشئ لك حساباً تلقائياً عند التحقق.'**
-  String get authPhoneNewAccountHint;
-
-  /// No description provided for @authPhoneRequired.
-  ///
-  /// In ar, this message translates to:
-  /// **'رقم الهاتف غير معروف. أعد إدخاله.'**
-  String get authPhoneRequired;
-
-  /// No description provided for @authGoogleDivider.
-  ///
-  /// In ar, this message translates to:
-  /// **'أو'**
-  String get authGoogleDivider;
-
-  /// No description provided for @authGoogleSignIn.
-  ///
-  /// In ar, this message translates to:
-  /// **'المتابعة بحساب Google'**
-  String get authGoogleSignIn;
 
   /// No description provided for @authNameLabel.
   ///
@@ -383,7 +389,7 @@ abstract class AppLocalizations {
   /// No description provided for @authOtpBody.
   ///
   /// In ar, this message translates to:
-  /// **'أرسلنا رمزاً مكوّناً من {count} أرقام إلى رقمك'**
+  /// **'أرسلنا رمزاً مكوّناً من {count} أرقام إلى بريدك الإلكتروني'**
   String authOtpBody(Object count);
 
   /// No description provided for @authOtpResendIn.
@@ -404,11 +410,11 @@ abstract class AppLocalizations {
   /// **'تحقق'**
   String get authOtpVerify;
 
-  /// No description provided for @authOtpChangeNumber.
+  /// No description provided for @authOtpChangeEmail.
   ///
   /// In ar, this message translates to:
-  /// **'تغيير رقم الهاتف'**
-  String get authOtpChangeNumber;
+  /// **'تغيير البريد الإلكتروني'**
+  String get authOtpChangeEmail;
 
   /// No description provided for @authOtpField.
   ///
@@ -419,7 +425,7 @@ abstract class AppLocalizations {
   /// No description provided for @authOtpSent.
   ///
   /// In ar, this message translates to:
-  /// **'تم إرسال رمز التحقق'**
+  /// **'تم إرسال رمز التحقق إلى بريدك'**
   String get authOtpSent;
 
   /// No description provided for @homeGreeting.

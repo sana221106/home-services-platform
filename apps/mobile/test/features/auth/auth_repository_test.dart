@@ -88,8 +88,8 @@ void main() {
     );
   }
 
-  group('phone + OTP sign-in', () {
-    test('requestOtp sends the phone and optional name', () async {
+  group('email + OTP sign-in', () {
+    test('requestOtp sends the email and an optional phone', () async {
       final adapter = _Adapter(
         (_, _) async => _json(<String, dynamic>{
           'message': 'تم إرسال الرمز',
@@ -100,27 +100,51 @@ void main() {
 
       final challenge = await repositoryWith(
         adapter,
-      ).requestOtp(phone: '+201001234567', fullName: 'سارة');
+      ).requestOtp(email: 'sara@example.com', phone: '+201001234567');
 
       expect(adapter.calls.single.$1, ApiEndpoints.authRequestOtp);
       expect(adapter.calls.single.$2, <String, dynamic>{
+        'email': 'sara@example.com',
         'phone': '+201001234567',
-        'full_name': 'سارة',
       });
       expect(challenge.isNewCustomer, isTrue);
       expect(challenge.expiresInSeconds, 300);
+    });
+
+    test('requestOtp omits the phone entirely when none was given', () async {
+      final adapter = _Adapter(
+        (_, _) async => _json(<String, dynamic>{
+          'message': 'تم إرسال الرمز',
+          'expires_in_seconds': 300,
+          'is_new_customer': false,
+        }),
+      );
+
+      await repositoryWith(
+        adapter,
+      ).requestOtp(email: 'sara@example.com');
+
+      expect(adapter.calls.single.$1, ApiEndpoints.authRequestOtp);
+      expect(adapter.calls.single.$2, <String, dynamic>{
+        'email': 'sara@example.com',
+      });
     });
 
     test('verifyOtp persists the tokens and returns the customer', () async {
       final adapter = _Adapter((_, _) async => _json(_session()));
       final repo = repositoryWith(adapter);
 
-      final customer = await repo.verifyOtp(phone: '+20100', code: '1234');
+      final customer = await repo.verifyOtp(
+        email: 'sara@example.com',
+        code: '1234',
+        fullName: 'سارة أحمد',
+      );
 
       expect(adapter.calls.single.$1, ApiEndpoints.authVerifyOtp);
       expect(adapter.calls.single.$2, <String, dynamic>{
-        'phone': '+20100',
+        'email': 'sara@example.com',
         'code': '1234',
+        'full_name': 'سارة أحمد',
       });
       expect(store.tokens, isNotNull);
       expect(store.tokens!.accessToken, 'access-1');
@@ -138,7 +162,9 @@ void main() {
       );
 
       await expectLater(
-        repositoryWith(adapter).verifyOtp(phone: '+20100', code: '0000'),
+        repositoryWith(
+          adapter,
+        ).verifyOtp(email: 'sara@example.com', code: '0000'),
         throwsA(
           isA<ApiFailure>()
               .having((ApiFailure f) => f.code, 'code', 'OTP_ATTEMPTS_EXCEEDED')

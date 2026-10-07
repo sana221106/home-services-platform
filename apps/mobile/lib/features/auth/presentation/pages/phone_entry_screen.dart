@@ -11,10 +11,12 @@ import '../../../../core/utils/phone_number.dart';
 import '../../../../core/widgets/app_icon.dart';
 import '../../presentation/controllers/auth_controller.dart';
 
-/// Asks for the phone number that the OTP will be sent to.
+/// Asks for the details the OTP is bound to.
 ///
-/// The customer never picks a password: the backend decides whether this phone
-/// is new and the OTP endpoint is the only sign-in path.
+/// The customer never picks a password: a six-digit code is sent to the email
+/// address below and that code is the only sign-in path. The name is captured
+/// here because the backend only trusts it once the code proves the address
+/// belongs to this device; the phone is voluntary and stored for support.
 class PhoneEntryScreen extends ConsumerStatefulWidget {
   const PhoneEntryScreen({super.key});
 
@@ -24,17 +26,19 @@ class PhoneEntryScreen extends ConsumerStatefulWidget {
 
 class _PhoneEntryScreenState extends ConsumerState<PhoneEntryScreen> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-  final TextEditingController _phoneController = TextEditingController();
   final TextEditingController _nameController = TextEditingController();
+  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _phoneController = TextEditingController();
 
-  /// Prefixed dial code. Kept as a constant rather than a picker because the
-  /// platform is a single market; the backend still validates the full number.
-  static const String _dialCode = PhoneNumber.defaultDialCode;
+  static final RegExp _emailPattern = RegExp(
+    r'^[^@\s]+@[^@\s]+\.[A-Za-z]{2,}$',
+  );
 
   @override
   void dispose() {
-    _phoneController.dispose();
     _nameController.dispose();
+    _emailController.dispose();
+    _phoneController.dispose();
     super.dispose();
   }
 
@@ -43,11 +47,12 @@ class _PhoneEntryScreenState extends ConsumerState<PhoneEntryScreen> {
     if (!(_formKey.currentState?.validate() ?? false)) return;
 
     final String? normalised = PhoneNumber.normalize(_phoneController.text);
-    if (normalised == null) return;
 
-    final bool sent = await ref
-        .read(authProvider.notifier)
-        .requestOtp(phone: normalised, fullName: _nameController.text.trim());
+    final bool sent = await ref.read(authProvider.notifier).requestOtp(
+      email: _emailController.text.trim().toLowerCase(),
+      phone: normalised,
+      fullName: _nameController.text.trim(),
+    );
 
     if (!mounted || !sent) return;
     await context.pushNamed(AppRoute.otpVerify.name);
@@ -81,12 +86,12 @@ class _PhoneEntryScreenState extends ConsumerState<PhoneEntryScreen> {
             ),
             SizedBox(height: AppSpacing.lg),
             Text(
-              l10n.authPhoneTitle,
+              l10n.authSignInTitle,
               style: Theme.of(context).textTheme.headlineMedium,
             ),
             const SizedBox(height: AppSpacing.xs),
             Text(
-              l10n.authPhoneBody,
+              l10n.authSignInBody,
               style: Theme.of(
                 context,
               ).textTheme.bodyMedium?.copyWith(color: colors.textSecondary),
@@ -98,40 +103,67 @@ class _PhoneEntryScreenState extends ConsumerState<PhoneEntryScreen> {
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: <Widget>[
                   TextFormField(
-                    controller: _phoneController,
-                    keyboardType: TextInputType.phone,
-                    textDirection: TextDirection.ltr,
+                    controller: _nameController,
+                    textDirection: TextDirection.rtl,
                     textInputAction: TextInputAction.next,
-                    inputFormatters: <TextInputFormatter>[
-                      FilteringTextInputFormatter.allow(RegExp(r'[0-9+\s\-]')),
-                      LengthLimitingTextInputFormatter(18),
-                    ],
+                    textCapitalization: TextCapitalization.words,
                     decoration: InputDecoration(
-                      labelText: l10n.authPhoneLabel,
-                      hintText: l10n.authPhoneHint,
-                      prefixText: '$_dialCode ',
-                      prefixStyle: Theme.of(context).textTheme.bodyLarge,
+                      labelText: l10n.authNameLabel,
+                      hintText: l10n.authNameHint,
                     ),
                     validator: (String? value) {
                       if (value == null || value.trim().isEmpty) {
                         return l10n.commonRequiredField;
                       }
-                      return PhoneNumber.normalize(value) == null
-                          ? l10n.authPhoneInvalid
-                          : null;
+                      return null;
                     },
                   ),
                   const SizedBox(height: AppSpacing.md),
                   TextFormField(
-                    controller: _nameController,
+                    controller: _emailController,
+                    keyboardType: TextInputType.emailAddress,
+                    textDirection: TextDirection.ltr,
+                    textInputAction: TextInputAction.next,
+                    autocorrect: false,
+                    inputFormatters: <TextInputFormatter>[
+                      LengthLimitingTextInputFormatter(255),
+                    ],
+                    decoration: InputDecoration(
+                      labelText: l10n.authEmailLabel,
+                      hintText: l10n.authEmailHint,
+                    ),
+                    validator: (String? value) {
+                      if (value == null || value.trim().isEmpty) {
+                        return l10n.commonRequiredField;
+                      }
+                      if (!_emailPattern.hasMatch(value.trim())) {
+                        return l10n.authEmailInvalid;
+                      }
+                      return null;
+                    },
+                  ),
+                  const SizedBox(height: AppSpacing.md),
+                  TextFormField(
+                    controller: _phoneController,
+                    keyboardType: TextInputType.phone,
+                    textDirection: TextDirection.ltr,
                     textInputAction: TextInputAction.done,
-                    textCapitalization: TextCapitalization.words,
+                    inputFormatters: <TextInputFormatter>[
+                      FilteringTextInputFormatter.allow(RegExp(r'[0-9+\s\-]')),
+                      LengthLimitingTextInputFormatter(18),
+                    ],
                     onFieldSubmitted: (_) => _submit(),
                     decoration: InputDecoration(
                       labelText:
-                          '${l10n.authNameLabel} (${l10n.commonOptional})',
-                      hintText: l10n.authNameHint,
+                          '${l10n.authPhoneLabel} (${l10n.commonOptional})',
+                      hintText: l10n.authPhoneHint,
                     ),
+                    validator: (String? value) {
+                      if (value == null || value.trim().isEmpty) return null;
+                      return PhoneNumber.normalize(value) == null
+                          ? l10n.authPhoneInvalid
+                          : null;
+                    },
                   ),
                 ],
               ),
@@ -159,38 +191,12 @@ class _PhoneEntryScreenState extends ConsumerState<PhoneEntryScreen> {
             if (isNew && state.error == null) ...<Widget>[
               const SizedBox(height: AppSpacing.md),
               Text(
-                l10n.authPhoneNewAccountHint,
+                l10n.authEmailNewAccountHint,
                 style: Theme.of(
                   context,
                 ).textTheme.bodySmall?.copyWith(color: colors.textSecondary),
               ),
             ],
-            const SizedBox(height: AppSpacing.xl),
-            Row(
-              children: <Widget>[
-                const Expanded(child: Divider()),
-                Padding(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: AppSpacing.md,
-                  ),
-                  child: Text(
-                    l10n.authGoogleDivider,
-                    style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                      color: colors.textSecondary,
-                    ),
-                  ),
-                ),
-                const Expanded(child: Divider()),
-              ],
-            ),
-            const SizedBox(height: AppSpacing.md),
-            OutlinedButton.icon(
-              onPressed: state.isSubmitting
-                  ? null
-                  : () => ref.read(authProvider.notifier).signInWithGoogle(),
-              icon: const Icon(Icons.account_circle_outlined, size: 22),
-              label: Text(l10n.authGoogleSignIn),
-            ),
           ],
         ),
       ),

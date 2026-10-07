@@ -30,11 +30,15 @@ class User(UUIDPrimaryKeyMixin, TimestampMixin, Base):
 
     __tablename__ = "users"
 
-    # Nullable because a Google-signed-in customer has no phone at all, and the
-    # phone is only meaningful to the OTP path. Every phone lookup in the code
-    # supplies a number, so a NULL can never match one of those queries.
-    phone: Mapped[str | None] = mapped_column(String(32), unique=True, index=True)
+    # Nullable and not unique: the email is the identity now, so the phone is
+    # only contact detail. Two customers on the same household number must not
+    # collide, and a blank entry stays a normal outcome rather than a violation.
+    phone: Mapped[str | None] = mapped_column(String(32), index=True)
     phone_country_code: Mapped[str] = mapped_column(String(8), default="+20", nullable=False)
+    #: The login identity for the email OTP path. Nullable because a Google
+    #: account can arrive without a usable address; the OTP path always sets it
+    #: before a challenge exists, so a challenge can never dangle on a NULL.
+    email: Mapped[str | None] = mapped_column(String(255), unique=True, index=True)
     is_active: Mapped[bool] = mapped_column(Boolean, default=True, nullable=False)
     is_staff: Mapped[bool] = mapped_column(Boolean, default=False, nullable=False)
     last_login_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True))

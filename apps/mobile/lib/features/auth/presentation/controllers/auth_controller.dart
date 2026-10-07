@@ -1,9 +1,7 @@
 import 'package:equatable/equatable.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:google_sign_in/google_sign_in.dart';
 
 import '../../../../app/bootstrap/app_bootstrap.dart';
-import '../../../../app/config/flavor_config.dart';
 import '../../../../core/logging/app_logger.dart';
 import '../../../../core/errors/failure.dart';
 import '../../data/datasources/auth_remote_data_source.dart';
@@ -29,9 +27,9 @@ final Provider<AuthRepository> authRepositoryProvider =
 /// Failures the client detects itself, before the backend can answer. Rendered
 /// through the ARB strings so no user-facing copy lives in a controller.
 enum AuthErrorCode {
-  /// The OTP screen is open but the phone it was sent to is gone, which means
-  /// the session was reset and the customer has to enter the number again.
-  phoneRequired,
+  /// The OTP screen is open but the address it was sent to is gone, which
+  /// means the session was reset and the customer has to enter it again.
+  emailRequired,
 }
 
 /// Where the customer is in the sign-in flow.
@@ -53,7 +51,9 @@ class AuthState extends Equatable {
   const AuthState({
     required this.stage,
     this.customer,
+    this.email,
     this.phone,
+    this.fullName,
     this.isNewCustomer = false,
     this.isSubmitting = false,
     this.otpExpiresInSeconds = 0,
@@ -67,9 +67,17 @@ class AuthState extends Equatable {
   final AuthStage stage;
   final CustomerProfile? customer;
 
-  /// Phone the current OTP was sent to; retained so a resend does not need
-  /// the form to still be mounted.
+  /// Address the current OTP was sent to; retained so a resend and the verify
+  /// call do not need the entry form to still be mounted.
+  final String? email;
+
+  /// Phone the customer volunteered. Recorded on the profile for support and
+  /// never used as a credential, which is why it is not required anywhere.
   final String? phone;
+
+  /// Name typed on the entry screen. Held unverified until the code proves
+  /// [email] belongs to this device, then sent with [verifyOtp].
+  final String? fullName;
 
   final bool isNewCustomer;
   final bool isSubmitting;
@@ -100,7 +108,9 @@ class AuthState extends Equatable {
   AuthState copyWith({
     AuthStage? stage,
     CustomerProfile? customer,
+    String? email,
     String? phone,
+    String? fullName,
     bool? isNewCustomer,
     bool? isSubmitting,
     int? otpExpiresInSeconds,
@@ -113,7 +123,9 @@ class AuthState extends Equatable {
     return AuthState(
       stage: stage ?? this.stage,
       customer: customer ?? this.customer,
+      email: email ?? this.email,
       phone: phone ?? this.phone,
+      fullName: fullName ?? this.fullName,
       isNewCustomer: isNewCustomer ?? this.isNewCustomer,
       isSubmitting: isSubmitting ?? this.isSubmitting,
       otpExpiresInSeconds: otpExpiresInSeconds ?? this.otpExpiresInSeconds,
@@ -129,7 +141,9 @@ class AuthState extends Equatable {
   List<Object?> get props => <Object?>[
     stage,
     customer,
+    email,
     phone,
+    fullName,
     isNewCustomer,
     isSubmitting,
     otpExpiresInSeconds,
@@ -192,17 +206,23 @@ class AuthController extends Notifier<AuthState> {
     }
   }
 
-  Future<bool> requestOtp({required String phone, String? fullName}) async {
+  Future<bool> requestOtp({
+    required String email,
+    String? phone,
+    String? fullName,
+  }) async {
     state = state.copyWith(isSubmitting: true, clearError: true);
     try {
       final challenge = await ref
           .read(authRepositoryProvider)
-          .requestOtp(phone: phone, fullName: fullName);
+          .requestOtp(email: email, phone: phone);
       if (!ref.mounted) return false;
       state = state.copyWith(
         stage: AuthStage.awaitingOtp,
         isSubmitting: false,
+        email: email,
         phone: phone,
+        fullName: fullName,
         isNewCustomer: challenge.isNewCustomer,
         otpExpiresInSeconds: challenge.expiresInSeconds,
         resendAvailableAt: DateTime.now().add(
@@ -216,18 +236,19 @@ class AuthController extends Notifier<AuthState> {
     }
   }
 
-  Future<bool> verifyOtp({required String code, String? fullName}) async {
-    final phone = state.phone;
-    if (phone == null) {
-      state = state.copyWith(errorCode: AuthErrorCode.phoneRequired);
+  Future<bool> verifyOtp({required String code}) async {
+    final email = state.email;
+    if (email == null) {
+      state = state.copyWith(errorCode: AuthErrorCode.emailRequired);
       return false;
     }
+    final fullName = state.fullName;
 
     state = state.copyWith(isSubmitting: true, clearError: true);
     try {
       final customer = await ref
           .read(authRepositoryProvider)
-          .verifyOtp(phone: phone, code: code, fullName: fullName);
+          .verifyOtp(email: email, code: code, fullName: fullName);
       if (!ref.mounted) return false;
       state = state.copyWith(
         stage: AuthStage.authenticated,
@@ -242,51 +263,8 @@ class AuthController extends Notifier<AuthState> {
     }
   }
 
-  /// Signs in with the Google account already on this device.
-  ///
-  /// Cancelling the sheet is a normal outcome rather than a failure, so it
-  /// returns false without putting an error on screen.
-  Future<bool> signInWithGoogle() async {
-    state = state.copyWith(isSubmitting: true, clearError: true);
-    try {
-      final GoogleSignIn signIn = GoogleSignIn.instance;
-      // The server audience decides which client ID Google stamps on the token,
-      // which is the one the backend checks against — without it the backend
-      // would reject every token as belonging to someone else's app.
-      await signIn.initialize(
-        serverClientId: FlavorConfig.googleServerClientId,
-      );
-      final GoogleSignInAccount account = await signIn.authenticate();
-      final String? idToken = account.authentication.idToken;
-      if (idToken == null || idToken.isEmpty) {
-        state = state.copyWith(isSubmitting: false);
-        return false;
-      }
-
-      final customer = await ref
-          .read(authRepositoryProvider)
-          .signInWithGoogle(idToken: idToken);
-      if (!ref.mounted) return false;
-      state = state.copyWith(
-        stage: AuthStage.authenticated,
-        customer: customer,
-        isSubmitting: false,
-        clearResend: true,
-      );
-      return true;
-    } on ApiFailure catch (failure) {
-      state = state.copyWith(isSubmitting: false, error: failure.message);
-      return false;
-    } catch (_) {
-      // Dismissed sheet or a plugin failure before a token existed: there is
-      // nothing useful to tell the customer, so leave the form as it was.
-      state = state.copyWith(isSubmitting: false);
-      return false;
-    }
-  }
-
-  /// Returns the customer to phone entry, e.g. from the "change number" action.
-  void backToPhoneEntry() {
+  /// Returns the customer to the entry form, e.g. from "change email address".
+  void backToSignIn() {
     state = const AuthState(stage: AuthStage.unauthenticated);
   }
 

@@ -42,7 +42,7 @@ class TokenPairPayload {
   final DateTime expiresAt;
 }
 
-/// Translates the four auth endpoints.
+/// Translates the three auth endpoints the client uses.
 ///
 /// The only job of this class is to turn a backend payload into a domain model
 /// and let [ApiFailure] propagate: presentation code must never see a
@@ -52,37 +52,27 @@ class AuthRemoteDataSource {
 
   final Dio _dio;
 
-  Future<OtpChallenge> requestOtp({
-    required String phone,
-    String? fullName,
-  }) async {
+  Future<OtpChallenge> requestOtp({required String email, String? phone}) async {
     final response = await _post(ApiEndpoints.authRequestOtp, <String, dynamic>{
-      'phone': phone,
-      if (fullName != null && fullName.isNotEmpty) 'full_name': fullName,
+      'email': email,
+      // The phone is recorded for support but is never the address the code
+      // goes to, so it is dropped entirely when blank rather than sent empty.
+      if (phone != null && phone.isNotEmpty) 'phone': phone,
     });
     return OtpChallenge.fromJson(response);
   }
 
   Future<AuthSession> verifyOtp({
-    required String phone,
+    required String email,
     required String code,
     String? fullName,
   }) async {
     final response = await _post(ApiEndpoints.authVerifyOtp, <String, dynamic>{
-      'phone': phone,
+      'email': email,
       'code': code,
+      // Only sent once the code proved the address belongs to this device:
+      // a name typed before verification is untrusted input.
       if (fullName != null && fullName.isNotEmpty) 'full_name': fullName,
-    });
-    return AuthSession.fromJson(response);
-  }
-
-  /// Exchanges the ID token Google issued on this device for our own session.
-  ///
-  /// The token is opaque here: Google's identity is verified server-side and
-  /// only the resulting session is trusted.
-  Future<AuthSession> signInWithGoogle({required String idToken}) async {
-    final response = await _post(ApiEndpoints.authGoogle, <String, dynamic>{
-      'id_token': idToken,
     });
     return AuthSession.fromJson(response);
   }

@@ -12,7 +12,7 @@ import '../../../../app/localization/app_localizations.dart';
 import '../../../../core/widgets/app_icon.dart';
 import '../../presentation/controllers/auth_controller.dart';
 
-/// Enters the OTP that was sent to the phone captured in [AuthState.phone].
+/// Enters the OTP that was sent to the email captured in [AuthState.email].
 ///
 /// The resend timer is cosmetic: the backend rate limit is authoritative, and
 /// a stale timer must never be the reason a legitimate resend is blocked.
@@ -77,12 +77,12 @@ class _OtpVerifyScreenState extends ConsumerState<OtpVerifyScreen> {
   }
 
   Future<void> _resend() async {
-    final String? phone = ref.read(authProvider).phone;
-    if (phone == null) return;
+    final String? email = ref.read(authProvider).email;
+    if (email == null) return;
 
     final bool sent = await ref
         .read(authProvider.notifier)
-        .requestOtp(phone: phone);
+        .requestOtp(email: email);
     if (!mounted || !sent) return;
 
     _startCountdown();
@@ -102,7 +102,7 @@ class _OtpVerifyScreenState extends ConsumerState<OtpVerifyScreen> {
     final String? errorMessage =
         state.error ??
         switch (state.errorCode) {
-          AuthErrorCode.phoneRequired => l10n.authPhoneRequired,
+          AuthErrorCode.emailRequired => l10n.authEmailRequired,
           null => null,
         };
 
@@ -118,7 +118,7 @@ class _OtpVerifyScreenState extends ConsumerState<OtpVerifyScreen> {
               alignment: AlignmentDirectional.centerStart,
               child: IconButton(
                 onPressed: () {
-                  ref.read(authProvider.notifier).backToPhoneEntry();
+                  ref.read(authProvider.notifier).backToSignIn();
                   context.pop();
                 },
                 icon: AppIcon(
@@ -137,7 +137,7 @@ class _OtpVerifyScreenState extends ConsumerState<OtpVerifyScreen> {
             ),
             const SizedBox(height: AppSpacing.sm),
             Text(
-              state.phone ?? '',
+              state.email ?? '',
               textDirection: TextDirection.ltr,
               style: context.text.body.copyWith(color: colors.primary),
             ),

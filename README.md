@@ -78,7 +78,10 @@ flutter test
 
 ## Authentication
 
-The platform runs its own phone-number OTP flow and issues its own JWTs.
+The platform runs its own email OTP flow and issues its own JWTs. A customer
+gives a name, an email address and an optional phone number; the 6-digit code is
+sent to that address. No SMS is involved anywhere.
+
 **Supabase Auth is deliberately not used** — `SUPABASE_AUTH_ENABLED` stays
 `false`, and enabling it would introduce a second, conflicting identity system.
 

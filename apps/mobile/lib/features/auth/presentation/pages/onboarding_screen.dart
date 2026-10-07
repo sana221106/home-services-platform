@@ -39,8 +39,8 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
 
   void _finish() {
     // Reset the session so a customer who reaches the end of onboarding always
-    // lands on phone entry, never straight into a half-filled OTP screen.
-    ref.read(authProvider.notifier).backToPhoneEntry();
+    // lands on the sign-in form, never straight into a half-filled OTP screen.
+    ref.read(authProvider.notifier).backToSignIn();
     context.goNamed(AppRoute.phoneEntry.name);
   }
 

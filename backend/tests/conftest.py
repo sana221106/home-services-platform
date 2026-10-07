@@ -30,6 +30,10 @@ os.environ.setdefault(
     "GOOGLE_CLIENT_IDS", "test-web-client.apps.googleusercontent.com"
 )
 os.environ.setdefault("STORAGE_ROOT", "./var/test-storage")
+# A developer's own ``backend/.env`` may point at a real relay; without this the
+# suite would try to deliver mail and hang on a dial. Assigned rather than
+# setdefault for the same reason as SUPABASE_URL below.
+os.environ["SMTP_HOST"] = ""
 
 # These are assigned, not setdefault: a developer's real ``backend/.env`` sets
 # SUPABASE_URL and SUPABASE_SERVICE_ROLE_KEY, and pydantic-settings reads that
@@ -209,7 +213,12 @@ def pricing_rule(db: Session, category: ServiceCategory, zone: CoverageZone) -> 
 
 @pytest.fixture()
 def customer(db: Session) -> CustomerProfile:
-    user = User(phone="+201000000001", is_active=True, is_staff=False)
+    user = User(
+        phone="+201000000001",
+        email="ahmed@example.com",
+        is_active=True,
+        is_staff=False,
+    )
     db.add(user)
     db.flush()
     row = CustomerProfile(
@@ -225,7 +234,12 @@ def customer(db: Session) -> CustomerProfile:
 
 @pytest.fixture()
 def other_customer(db: Session) -> CustomerProfile:
-    user = User(phone="+201000000002", is_active=True, is_staff=False)
+    user = User(
+        phone="+201000000002",
+        email="sara@example.com",
+        is_active=True,
+        is_staff=False,
+    )
     db.add(user)
     db.flush()
     row = CustomerProfile(
@@ -404,11 +418,11 @@ def make_payment(
     return row
 
 
-def latest_otp(db: Session, phone: str) -> str:
+def latest_otp(db: Session, email: str) -> str:
     """Tests cannot reverse the OTP hash, so re-issue a known challenge code."""
     from app.services import auth_service
 
-    user = db.query(User).filter(User.phone == phone).one()
+    user = db.query(User).filter(User.email == email).one()
     challenge = (
         db.query(OtpChallenge)
         .filter(OtpChallenge.user_id == user.id, OtpChallenge.consumed_at.is_(None))

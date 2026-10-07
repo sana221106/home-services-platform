@@ -115,10 +115,26 @@ class AppLocalizationsAr extends AppLocalizations {
   String get onboardingGetStarted => 'ابدأ الآن';
 
   @override
-  String get authPhoneTitle => 'رقم الهاتف';
+  String get authSignInTitle => 'تسجيل الدخول';
 
   @override
-  String get authPhoneBody => 'أدخل رقم هاتفك للمتابعة';
+  String get authSignInBody => 'أدخل بياناتك للمتابعة';
+
+  @override
+  String get authEmailLabel => 'البريد الإلكتروني';
+
+  @override
+  String get authEmailHint => 'name@example.com';
+
+  @override
+  String get authEmailInvalid => 'البريد الإلكتروني غير صحيح';
+
+  @override
+  String get authEmailNewAccountHint =>
+      'حساب جديد؟ سننشئه تلقائياً بعد التحقق من بريدك.';
+
+  @override
+  String get authEmailRequired => 'البريد الإلكتروني غير معروف. أعد إدخاله.';
 
   @override
   String get authPhoneLabel => 'رقم الهاتف';
@@ -128,19 +144,6 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get authPhoneInvalid => 'رقم الهاتف غير صحيح';
-
-  @override
-  String get authPhoneNewAccountHint =>
-      'رقم جديد؟ سننشئ لك حساباً تلقائياً عند التحقق.';
-
-  @override
-  String get authPhoneRequired => 'رقم الهاتف غير معروف. أعد إدخاله.';
-
-  @override
-  String get authGoogleDivider => 'أو';
-
-  @override
-  String get authGoogleSignIn => 'المتابعة بحساب Google';
 
   @override
   String get authNameLabel => 'الاسم بالكامل';
@@ -153,7 +156,7 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String authOtpBody(Object count) {
-    return 'أرسلنا رمزاً مكوّناً من $count أرقام إلى رقمك';
+    return 'أرسلنا رمزاً مكوّناً من $count أرقام إلى بريدك الإلكتروني';
   }
 
   @override
@@ -168,13 +171,13 @@ class AppLocalizationsAr extends AppLocalizations {
   String get authOtpVerify => 'تحقق';
 
   @override
-  String get authOtpChangeNumber => 'تغيير رقم الهاتف';
+  String get authOtpChangeEmail => 'تغيير البريد الإلكتروني';
 
   @override
   String get authOtpField => 'رمز التحقق';
 
   @override
-  String get authOtpSent => 'تم إرسال رمز التحقق';
+  String get authOtpSent => 'تم إرسال رمز التحقق إلى بريدك';
 
   @override
   String homeGreeting(Object name) {

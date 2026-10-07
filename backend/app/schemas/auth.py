@@ -8,28 +8,50 @@ from datetime import datetime
 from pydantic import BaseModel, ConfigDict, Field, field_validator
 
 PHONE_PATTERN = r"^\+?[0-9]{8,15}$"
+#: Deliberately permissive: the address only has to be well-formed enough to
+#: route mail to it. Deliverability is the relay's answer, not a regex's.
+EMAIL_PATTERN = r"^[^@\s]+@[^@\s]+\.[A-Za-z]{2,}$"
 
 
-class PhoneRequest(BaseModel):
-    model_config = ConfigDict(json_schema_extra={"example": {"phone": "+201001234567"}})
+class EmailOtpRequest(BaseModel):
+    """Asks for a verification code to be sent to an email address.
 
-    phone: str = Field(pattern=PHONE_PATTERN)
-    full_name: str | None = Field(default=None, max_length=160)
+    `phone` is contact detail rather than identity: it is stored, shown on the
+    profile, and never used to decide who is signing in — which is why it is
+    optional and why the same number may appear on more than one account.
+    """
+
+    model_config = ConfigDict(
+        json_schema_extra={
+            "example": {"email": "sara@example.com", "phone": "+201001234567"}
+        }
+    )
+
+    email: str = Field(pattern=EMAIL_PATTERN, max_length=255)
+    phone: str | None = Field(default=None, pattern=PHONE_PATTERN)
+
+    @field_validator("email")
+    @classmethod
+    def _normalise_email(cls, value: str) -> str:
+        return value.strip().lower()
 
     @field_validator("phone")
     @classmethod
-    def _normalise(cls, value: str) -> str:
-        return value.strip().replace(" ", "")
-
-
-class OtpRequest(BaseModel):
-    phone: str = Field(pattern=PHONE_PATTERN)
+    def _trim_phone(cls, value: str | None) -> str | None:
+        if value is None:
+            return None
+        return value.strip().replace(" ", "").replace("-", "") or None
 
 
 class VerifyOtpRequest(BaseModel):
-    phone: str = Field(pattern=PHONE_PATTERN)
+    email: str = Field(pattern=EMAIL_PATTERN, max_length=255)
     code: str = Field(min_length=4, max_length=8)
     full_name: str | None = Field(default=None, max_length=160)
+
+    @field_validator("email")
+    @classmethod
+    def _normalise_email(cls, value: str) -> str:
+        return value.strip().lower()
 
 
 class GoogleSignInRequest(BaseModel):
@@ -56,7 +78,8 @@ class CustomerProfileResponse(BaseModel):
 
     id: uuid.UUID
     full_name: str
-    #: Null for a customer who signed in with Google and never gave a phone.
+    #: Optional: the customer may leave it blank, and a Google sign-in never
+    #: asks for it at all.
     phone: str | None = None
     email: str | None = None
     avatar_url: str | None = None
