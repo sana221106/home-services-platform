@@ -34,6 +34,17 @@ class _OtpVerifyScreenState extends ConsumerState<OtpVerifyScreen> {
   void initState() {
     super.initState();
     _startCountdown();
+    // Show the backend's "code sent" confirmation once; it lives in
+    // AuthState because the server authors it in the user's locale.
+    final String? message = ref.read(authProvider).otpConfirmMessage;
+    if (message != null && message.isNotEmpty) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (!mounted) return;
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text(message)));
+      });
+    }
   }
 
   @override

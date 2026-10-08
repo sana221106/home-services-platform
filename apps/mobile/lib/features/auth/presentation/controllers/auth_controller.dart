@@ -54,6 +54,7 @@ class AuthState extends Equatable {
     this.email,
     this.phone,
     this.fullName,
+    this.otpConfirmMessage,
     this.isNewCustomer = false,
     this.isSubmitting = false,
     this.otpExpiresInSeconds = 0,
@@ -78,6 +79,10 @@ class AuthState extends Equatable {
   /// Name typed on the entry screen. Held unverified until the code proves
   /// [email] belongs to this device, then sent with [verifyOtp].
   final String? fullName;
+
+  /// Backend's own success text for the sent code (e.g. the Arabic "تم إرسال
+  /// رمز التحقق..."). Shown once when the OTP screen opens, then cleared.
+  final String? otpConfirmMessage;
 
   final bool isNewCustomer;
   final bool isSubmitting;
@@ -111,6 +116,8 @@ class AuthState extends Equatable {
     String? email,
     String? phone,
     String? fullName,
+    String? otpConfirmMessage,
+    bool clearOtpConfirm = false,
     bool? isNewCustomer,
     bool? isSubmitting,
     int? otpExpiresInSeconds,
@@ -126,6 +133,9 @@ class AuthState extends Equatable {
       email: email ?? this.email,
       phone: phone ?? this.phone,
       fullName: fullName ?? this.fullName,
+      otpConfirmMessage: clearOtpConfirm
+          ? null
+          : (otpConfirmMessage ?? this.otpConfirmMessage),
       isNewCustomer: isNewCustomer ?? this.isNewCustomer,
       isSubmitting: isSubmitting ?? this.isSubmitting,
       otpExpiresInSeconds: otpExpiresInSeconds ?? this.otpExpiresInSeconds,
@@ -144,6 +154,7 @@ class AuthState extends Equatable {
     email,
     phone,
     fullName,
+    otpConfirmMessage,
     isNewCustomer,
     isSubmitting,
     otpExpiresInSeconds,
@@ -223,6 +234,7 @@ class AuthController extends Notifier<AuthState> {
         email: email,
         phone: phone,
         fullName: fullName,
+        otpConfirmMessage: challenge.message,
         isNewCustomer: challenge.isNewCustomer,
         otpExpiresInSeconds: challenge.expiresInSeconds,
         resendAvailableAt: DateTime.now().add(
@@ -255,6 +267,7 @@ class AuthController extends Notifier<AuthState> {
         customer: customer,
         isSubmitting: false,
         clearResend: true,
+        clearOtpConfirm: true,
       );
       return true;
     } on ApiFailure catch (failure) {
