@@ -179,11 +179,16 @@ class Settings(BaseSettings):
     # hashing, its TTL and its attempt budget are unchanged: only the transport
     # that carries it moved off SMS.
     #
-    # An empty SMTP_HOST is a supported state (§135): the code is written to the
-    # log instead of an inbox, so a fresh clone signs a customer in end to end
-    # without any mail credentials. Setting a host makes delivery real — and a
-    # failed send then fails the request rather than silently dropping a code
-    # the customer will wait forever for.
+    # Keep the legacy SMTP/no-host development fallback by default. Selecting
+    # gmail_api always attempts HTTPS delivery and fails safely if unconfigured;
+    # it never falls back to SMTP or log-only delivery.
+    email_otp_provider: Literal["log_only", "smtp", "gmail_api"] = "smtp"
+    gmail_client_id: str = ""
+    gmail_client_secret: SecretStr | None = None
+    gmail_refresh_token: SecretStr | None = None
+    gmail_sender_email: str = ""
+    gmail_sender_name: str = "Home Services"
+
     smtp_host: str = ""
     smtp_port: int = 587
     smtp_user: str = ""
@@ -255,12 +260,17 @@ class Settings(BaseSettings):
 
     @property
     def email_configured(self) -> bool:
-        """True when a real outbound mail relay is available.
-
-        A ``SecretStr`` wrapping an empty password is still a truthy object, so
-        the host is what decides: without one there is nowhere to send to.
-        """
-        return bool(self.smtp_host.strip())
+        """Whether the selected real-mail provider has its required settings."""
+        if self.email_otp_provider == "gmail_api":
+            return bool(
+                self.gmail_client_id.strip()
+                and self.gmail_client_secret is not None
+                and self.gmail_client_secret.get_secret_value().strip()
+                and self.gmail_refresh_token is not None
+                and self.gmail_refresh_token.get_secret_value().strip()
+                and self.gmail_sender_email.strip()
+            )
+        return self.email_otp_provider == "smtp" and bool(self.smtp_host.strip())
 
     # ------------------------------------------------------------ validation
 

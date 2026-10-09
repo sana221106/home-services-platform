@@ -5,9 +5,9 @@ hashes it, gives it one TTL and one attempt budget. Only the channel that
 carries it moved from a handset to an inbox, so this module owns transport and
 nothing else — no code generation, no storage, no API response.
 
-Relaying is optional at boot (§135). With no host configured the caller falls
-back to the log-only provider; with one configured a send failure is raised so
-the request fails rather than reporting a code that never leaves the building.
+Delivery is selected by EMAIL_OTP_PROVIDER. SMTP without a host retains the
+development log-only fallback (§135). Gmail API failures always propagate so
+the request cannot report a code as sent when delivery failed.
 """
 
 from __future__ import annotations
@@ -63,12 +63,25 @@ def _build_message(*, to: str, code: str, ttl_minutes: int) -> EmailMessage:
 
 
 def send_verification_code(to: str, *, code: str, ttl_minutes: int) -> None:
-    """Deliver `code` to `to`, or raise if the relay refuses it.
+    """Deliver `code` to `to` with the selected provider, or raise on failure.
 
     Raising is deliberate. Returning quietly would show the customer "code sent"
     while the mailbox stays empty, and they would sit there retrying a flow that
     can never succeed.
     """
+    if settings.email_otp_provider == "gmail_api":
+        from app.services import gmail_service
+
+        gmail_service.send_verification_code(to, code=code, ttl_minutes=ttl_minutes)
+        return
+
+    if settings.email_otp_provider == "log_only" or not settings.email_configured:
+        if settings.debug and not settings.is_production:
+            log.info("otp_issued", email_masked=mask_email(to), otp_debug_value=code)
+        else:
+            log.warning("otp_email_unconfigured", email_masked=mask_email(to))
+        return
+
     password = settings.smtp_password
     try:
         with smtplib.SMTP(

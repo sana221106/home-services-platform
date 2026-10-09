@@ -149,22 +149,12 @@ def start_otp(
 
     destination = normalise_email(email)
     masked = email_service.mask_email(destination)
-    if settings.email_configured:
-        # Raises on a refused send, so a code is never recorded as delivered
-        # when it is still sitting in the outbound queue.
-        email_service.send_verification_code(
-            destination, code=code, ttl_minutes=settings.otp_ttl_minutes
-        )
-        provider = "smtp"
-    else:
-        # No relay configured (§135). The log is the only channel that exists;
-        # printing the code is the documented development fallback and is gated
-        # on debug so it cannot leak from a production deployment (§93).
-        provider = "log_only"
-        if settings.debug:
-            log.info("otp_issued", email_masked=masked, otp_debug_value=code)
-        else:
-            log.warning("otp_email_unconfigured", email_masked=masked)
+    # The transport owns routing and raises before a successful delivery is
+    # recorded, including when Gmail is selected but credentials are missing.
+    email_service.send_verification_code(
+        destination, code=code, ttl_minutes=settings.otp_ttl_minutes
+    )
+    provider = settings.email_otp_provider if settings.email_configured else "log_only"
 
     session.add(
         OtpDeliveryLog(

@@ -34,6 +34,9 @@ os.environ.setdefault("STORAGE_ROOT", "./var/test-storage")
 # suite would try to deliver mail and hang on a dial. Assigned rather than
 # setdefault for the same reason as SUPABASE_URL below.
 os.environ["SMTP_HOST"] = ""
+# A real Gmail provider in a developer's environment must not send test OTPs.
+# Individual delivery tests select gmail_api with mocked HTTPS calls.
+os.environ["EMAIL_OTP_PROVIDER"] = "smtp"
 
 # These are assigned, not setdefault: a developer's real ``backend/.env`` sets
 # SUPABASE_URL and SUPABASE_SERVICE_ROLE_KEY, and pydantic-settings reads that
